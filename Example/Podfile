@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'Z3MapView_Example' do
+  pod 'Z3MapView', :path => '../'
+
+  target 'Z3MapView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
