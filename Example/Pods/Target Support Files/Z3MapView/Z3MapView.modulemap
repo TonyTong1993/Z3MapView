@@ -1,0 +1,6 @@
+framework module Z3MapView {
+  umbrella header "Z3MapView-umbrella.h"
+
+  export *
+  module * { export * }
+}

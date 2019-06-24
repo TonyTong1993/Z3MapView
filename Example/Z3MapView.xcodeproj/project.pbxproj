@@ -23,6 +23,7 @@
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		D57CAF7821A769B861279855 /* Pods_Z3MapView_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD5188C3CC43134EF559BB5 /* Pods_Z3MapView_Tests.framework */; };
+		EB81540322BA1EA90054D0D7 /* Z3DisplayIdentityResultViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB81540122BA1EA90054D0D7 /* Z3DisplayIdentityResultViewCell.xib */; };
 		F913DD0D71C8DD26688ACCEB /* Pods_Z3MapView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EEE63D0E14AC0003CA85602 /* Pods_Z3MapView_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,13 +60,14 @@
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		7E5447B1DED9ED546FB4249E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		7E5447B1DED9ED546FB4249E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		8269BDE1BFD9F457E33CD8E1 /* Pods-Z3MapView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Z3MapView_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Z3MapView_Tests/Pods-Z3MapView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8C24A481F23C48ED404C8176 /* Pods-Z3MapView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Z3MapView_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		DAEFDBA940F6B65C3606A219 /* Z3MapView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = Z3MapView.podspec; path = ../Z3MapView.podspec; sourceTree = "<group>"; };
+		DAEFDBA940F6B65C3606A219 /* Z3MapView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Z3MapView.podspec; path = ../Z3MapView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DC6E4D1F5878B87F7B4EFC5C /* Pods-Z3MapView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Z3MapView_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example.release.xcconfig"; sourceTree = "<group>"; };
-		F5E543A9BC7C13B1F75FC4A0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		EB81540122BA1EA90054D0D7 /* Z3DisplayIdentityResultViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Z3DisplayIdentityResultViewCell.xib; sourceTree = "<group>"; };
+		F5E543A9BC7C13B1F75FC4A0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		FA908AEFF2B995EC6ADED1F2 /* Pods-Z3MapView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Z3MapView_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Z3MapView_Tests/Pods-Z3MapView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,6 +134,8 @@
 		6003F593195388D20070C39A /* Example for Z3MapView */ = {
 			isa = PBXGroup;
 			children = (
+				EB8153FB22BA1C920054D0D7 /* View */,
+				EB8153E222B8D0560054D0D7 /* Mock */,
 				6003F59C195388D20070C39A /* Z3AppDelegate.h */,
 				6003F59D195388D20070C39A /* Z3AppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
@@ -196,6 +200,21 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		EB8153E222B8D0560054D0D7 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Mock;
+			sourceTree = "<group>";
+		};
+		EB8153FB22BA1C920054D0D7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EB81540122BA1EA90054D0D7 /* Z3DisplayIdentityResultViewCell.xib */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -208,7 +227,6 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				DC9B9E69D3E85B49F46182EE /* [CP] Embed Pods Frameworks */,
-				816E3B848B874CC3CE4FA060 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -227,8 +245,6 @@
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
-				54F52D36C37779E1203C3998 /* [CP] Embed Pods Frameworks */,
-				F3FFDC3B1C269336CE679005 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -250,6 +266,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Tony Tony";
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = ZA734EWL3T;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -260,6 +279,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -279,6 +299,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB81540322BA1EA90054D0D7 /* Z3DisplayIdentityResultViewCell.xib in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
@@ -333,67 +354,36 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		54F52D36C37779E1203C3998 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Z3MapView_Tests/Pods-Z3MapView_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		816E3B848B874CC3CE4FA060 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		DC9B9E69D3E85B49F46182EE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Z3CommonLib/Z3CommonLib.framework",
+				"${BUILT_PRODUCTS_DIR}/Z3Login/Z3Login.framework",
+				"${PODS_ROOT}/../../ArcGIS.framework",
 				"${BUILT_PRODUCTS_DIR}/Z3MapView/Z3MapView.framework",
+				"${BUILT_PRODUCTS_DIR}/Z3Network/Z3Network.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Z3CommonLib.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Z3Login.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ArcGIS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Z3MapView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Z3Network.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F3FFDC3B1C269336CE679005 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Z3MapView_Tests/Pods-Z3MapView_Tests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -533,9 +523,11 @@
 			baseConfigurationReference = 8C24A481F23C48ED404C8176 /* Pods-Z3MapView_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZA734EWL3T;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Z3MapView/Z3MapView-Prefix.pch";
 				INFOPLIST_FILE = "Z3MapView/Z3MapView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -548,9 +540,11 @@
 			baseConfigurationReference = DC6E4D1F5878B87F7B4EFC5C /* Pods-Z3MapView_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZA734EWL3T;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Z3MapView/Z3MapView-Prefix.pch";
 				INFOPLIST_FILE = "Z3MapView/Z3MapView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";

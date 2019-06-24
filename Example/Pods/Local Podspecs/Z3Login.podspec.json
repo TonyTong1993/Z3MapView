@@ -1,0 +1,35 @@
+{
+  "name": "Z3Login",
+  "version": "0.1.2",
+  "summary": "Z3Login help user construct login for zzht",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/TonyTong1993/Z3Login",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Tony Tony": "tongwanhua1993@163.com"
+  },
+  "source": {
+    "git": "https://github.com/TonyTong1993/Z3Login.git",
+    "tag": "0.1.2"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "Z3Login/Classes/**/*",
+  "resource_bundles": {
+    "Z3Login": [
+      "Z3Login/Assets/*"
+    ]
+  },
+  "dependencies": {
+    "Z3Network": [
+      "~> 0.0.1"
+    ],
+    "Z3CommonLib": [
+      "~> 0.1.1"
+    ]
+  }
+}
