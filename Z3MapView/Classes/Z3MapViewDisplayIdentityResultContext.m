@@ -92,17 +92,13 @@
 
 - (void)displayPopViewForIphone {
     if (_displayIdentityResultView == nil) {
-         [self.mapView addSubview:self.displayIdentityResultView];
+        [self.mapView addSubview:self.displayIdentityResultView];
         [self updateContraints];
         [self.displayIdentityResultView setDataSource:self.results];
-        [UIView animateWithDuration:1 animations:^{
-            NSMutableArray *animationConstraintsForPresent = [NSMutableArray array];
-             [animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
-            [self.mapView addConstraints:animationConstraintsForPresent];
-        } completion:^(BOOL finished) {
-            
-        }];
-        [self.mapView layoutIfNeeded];
+        NSMutableArray *animationConstraintsForPresent = [NSMutableArray array];
+        [animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
+        [self.mapView addConstraints:animationConstraintsForPresent];
+        
     }else {
         NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
         [self.displayIdentityResultView setSelectItem:index];

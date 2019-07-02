@@ -9,6 +9,9 @@
 #import "Z3MapViewCommonXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
+@interface Z3MapViewCommonXtd ()
+@property (nonatomic,strong) NSArray *rightItems;
+@end
 @implementation Z3MapViewCommonXtd
 
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView {
@@ -22,16 +25,38 @@
     return self;
 }
 
+- (void)dealloc {
+    [self rollbackNavgationBar];
+}
+
 - (void)display {
-    
+    [self updateNavigationBar];
 }
+
+- (void)setOnComplicationListener:(OnComplicationBlock)complication {
+    _listener = complication;
+}
+
+//修改导航栏样式
+- (void)updateNavigationBar {
+    UIBarButtonItem *lefttem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
+    self.targetViewController.navigationItem.leftBarButtonItem = lefttem;
+    self.rightItems = self.targetViewController.navigationItem.rightBarButtonItems;
+    self.targetViewController.navigationItem.rightBarButtonItems = nil;
+}
+
+- (void)dismiss {
+    if (self.listener) {
+        self.listener();
+    }
+}
+
+//还原导航栏样式
+- (void)rollbackNavgationBar {
+    self.targetViewController.navigationItem.leftBarButtonItem = nil;
+    self.targetViewController.navigationItem.rightBarButtonItems = self.rightItems;
+}
+
 
 @end
 
-@implementation Z3MapViewCommonXtd(Private)
-
--(void)display {
-    
-}
-
-@end

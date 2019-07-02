@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'Z3MapView'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of Z3MapView.'
+  s.summary          = 'Z3MapView for zzht to build mapView'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,14 +21,15 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/Tony Tony/Z3MapView'
+  s.homepage         = 'https://github.com/TonyTong1993/Z3MapView'
+ 
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Tony Tony' => 'tongwanhua1993@163.com' }
-  s.source           = { :git => 'https://github.com/Tony Tony/Z3MapView.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/TonyTong1993/Z3MapView.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'Z3MapView/Classes/**/*'
   
@@ -37,6 +38,10 @@ TODO: Add long description of the pod here.
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.frameworks = 'UIKit', 'MapKit'
+  s.vendored_frameworks = 'ArcGIS.framework'
+  #s.dependency 'ArcGIS-Runtime-SDK-iOS', '~> 100.4'
+  s.dependency 'Z3Login','~> 0.1.1'
+  s.dependency 'Z3Network', '~>0.0.1'
+  s.dependency 'Z3CommonLib', '~>0.1.1'
 end

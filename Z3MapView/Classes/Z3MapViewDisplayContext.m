@@ -43,22 +43,24 @@ static NSString *context = @"Z3MapViewDisplayContext";
     if ([keyPath isEqualToString:@"loadStatus"]) {
         NSNumber *value = change[NSKeyValueChangeNewKey];
         AGSLoadStatus status =  [value intValue];
-        switch (status) {
-            case AGSLoadStatusLoaded:
-                [self setAccessoryViewEndLoadMapLayers];
-                break;
-            case AGSLoadStatusFailedToLoad:
-                [self setAccessoryViewEndLoadMapLayers];
-                break;
-            case AGSLoadStatusLoading:
-                [self setAccessoryViewStartLoadMapLayers];
-                break;
-            default:
-                break;
-        }
-        if (self.loadStatusListener) {
-            self.loadStatusListener(status);
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            switch (status) {
+                case AGSLoadStatusLoaded:
+                    [self setAccessoryViewEndLoadMapLayers];
+                    break;
+                case AGSLoadStatusFailedToLoad:
+                    [self setAccessoryViewEndLoadMapLayers];
+                    break;
+                case AGSLoadStatusLoading:
+                    [self setAccessoryViewStartLoadMapLayers];
+                    break;
+                default:
+                    break;
+            }
+            if (self.loadStatusListener) {
+                self.loadStatusListener(status);
+            }
+        });
     }
 }
 

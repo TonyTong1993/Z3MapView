@@ -10,6 +10,9 @@
 #import <ArcGIS/ArcGIS.h>
 #import "Z3GraphicFactory.h"
 #import "Z3MapViewPrivate.h"
+@interface Z3MapViewCommonQueryXtd()
+@property (nonatomic,strong) NSArray *buttons;
+@end
 @implementation Z3MapViewCommonQueryXtd
 @synthesize identityContext = _identityContext;
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView {
@@ -25,17 +28,18 @@
 - (void)dealloc {
     [self dismiss];
     _identityContext = nil;
-    if (self.queryGraphicsOverlay) {
-        [self.mapView.graphicsOverlays removeObject:self.queryGraphicsOverlay];
-    }
 }
 
 - (void)display {
-    
+    [super display];
 }
 
 - (void)dismiss {
+    [super dismiss];
     [_identityContext dissmiss];
+     [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
+    [self.targetViewController.tabBarController.tabBar setHidden:NO];
+    
 }
 
 - (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
@@ -44,6 +48,9 @@
 }
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context {
+    [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
+    [self.targetViewController.tabBarController.tabBar setHidden:YES];
+    [self.mapView setNeedsUpdateConstraints];
     
 }
 

@@ -70,8 +70,6 @@
              //TODO:统一失败处理
         }
     }];
-    
-    
 }
 
 - (void)loadGISMetas {

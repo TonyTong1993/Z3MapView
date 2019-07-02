@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewMeasureXtd.h"
+#import <ArcGIS/AGSEnumerations.h>
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const IDENTITY_GRAPHICS_OVERLAY_ID;
@@ -15,6 +17,15 @@ extern NSString * const QUERY_GRAPHICS_OVERLAY_ID;
 
 @interface Z3MapViewCommonXtd (Private)
 - (void)display;
+- (void)dismiss;
+- (void)updateNavigationBar;
+- (void)rollbackNavgationBar;
 @end
-
+@class AGSSketchStyle,AGSSketchEditConfiguration;
+@interface Z3MapViewMeasureXtd (Private)
+- (AGSSketchCreationMode)creationMode;
+- (AGSSketchStyle *)style;
+- (AGSSketchEditConfiguration *)sketchEditConfiguration;
+- (void)onListenerGeometryDidChange:(NSNotification *)notification;
+@end
 NS_ASSUME_NONNULL_END

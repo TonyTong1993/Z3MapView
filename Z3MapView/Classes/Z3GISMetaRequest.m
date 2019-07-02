@@ -7,7 +7,9 @@
 //
 
 #import "Z3GISMetaRequest.h"
-
+#import "Z3GISMetaResponse.h"
 @implementation Z3GISMetaRequest
-
+- (Class)responseClasz {
+    return [Z3GISMetaResponse class];
+}
 @end

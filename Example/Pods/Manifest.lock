@@ -25,7 +25,9 @@ PODS:
     - Z3CommonLib (~> 0.1.1)
     - Z3Network (~> 0.0.1)
   - Z3MapView (0.1.0):
-    - Z3Login (~> 0.1.2)
+    - Z3CommonLib (~> 0.1.1)
+    - Z3Login (~> 0.1.1)
+    - Z3Network (~> 0.0.1)
   - Z3Network (0.0.1):
     - AFNetworking (~> 3.2.1)
 
@@ -57,9 +59,9 @@ SPEC CHECKSUMS:
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
   Z3CommonLib: 77bcabcc40fcc0c102b2006aa6a2aa6b6ed3f600
   Z3Login: 3699a83a91ab0da13d97fe2a6370a4aa782993a9
-  Z3MapView: 027da46027edf687b86bb38ac9121234ecc10c80
+  Z3MapView: 20663e490f0867a24814dcee83fdbab68318b0af
   Z3Network: 4386fd3b1b5648cf0bcde0962e6378b6f9a4fd4f
 
-PODFILE CHECKSUM: 3d08d045311131ee2414178cffbc16d5d7753e76
+PODFILE CHECKSUM: a94ef2a791daf5145f0796c5b55a221316240d6d
 
 COCOAPODS: 1.6.1

@@ -33,6 +33,8 @@
 #import "Z3MapViewIdentityResponse.h"
 #import "Z3MapViewIdentityResult.h"
 #import "Z3MapViewLocateXtd.h"
+#import "Z3MapViewMeasurePolygonXtd.h"
+#import "Z3MapViewMeasurePolylineXtd.h"
 #import "Z3MapViewMeasureXtd.h"
 #import "Z3MapViewObtainLocationXtd.h"
 #import "Z3MapViewPrivate.h"
