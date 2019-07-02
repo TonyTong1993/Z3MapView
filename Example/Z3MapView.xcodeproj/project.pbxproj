@@ -24,6 +24,11 @@
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		D57CAF7821A769B861279855 /* Pods_Z3MapView_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD5188C3CC43134EF559BB5 /* Pods_Z3MapView_Tests.framework */; };
 		EB523A8B22C25F8E00045E91 /* Z3DisplayIdentityResultViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB523A8A22C25F8E00045E91 /* Z3DisplayIdentityResultViewCell.xib */; };
+		EBFB0F4722C85EC70003FE53 /* Z3MapViewSwitchOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFB0F4622C85EC70003FE53 /* Z3MapViewSwitchOperationView.m */; };
+		EBFB0F4D22C860420003FE53 /* Z3MapViewOperationMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFB0F4C22C860420003FE53 /* Z3MapViewOperationMenuItem.m */; };
+		EBFB0F4F22C8692C0003FE53 /* map_btn.plist in Resources */ = {isa = PBXBuildFile; fileRef = EBFB0F4E22C8692C0003FE53 /* map_btn.plist */; };
+		EBFB0F5422C86E600003FE53 /* Z3MapViewOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFB0F5222C86E600003FE53 /* Z3MapViewOperation.m */; };
+		EBFB0F5522C86E600003FE53 /* Z3MapViewOperationBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFB0F5322C86E600003FE53 /* Z3MapViewOperationBuilder.m */; };
 		F913DD0D71C8DD26688ACCEB /* Pods_Z3MapView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EEE63D0E14AC0003CA85602 /* Pods_Z3MapView_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +72,15 @@
 		DAEFDBA940F6B65C3606A219 /* Z3MapView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Z3MapView.podspec; path = ../Z3MapView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DC6E4D1F5878B87F7B4EFC5C /* Pods-Z3MapView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Z3MapView_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Z3MapView_Example/Pods-Z3MapView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		EB523A8A22C25F8E00045E91 /* Z3DisplayIdentityResultViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Z3DisplayIdentityResultViewCell.xib; path = ../../Z3MapView/Assets/Z3DisplayIdentityResultViewCell.xib; sourceTree = "<group>"; };
+		EBFB0F4522C85EC70003FE53 /* Z3MapViewSwitchOperationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Z3MapViewSwitchOperationView.h; sourceTree = "<group>"; };
+		EBFB0F4622C85EC70003FE53 /* Z3MapViewSwitchOperationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Z3MapViewSwitchOperationView.m; sourceTree = "<group>"; };
+		EBFB0F4B22C860420003FE53 /* Z3MapViewOperationMenuItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Z3MapViewOperationMenuItem.h; sourceTree = "<group>"; };
+		EBFB0F4C22C860420003FE53 /* Z3MapViewOperationMenuItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Z3MapViewOperationMenuItem.m; sourceTree = "<group>"; };
+		EBFB0F4E22C8692C0003FE53 /* map_btn.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = map_btn.plist; path = ../../../../OutWork/OutWork/map_btn.plist; sourceTree = "<group>"; };
+		EBFB0F5022C86E600003FE53 /* Z3MapViewOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z3MapViewOperation.h; sourceTree = "<group>"; };
+		EBFB0F5122C86E600003FE53 /* Z3MapViewOperationBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z3MapViewOperationBuilder.h; sourceTree = "<group>"; };
+		EBFB0F5222C86E600003FE53 /* Z3MapViewOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Z3MapViewOperation.m; sourceTree = "<group>"; };
+		EBFB0F5322C86E600003FE53 /* Z3MapViewOperationBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Z3MapViewOperationBuilder.m; sourceTree = "<group>"; };
 		F5E543A9BC7C13B1F75FC4A0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		FA908AEFF2B995EC6ADED1F2 /* Pods-Z3MapView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Z3MapView_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Z3MapView_Tests/Pods-Z3MapView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +148,11 @@
 		6003F593195388D20070C39A /* Example for Z3MapView */ = {
 			isa = PBXGroup;
 			children = (
+				EBFB0F5022C86E600003FE53 /* Z3MapViewOperation.h */,
+				EBFB0F5222C86E600003FE53 /* Z3MapViewOperation.m */,
+				EBFB0F5122C86E600003FE53 /* Z3MapViewOperationBuilder.h */,
+				EBFB0F5322C86E600003FE53 /* Z3MapViewOperationBuilder.m */,
+				EBFB0F4E22C8692C0003FE53 /* map_btn.plist */,
 				EB8153FB22BA1C920054D0D7 /* View */,
 				EB8153E222B8D0560054D0D7 /* Mock */,
 				6003F59C195388D20070C39A /* Z3AppDelegate.h */,
@@ -211,6 +230,10 @@
 			isa = PBXGroup;
 			children = (
 				EB523A8A22C25F8E00045E91 /* Z3DisplayIdentityResultViewCell.xib */,
+				EBFB0F4522C85EC70003FE53 /* Z3MapViewSwitchOperationView.h */,
+				EBFB0F4622C85EC70003FE53 /* Z3MapViewSwitchOperationView.m */,
+				EBFB0F4B22C860420003FE53 /* Z3MapViewOperationMenuItem.h */,
+				EBFB0F4C22C860420003FE53 /* Z3MapViewOperationMenuItem.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -299,6 +322,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBFB0F4F22C8692C0003FE53 /* map_btn.plist in Resources */,
 				EB523A8B22C25F8E00045E91 /* Z3DisplayIdentityResultViewCell.xib in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
@@ -394,7 +418,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* Z3AppDelegate.m in Sources */,
+				EBFB0F4722C85EC70003FE53 /* Z3MapViewSwitchOperationView.m in Sources */,
+				EBFB0F4D22C860420003FE53 /* Z3MapViewOperationMenuItem.m in Sources */,
 				6003F5A7195388D20070C39A /* Z3ViewController.m in Sources */,
+				EBFB0F5522C86E600003FE53 /* Z3MapViewOperationBuilder.m in Sources */,
+				EBFB0F5422C86E600003FE53 /* Z3MapViewOperation.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,6 +18,8 @@
 @property (nonatomic,strong) NSMutableArray *graphics;
 @property (nonatomic,strong) AGSGraphicsOverlay *mGraphicsOverlay;
 @property (nonatomic,strong) Z3DisplayIdentityResultView *displayIdentityResultView;
+@property (nonatomic,strong) NSMutableArray *animationConstraintsForPresent;
+@property (nonatomic,strong) NSMutableArray *animationConstraintsForDismiss;
 @end
 @implementation Z3MapViewDisplayIdentityResultContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView identityResults:(NSArray *)results{
@@ -95,9 +97,9 @@
         [self.mapView addSubview:self.displayIdentityResultView];
         [self updateContraints];
         [self.displayIdentityResultView setDataSource:self.results];
-        NSMutableArray *animationConstraintsForPresent = [NSMutableArray array];
-        [animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
-        [self.mapView addConstraints:animationConstraintsForPresent];
+        _animationConstraintsForPresent = [NSMutableArray array];
+        [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
+        [self.mapView addConstraints:_animationConstraintsForPresent];
         
     }else {
         NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
@@ -133,15 +135,19 @@
 
 - (void)dismissPopupView {
     [UIView animateWithDuration:1 animations:^{
-         NSMutableArray *animationConstraintsForDismiss = [NSMutableArray array];
-         [animationConstraintsForDismiss addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-(margin)-|" options:0 metrics:@{@"margin":@(-160)} views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
-        [self.mapView addConstraints:animationConstraintsForDismiss];
-        
+        [self.mapView removeConstraints:self.animationConstraintsForPresent];
+        self.animationConstraintsForDismiss = [NSMutableArray array];
+        NSDictionary *views = @{@"displayIdentityResultView":self.displayIdentityResultView};
+        [self.animationConstraintsForDismiss addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[displayIdentityResultView(160)]-(margin)-|" options:0 metrics:@{@"margin":@(-160)} views:views]];
+        [self.mapView addConstraints:self.animationConstraintsForDismiss];
     } completion:^(BOOL finished) {
         [self.displayIdentityResultView removeFromSuperview];
         self.displayIdentityResultView = nil;
     }];
     [self.mapView layoutIfNeeded];
+
+    
+    
 }
 
 - (void)updateIdentityResults:(NSArray *)results {
@@ -166,8 +172,8 @@
     }
     [self.mapView setViewpointCenter:center completion:^(BOOL finished) {
         double scale =  self.mapView.mapScale;
-        if (scale > 500) {
-            [self.mapView setViewpointScale:500 completion:^(BOOL finished) {
+        if (scale > 1000) {
+            [self.mapView setViewpointScale:1000 completion:^(BOOL finished) {
                 [self dispalyPopview];
             }];
         }else {

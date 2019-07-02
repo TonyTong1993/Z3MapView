@@ -58,6 +58,7 @@
 }
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context {
+    [super identityContextQuerySuccess:context];
     [self dissmissGraphicsForQuery];
 }
 

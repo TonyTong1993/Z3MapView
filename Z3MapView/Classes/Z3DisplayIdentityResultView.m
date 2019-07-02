@@ -56,6 +56,7 @@ static NSString *Z3DisplayIdentityResultViewCell_reuseIdentifier = @"Z3DisplayId
     self.collectionView.pagingEnabled = YES;
     [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([Z3DisplayIdentityResultViewCell class]) bundle:nil] forCellWithReuseIdentifier:Z3DisplayIdentityResultViewCell_reuseIdentifier];
     self.backgroundColor = [UIColor clearColor];
+    self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
     [self addSubview:self.collectionView];
 
