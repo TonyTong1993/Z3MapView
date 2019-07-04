@@ -49,6 +49,7 @@
         }];
         return;
     };
+
     AGSGeometry *geometory = nil;
     if (self.delegate && [self.delegate respondsToSelector:@selector(identityContext:didTapAtScreenPoint:mapPoint:)]) {
        geometory = [self.delegate identityContext:self didTapAtScreenPoint:screenPoint mapPoint:mapPoint];
@@ -110,8 +111,6 @@
 - (void)identifyGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo{
 //    NSAssert(self.identityLayer, @"you must set identityLayer");
     NSString *url =@"http://222.92.12.42:8088/ServiceEngine/rest/services/NetServer/szgw/identify";
-    
-// @"http://192.168.8.86:7777/ServiceEngine/rest/services/NetServer/czpsgis/identify"; //
     [self identityFeaturesWithGisServer:url geometry:geometry userInfo:userInfo];
 
 }
@@ -150,7 +149,9 @@
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
         dispatch_async(dispatch_get_main_queue(), ^{
              [weakSelf hidenAccessoryView];
+             [self showToast:@"未查询到数据"];
         });
+       
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
             [weakSelf.delegate identityContextQueryFailure:weakSelf];
         }

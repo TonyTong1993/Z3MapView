@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class AGSMapView;
+@class AGSMapView,UIViewController;
 typedef void(^OnComplicationBlock)(void);
 @interface Z3MapViewCommonXtd : NSObject
 @property (nonatomic,weak,readonly) UIViewController *targetViewController;

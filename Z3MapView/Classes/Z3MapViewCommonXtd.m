@@ -9,6 +9,7 @@
 #import "Z3MapViewCommonXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
+#import <UIDevice+YYAdd.h>
 @interface Z3MapViewCommonXtd ()
 @property (nonatomic,strong) NSArray *rightItems;
 @end
@@ -39,10 +40,12 @@
 
 //修改导航栏样式
 - (void)updateNavigationBar {
-    UIBarButtonItem *lefttem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
-    self.targetViewController.navigationItem.leftBarButtonItem = lefttem;
-    self.rightItems = self.targetViewController.navigationItem.rightBarButtonItems;
-    self.targetViewController.navigationItem.rightBarButtonItems = nil;
+    if (![UIDevice currentDevice].isPad) {
+        UIBarButtonItem *lefttem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
+        self.targetViewController.navigationItem.leftBarButtonItem = lefttem;
+        self.rightItems = self.targetViewController.navigationItem.rightBarButtonItems;
+        self.targetViewController.navigationItem.rightBarButtonItems = nil;
+    }
 }
 
 - (void)dismiss {
@@ -53,8 +56,10 @@
 
 //还原导航栏样式
 - (void)rollbackNavgationBar {
-    self.targetViewController.navigationItem.leftBarButtonItem = nil;
-    self.targetViewController.navigationItem.rightBarButtonItems = self.rightItems;
+    if (![UIDevice currentDevice].isPad) {
+        self.targetViewController.navigationItem.leftBarButtonItem = nil;
+        self.targetViewController.navigationItem.rightBarButtonItems = self.rightItems;
+    }
 }
 
 

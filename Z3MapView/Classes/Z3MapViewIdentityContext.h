@@ -7,7 +7,7 @@
 //
 #warning "请及时释放Z3MapViewIdentityContext对象"
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
 NS_ASSUME_NONNULL_BEGIN
 @class AGSMapView,AGSLayer,AGSGeometry,AGSPoint,AGSGraphic,Z3MapViewIdentityContext;
 

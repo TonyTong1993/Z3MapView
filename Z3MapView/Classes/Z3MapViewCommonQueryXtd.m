@@ -10,6 +10,7 @@
 #import <ArcGIS/ArcGIS.h>
 #import "Z3GraphicFactory.h"
 #import "Z3MapViewPrivate.h"
+#import <UIDevice+YYAdd.h>
 @interface Z3MapViewCommonQueryXtd()
 @property (nonatomic,strong) NSArray *buttons;
 @end
@@ -37,20 +38,27 @@
 - (void)dismiss {
     [super dismiss];
     [_identityContext dissmiss];
-     [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
-    [self.targetViewController.tabBarController.tabBar setHidden:NO];
+    if (![UIDevice currentDevice].isPad) {
+        [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
+        [self.targetViewController.tabBarController.tabBar setHidden:NO];
+    }
     
 }
 
 - (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
-   
+    
     return (AGSGeometry *)mapPoint;
 }
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context {
-    [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
-    [self.targetViewController.tabBarController.tabBar setHidden:YES];
-    [self.mapView setNeedsUpdateConstraints];
+    if (![UIDevice currentDevice].isPad) {
+        [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
+        [self.targetViewController.tabBarController.tabBar setHidden:YES];
+        [self.mapView setNeedsUpdateConstraints];
+    }else {
+        
+    }
+    
     
 }
 
