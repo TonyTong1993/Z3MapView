@@ -7,15 +7,57 @@
 //
 
 #import "Z3AGSCalloutViewIPad.h"
-
+#import "Z3MapViewIdentityResult.h"
+@interface Z3AGSCalloutViewIPad()<UITableViewDataSource>
+@property (nonatomic,strong) UITableView *tableView;
+@property (nonatomic,copy) NSDictionary *attributes;
+@end
 @implementation Z3AGSCalloutViewIPad
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
++ (instancetype)calloutView {
+    return [[self alloc] init];
 }
-*/
+static  CGFloat CalloutViewWidth = 320.0f;
+static  CGFloat CalloutViewHeight = 568.0f;
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.bounds = CGRectMake(0, 0, CalloutViewWidth, CalloutViewHeight);
+        [self initTableView];
+    }
+    return self;
+}
+
+- (void)initTableView {
+    _tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+    _tableView.dataSource = self;
+    [self addSubview:_tableView];
+}
+
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(CalloutViewWidth, CalloutViewHeight);
+}
+
+- (void)setIdentityAttributes:(NSDictionary *)attributes {
+    _attributes = attributes;
+}
+
+#pragma mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.attributes.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *reuseIdentifier = @"UITableViewCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    if (nil == cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
+    }
+   NSString *key = [self.attributes allKeys][indexPath.row];
+   NSString *value = self.attributes[key];
+   cell.textLabel.text = key;
+   cell.detailTextLabel.text = value;
+   return cell;
+}
 
 @end

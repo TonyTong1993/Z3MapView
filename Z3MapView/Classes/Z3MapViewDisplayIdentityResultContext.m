@@ -9,9 +9,11 @@
 #import "Z3MapViewDisplayIdentityResultContext.h"
 #import "Z3MapViewIdentityResult.h"
 #import "Z3DisplayIdentityResultView.h"
+#import "Z3AGSCalloutViewIPad.h"
 #import "Z3GraphicFactory.h"
 #import "Z3AGSPopupFactory.h"
 #import "Z3MapViewPrivate.h"
+
 #import <ArcGIS/ArcGIS.h>
 @interface Z3MapViewDisplayIdentityResultContext()<Z3DisplayIdentityResultViewDelegate>
 @property (nonatomic,copy) NSArray *results;
@@ -89,7 +91,11 @@
 }
 
 - (void)dispalyPopviewForIpad {
-    
+    Z3AGSCalloutViewIPad *callout = [Z3AGSCalloutViewIPad calloutView];
+    [callout setIdentityAttributes:self.selectedGraphic.attributes];
+    [self.mapView.callout setCustomView:callout];
+    self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionLeft;
+    [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:nil animated:YES];
 }
 
 - (void)displayPopViewForIphone {
@@ -100,7 +106,7 @@
         _animationConstraintsForPresent = [NSMutableArray array];
         [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
         [self.mapView addConstraints:_animationConstraintsForPresent];
-        
+
     }else {
         NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
         [self.displayIdentityResultView setSelectItem:index];
@@ -146,8 +152,6 @@
     }];
     [self.mapView layoutIfNeeded];
 
-    
-    
 }
 
 - (void)updateIdentityResults:(NSArray *)results {
@@ -188,7 +192,7 @@
         _displayIdentityResultView.delegate = self;
         _displayIdentityResultView.translatesAutoresizingMaskIntoConstraints = NO;
     }
-    
+
     return _displayIdentityResultView;
 }
 
