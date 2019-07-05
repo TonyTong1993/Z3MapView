@@ -9,6 +9,7 @@
 #import "Z3MapViewDisplayUserLocationContext.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
+#import "Z3AGSSymbolFactory.h"
 @interface Z3MapViewDisplayUserLocationContext()
 @property (nonatomic,assign) BOOL showTrack;
 @end
@@ -29,28 +30,28 @@
 }
 
 - (void)showUserLocation {
-    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeCompassNavigation;
-        //    [[[SimulatePositionProducer alloc] init] loadSimulationLocationJSONWithFileName:@"szsl_trace" complicationHandler:^(NSArray * _Nonnull points) {
-        //        AGSSimulatedLocationDataSource *dataSource = [[AGSSimulatedLocationDataSource alloc] init];
-        //        [dataSource setLocations:points];
-        //        [self.mapView.locationDisplay setDataSource:dataSource];
-        //        [dataSource startWithCompletion:^(NSError * _Nullable error) {
-        //            if (error) {
-        //                [self showFailureAlert:[error localizedDescription]];
-        //            }
-        //        }];
-        //    }];
-    
-    [self.mapView.locationDisplay startWithCompletion:^(NSError * _Nullable error) {
+    NSString *document = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [document stringByAppendingPathComponent:@"simulated_trace.json"];
+    BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:path];
+    if (isExists) {
+       NSData *data = [[NSData alloc] initWithContentsOfFile:path];
+        NSError * __autoreleasing error = nil;
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
-            [self showFailureAlert:[error localizedDescription]];
+            NSAssert(false, @"模拟轨迹点读取失败");
         }
-    }];
+       AGSPolyline *polyline = (AGSPolyline *)[AGSPolyline fromJSON:json error:&error];
+       AGSSimulatedLocationDataSource *dataSource = [[AGSSimulatedLocationDataSource alloc] init];
+       [dataSource setLocationsWithPolyline:polyline];
+        [self.mapView.locationDisplay setDataSource:dataSource];
+    }
     
+    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeOff;
+    [self.mapView.locationDisplay.dataSource startWithCompletion:nil];
     
 }
 
-    //TODO: 国际化
+//TODO: 国际化
 - (void)showFailureAlert:(NSString *)status {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:status preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

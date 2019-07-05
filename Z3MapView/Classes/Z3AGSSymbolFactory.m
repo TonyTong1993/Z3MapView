@@ -71,4 +71,8 @@
 }
 
 
+- (AGSSymbol *)buildDefaultSymbol {
+    return [self buildNormalPonitSymbol];
+}
+
 @end

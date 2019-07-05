@@ -24,12 +24,14 @@
 #import "Z3MapViewOperationBuilder.h"
 #import "Z3MapViewOperation.h"
 #import "Z3MapViewSwitchOperationView.h"
-
+#import "Z3BuildSimulatedLocationDataSourceXtd.h"
+#import "Z3MapViewDisplayUserLocationContext.h"
 
 @interface Z3ViewController ()<Z3MapViewSwitchOperationViewDelegate>
 @property (nonatomic,strong) AGSMapView* mapView;
 @property (nonatomic,strong) Z3MapViewDisplayContext *displayContext;
-@property (nonatomic,strong) Z3MapViewCommonQueryXtd *commonQueryXtd;
+@property (nonatomic,strong) Z3MapViewDisplayUserLocationContext *displayDeviceLocationContext;
+@property (nonatomic,strong) Z3MapViewCommonXtd *commonQueryXtd;
 @property (nonatomic,strong) Z3MapConfigRequest *request;
 @property (nonatomic,strong) Z3GISMetaRequest *metaRequest;
 @property (nonatomic,strong) UIActivityIndicatorView *indicatorView;
@@ -76,6 +78,10 @@
              //TODO:统一失败处理
         }
     }];
+   self.displayDeviceLocationContext = [[Z3MapViewDisplayUserLocationContext alloc] initWithAGSMapView:self.mapView];
+    [self.mapView.locationDisplay setLocationChangedHandler:^(AGSLocation * _Nonnull location) {
+        
+    }];
 }
 
 - (void)loadGISMetas {
@@ -90,7 +96,7 @@
 }
 
 - (void)mapViewDidLoad {
-//    self.commonQueryXtd = [[Z3MapViewRectQueryXtd alloc] initWithTargetViewController:self mapView:self.mapView];
+//    self.commonQueryXtd = [[Z3MapViewTapQueryXtd alloc] initWithTargetViewController:self mapView:self.mapView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -100,30 +106,14 @@
 }
 
 - (IBAction)onClickedMoreOperation:(UIBarButtonItem *)sender {
-    NSArray *operations = [[Z3MapViewOperationBuilder builder] buildOperations];
-   Z3MapViewSwitchOperationView *popupView = [[Z3MapViewSwitchOperationView alloc] init];
-    [popupView setDataSource:operations];
-    [popupView setDelegate:self];
-    
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
-    hud.mode = MBProgressHUDModeCustomView;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hidePopupView)];
-    [hud.backgroundView addGestureRecognizer:tap];
-    hud.customView = popupView;
-    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
-    hud.bezelView.backgroundColor = [UIColor clearColor];
-    CGFloat height = CGRectGetHeight(hud.customView.frame);
-    CGFloat width = CGRectGetWidth(hud.customView.frame);
-    CGFloat midY = CGRectGetMidY(self.view.frame);
-    CGFloat temY = midY - (height/2);
-    CGFloat maxY = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-    CGFloat offsetY = temY - maxY;
-    CGFloat midX = CGRectGetMidX(self.view.frame);
-    CGFloat maxX = CGRectGetMaxX(self.view.frame);
-    CGFloat offsetX = (maxX - (midX + width/2));
-    hud.offset = CGPointMake(offsetX+37, -offsetY);
-    self.hud = hud;
+    self.commonQueryXtd = [[Z3BuildSimulatedLocationDataSourceXtd alloc] initWithTargetViewController:self mapView:self.mapView];
+    __weak typeof(self) weakSelf = self;
+    [self.commonQueryXtd setOnComplicationListener:^{
+        weakSelf.commonQueryXtd = nil;
+    }];
+    [self.mapView.locationDisplay setLocationChangedHandler:^(AGSLocation * _Nonnull location) {
+        
+    }];
     
 }
 

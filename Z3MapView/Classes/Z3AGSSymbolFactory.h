@@ -27,6 +27,15 @@ NS_ASSUME_NONNULL_BEGIN
     //创建SketchEditor模式下，end点x样式
 - (AGSSymbol *)buildSketchEditorMidPonitSymbol;
 
+//Show User Location
+- (AGSSymbol *)buildAccuracySymbol;
+- (AGSSymbol *)buildAcquiringSymbol;
+- (AGSSymbol *)buildPingAnimationSymbol;
+- (AGSSymbol *)buildCourseSymbol;
+- (AGSSymbol *)buildDefaultSymbol;
+- (AGSSymbol *)buildHeadingSymbol;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
