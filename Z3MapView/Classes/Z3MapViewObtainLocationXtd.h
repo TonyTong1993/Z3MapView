@@ -4,7 +4,7 @@
 //
 //  Created by 童万华 on 2019/6/16.
 //  Copyright © 2019 Tony Tony. All rights reserved.
-//
+//获取位置
 
 #import "Z3MapViewCommonXtd.h"
 

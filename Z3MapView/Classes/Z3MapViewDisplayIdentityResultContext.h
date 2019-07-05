@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView identityResults:(NSArray *)results;
 - (void)updateIdentityResults:(NSArray *)results;
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic;
+- (void)setShowPopup:(BOOL)showPopup;
 - (void)dismiss;
 @end
 

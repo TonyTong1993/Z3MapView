@@ -10,7 +10,9 @@
 #import <ArcGIS/ArcGIS.h>
 #import "Z3GraphicFactory.h"
 #import "Z3MapViewPrivate.h"
-#import <UIDevice+YYAdd.h>
+#import <YYKit/YYKit.h>
+#import <Z3Login/Z3QueryTaskHelper.h>
+#import <Z3Login/Z3MobileTask.h>
 @interface Z3MapViewCommonQueryXtd()
 @property (nonatomic,strong) NSArray *buttons;
 @end
@@ -21,6 +23,9 @@
     if (self) {
         _identityContext = [[Z3MapViewIdentityContext alloc] initWithAGSMapView:mapView];
         _identityContext.delegate = self;
+        Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];
+        NSString *identityURL = [task.baseURL stringByAppendingPathComponent:@"identify"];
+        [_identityContext setIdentityURL:identityURL];
     }
     
     return self;
@@ -50,7 +55,7 @@
     return (AGSGeometry *)mapPoint;
 }
 
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context {
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(nonnull NSArray *)results {
     if (![UIDevice currentDevice].isPad) {
         [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
         [self.targetViewController.tabBarController.tabBar setHidden:YES];
@@ -58,7 +63,6 @@
     }else {
         
     }
-    
     
 }
 

@@ -57,8 +57,8 @@
     return nil;
 }
 
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context {
-    [super identityContextQuerySuccess:context];
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(nonnull NSArray *)results{
+    [super identityContextQuerySuccess:context identityResults:results];
     [self dissmissGraphicsForQuery];
 }
 

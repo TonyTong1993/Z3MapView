@@ -11,6 +11,8 @@
 #endif
 
 #import "Z3AppMenu.h"
+#import "Z3HUDLoginSettingViewController.h"
+#import "Z3HUDLoginViewController.h"
 #import "Z3LoginComponent.h"
 #import "Z3LoginPrivate.h"
 #import "Z3LoginRequest.h"
@@ -22,6 +24,7 @@
 #import "Z3MapConfigResponse.h"
 #import "Z3MobileConfig.h"
 #import "Z3MobileTask.h"
+#import "Z3QueryTaskHelper.h"
 #import "Z3User.h"
 #import "Z3XmllRequest.h"
 

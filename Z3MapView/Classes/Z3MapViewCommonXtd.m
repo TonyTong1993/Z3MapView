@@ -9,7 +9,7 @@
 #import "Z3MapViewCommonXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
-#import <UIDevice+YYAdd.h>
+#import <YYKit/YYKit.h>
 @interface Z3MapViewCommonXtd ()
 @property (nonatomic,strong) NSArray *rightItems;
 @end

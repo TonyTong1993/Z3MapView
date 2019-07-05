@@ -22,6 +22,7 @@
 @property (nonatomic,strong) Z3DisplayIdentityResultView *displayIdentityResultView;
 @property (nonatomic,strong) NSMutableArray *animationConstraintsForPresent;
 @property (nonatomic,strong) NSMutableArray *animationConstraintsForDismiss;
+@property (nonatomic,assign) BOOL showPopup;
 @end
 @implementation Z3MapViewDisplayIdentityResultContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView identityResults:(NSArray *)results{
@@ -37,6 +38,10 @@
     [self dismiss];
     [self.mapView.graphicsOverlays removeObject:self.mGraphicsOverlay];
     self.mGraphicsOverlay = nil;
+}
+
+- (void)setShowPopup:(BOOL)showPopup {
+    _showPopup = showPopup;
 }
 
 - (void)buildGraphics {
@@ -83,6 +88,7 @@
 
 
 - (void)dispalyPopview {
+    if (!_showPopup) return;
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         [self dispalyPopviewForIpad];
     }else if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {

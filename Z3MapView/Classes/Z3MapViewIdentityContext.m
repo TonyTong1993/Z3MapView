@@ -19,6 +19,8 @@
 @property (nonatomic,strong) Z3MapViewIdentityRequest *identityRequest;
 @property (nonatomic,strong) Z3MapViewDisplayIdentityResultContext *displayIdentityResultContext;
 @property (nonatomic,assign,getter=isPause) BOOL pause;
+@property (nonatomic,copy) NSString *identityURL;
+@property (nonatomic,assign,getter=isDisplayPopup) BOOL showPopup;
 @end
 @implementation Z3MapViewIdentityContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
@@ -26,7 +28,7 @@
     if (self) {
         _mapView = mapView;
         _mapView.touchDelegate = self;
-        
+        _showPopup = YES;
     }
     return self;
 }
@@ -36,6 +38,14 @@
     if ([self.identityRequest isExecuting]) {
         [self.identityRequest.requestTask cancel];
     }
+}
+
+- (void)setIdentityURL:(NSString *)url {
+    _identityURL = url;
+}
+
+- (void)setDisplayPopup:(BOOL)showPopup {
+    _showPopup = showPopup;
 }
 
 - (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
@@ -66,26 +76,6 @@
     }
 }
 
-//- (void)geoView:(AGSGeoView *)geoView didDoubleTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint completion:(void (^)(BOOL))completion {
-//
-//    if (self.isPause && self.displayIdentityResultContext) {
-//        //TODO:设置双击graphic的效果
-//        __weak typeof(self) weakSelf = self;
-//        [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:2 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
-//            AGSGraphic *graphic = [identifyResult.graphics firstObject];
-//            if (graphic == nil) {
-//                return;
-//            }
-//
-//            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContext:doubleTapAtScreenPoint:mapPoint:graphic:)]) {
-//                [weakSelf.delegate identityContext:weakSelf doubleTapAtScreenPoint:screenPoint mapPoint:mapPoint graphic:graphic];
-//            }
-//
-//            //TODO:display popup view
-//
-//        }];
-//    };
-//}
 
 - (void)geoView:(AGSGeoView *)geoView didLongPressAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
     if (self.isPause && self.displayIdentityResultContext) {
@@ -98,8 +88,6 @@
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContext:longTapAtScreenPoint:mapPoint:graphic:)]) {
                 [weakSelf.delegate identityContext:weakSelf doubleTapAtScreenPoint:screenPoint mapPoint:mapPoint graphic:graphic];
             }
-            
-              //TODO:display popup view
         }];
     };
 }
@@ -109,10 +97,8 @@
 }
 
 - (void)identifyGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo{
-//    NSAssert(self.identityLayer, @"you must set identityLayer");
-    NSString *url =@"http://222.92.12.42:8088/ServiceEngine/rest/services/NetServer/szgw/identify";
-    [self identityFeaturesWithGisServer:url geometry:geometry userInfo:userInfo];
-
+    NSAssert(self.identityURL.length, @"identity url must not be nil");
+    [self identityFeaturesWithGisServer:self.identityURL geometry:geometry userInfo:userInfo];
 }
 
 
@@ -133,16 +119,17 @@
     __weak typeof(self) weakSelf = self;
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf hidenAccessoryView];
-        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:)]) {
-            [weakSelf.delegate identityContextQuerySuccess:weakSelf];
-        }
         if ([response.data count] == 0) {
             [self showToast:@"未查询到数据"];
             return;
         }
+        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
+            [weakSelf.delegate identityContextQuerySuccess:weakSelf identityResults:response.data];
+        }
         [self pause];
         if (weakSelf.displayIdentityResultContext == nil) {
              weakSelf.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:weakSelf.mapView identityResults:response.data];
+            [weakSelf.displayIdentityResultContext setShowPopup:weakSelf.showPopup];
         }else {
             [weakSelf.displayIdentityResultContext updateIdentityResults:response.data];
         }

@@ -23,7 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return 要查询的地理类型，点，线，envelop,polygon
  */
 @optional
-- (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint;
+- (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context
+             didTapAtScreenPoint:(CGPoint)screenPoint
+                        mapPoint:(AGSPoint *)mapPoint;
 
 @optional
 
@@ -35,7 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param mapPoint 地图坐标点
  @param graphic result graphic
  */
-- (void)identityContext:(Z3MapViewIdentityContext *)context doubleTapAtScreenPoint:(CGPoint)screenPoint
+- (void)identityContext:(Z3MapViewIdentityContext *)context
+ doubleTapAtScreenPoint:(CGPoint)screenPoint
                mapPoint:(AGSPoint *)mapPoint
                 graphic:(AGSGraphic *)graphic;
 
@@ -81,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param context 当前查询的上下文
  */
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context;
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(NSArray *)results;
 
 /**
  查询失败
@@ -99,7 +102,15 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView;
 
-- (void)setIdentityLayer:(AGSLayer *)layer;
+- (void)setIdentityURL:(NSString *)url;//设置查询的URL
+- (void)setIdentityLayer:(AGSLayer *)layer;//设置查询的图层
+
+/**
+ 查询结果是否显示popup
+
+ @param showPopup default YES
+ */
+- (void)setDisplayPopup:(BOOL)showPopup;
 
 - (void)dissmiss;//清除查询数据，并执行resume操作
 - (void)resume;//恢复查询触摸交换事件
