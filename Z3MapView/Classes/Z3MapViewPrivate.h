@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const IDENTITY_GRAPHICS_OVERLAY_ID;
 extern NSString * const QUERY_GRAPHICS_OVERLAY_ID;
-
+extern NSString * const TRACK_GRAPHICS_OVERLAY_ID;
 @interface Z3MapViewCommonXtd (Private)
 - (void)display;
 - (void)dismiss;

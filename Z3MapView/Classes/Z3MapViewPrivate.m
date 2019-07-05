@@ -10,3 +10,4 @@
 
 NSString * const IDENTITY_GRAPHICS_OVERLAY_ID = @"identity.graphics.overlay";
 NSString * const QUERY_GRAPHICS_OVERLAY_ID= @"query.graphics.overlay";
+NSString * const TRACK_GRAPHICS_OVERLAY_ID= @"track.graphics.overlay";
