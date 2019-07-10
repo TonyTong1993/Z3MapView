@@ -11,8 +11,8 @@
 #import "Z3GraphicFactory.h"
 #import "Z3MapViewPrivate.h"
 #import <YYKit/YYKit.h>
-#import <Z3Login/Z3QueryTaskHelper.h>
-#import <Z3Login/Z3MobileTask.h>
+#import "Z3QueryTaskHelper.h"
+#import "Z3MobileTask.h"
 @interface Z3MapViewCommonQueryXtd()
 @property (nonatomic,strong) NSArray *buttons;
 @end
@@ -40,13 +40,26 @@
     [super display];
 }
 
+- (void)updateNavigationBar {
+    [super updateNavigationBar];
+    UIImage *cleanImage = [UIImage imageNamed:@"nav_clear"];
+    UIBarButtonItem *cleanItem = [[UIBarButtonItem alloc] initWithImage:cleanImage style:UIBarButtonItemStylePlain target:self action:@selector(clear)];
+    self.targetViewController.navigationItem.rightBarButtonItem = cleanItem;
+}
+
+
+
 - (void)dismiss {
     [super dismiss];
     [_identityContext dissmiss];
-    if (![UIDevice currentDevice].isPad) {
+    if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
         [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
         [self.targetViewController.tabBarController.tabBar setHidden:NO];
     }
+}
+
+- (void)clear {
+    [_identityContext dissmiss];
     
 }
 
@@ -56,7 +69,7 @@
 }
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(nonnull NSArray *)results {
-    if (![UIDevice currentDevice].isPad) {
+    if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
         [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
         [self.targetViewController.tabBarController.tabBar setHidden:YES];
         [self.mapView setNeedsUpdateConstraints];

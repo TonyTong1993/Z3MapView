@@ -8,10 +8,10 @@
 
 #import "Z3ViewController.h"
 #import <ArcGIS/ArcGIS.h>
-#import <Z3Login/Z3MobileConfig.h>
-#import <Z3Login/Z3MapConfig.h>
-#import <Z3Login/Z3MapConfigRequest.h>
-#import <Z3Login/Z3MapConfigResponse.h>
+#import "Z3MobileConfig.h"
+#import "Z3MapConfig.h"
+#import "Z3MapConfigRequest.h"
+#import "Z3MapConfigResponse.h"
 #import "Z3MapViewDisplayContext.h"
 #import "Z3MapViewTapQueryXtd.h"
 #import "Z3MapViewRectQueryXtd.h"

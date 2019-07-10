@@ -109,6 +109,9 @@
         [self.mapView addSubview:self.displayIdentityResultView];
         [self updateContraints];
         [self.displayIdentityResultView setDataSource:self.results];
+        if (self.animationConstraintsForDismiss) {
+            [self.mapView removeConstraints:self.animationConstraintsForDismiss];
+        }
         _animationConstraintsForPresent = [NSMutableArray array];
         [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
         [self.mapView addConstraints:_animationConstraintsForPresent];
@@ -141,7 +144,9 @@
     if (self.mGraphicsOverlay) {
         [self.mGraphicsOverlay.graphics removeAllObjects];
         [self.graphics removeAllObjects];
-         [self dismissPopupView];
+    }
+    if (_displayIdentityResultView) {
+        [self dismissPopupView];
     }
 }
 

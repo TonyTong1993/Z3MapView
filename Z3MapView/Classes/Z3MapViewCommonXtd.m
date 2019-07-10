@@ -40,7 +40,7 @@
 
 //修改导航栏样式
 - (void)updateNavigationBar {
-    if (![UIDevice currentDevice].isPad) {
+    if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
         UIBarButtonItem *lefttem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
         self.targetViewController.navigationItem.leftBarButtonItem = lefttem;
         self.rightItems = self.targetViewController.navigationItem.rightBarButtonItems;
@@ -56,7 +56,7 @@
 
 //还原导航栏样式
 - (void)rollbackNavgationBar {
-    if (![UIDevice currentDevice].isPad) {
+    if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
         self.targetViewController.navigationItem.leftBarButtonItem = nil;
         self.targetViewController.navigationItem.rightBarButtonItems = self.rightItems;
     }

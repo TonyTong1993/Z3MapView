@@ -7,8 +7,8 @@
     //
 
 #import "Z3AGSLayerFactory.h"
-#import <Z3Login/Z3MobileConfig.h>
-#import <Z3Login/Z3MapConfig.h>
+#import "Z3MobileConfig.h"
+#import "Z3MapConfig.h"
 #import <ArcGIS/ArcGIS.h>
 @implementation Z3AGSLayerFactory
 + (instancetype)factory {

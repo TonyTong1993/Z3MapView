@@ -121,6 +121,9 @@
         [weakSelf hidenAccessoryView];
         if ([response.data count] == 0) {
             [self showToast:@"未查询到数据"];
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
+                [weakSelf.delegate identityContextQueryFailure:weakSelf];
+            }
             return;
         }
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
