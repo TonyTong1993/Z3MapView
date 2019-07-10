@@ -11,6 +11,7 @@
 #import <ArcGIS/AGSPoint.h>
 #import "CoorTranUtil.h"
 #import "Z3MobileConfig.h"
+
 @implementation AGSPointFactory
 + (instancetype)factory {
     return [[super alloc] init];
