@@ -62,8 +62,8 @@
     NSArray *trace = [result valueForKey:@"trace"];
     NSMutableArray *temp = [NSMutableArray array];
     [trace enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        double latitude = [obj doubleValueForKey:@"lat" default:0.0];
-        double longitude = [obj doubleValueForKey:@"lon" default:0.0];
+        double latitude = [[obj valueForKey:@"lat"] doubleValue];
+        double longitude = [[obj valueForKey:@"lon"] doubleValue];
         
         AGSPoint *point = [[AGSPointFactory factory] pointWithLatitude:latitude longitude:longitude wkid:2437];
         [temp addObject:point];

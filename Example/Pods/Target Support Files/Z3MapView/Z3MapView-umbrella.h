@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "AGSPointFactory.h"
 #import "Z3AGSCalloutViewIPad.h"
 #import "Z3AGSLayerFactory.h"
 #import "Z3AGSPopupFactory.h"
