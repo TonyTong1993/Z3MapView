@@ -112,7 +112,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setDisplayPopup:(BOOL)showPopup;
 
-- (void)dissmiss;//清除查询数据，并执行resume操作
+- (void)clear;//清除查询数据，并执行resume操作,如果当前正在查询，则不处理响应
+- (void)dissmiss;//清除数据，结束查询
 - (void)resume;//恢复查询触摸交换事件
 - (void)pause;//阻止查询触摸交换事件
 - (void)stop;//禁止触摸事件的交换

@@ -6,10 +6,10 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 
-#import "Z3DeviceMetaBuilder.h"
+#import "Z3GISMetaBuilder.h"
 #import "Z3MobileConfig.h"
 #import "Z3GISMeta.h"
-@implementation Z3DeviceMetaBuilder
+@implementation Z3GISMetaBuilder
 + (instancetype)builder {
     return [[super alloc] init];
 }
@@ -34,4 +34,15 @@
     NSAssert(deviceInfo, @"not find device info in config xml");
     return deviceInfo;
 }
+
+- (NSString *)allGISMetaLayerIDs {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSMutableString *mstr = [[NSMutableString alloc] initWithString:@"all:"];
+    for (Z3GISMeta *meta in metas) {
+        [mstr appendFormat:@"%@,",meta.layerid];
+    }
+    return mstr;
+}
+
+
 @end

@@ -120,7 +120,7 @@
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf hidenAccessoryView];
         if ([response.data count] == 0) {
-            [self showToast:@"未查询到数据"];
+            [weakSelf showToast:@"未查询到数据"];
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
                 [weakSelf.delegate identityContextQueryFailure:weakSelf];
             }
@@ -129,7 +129,7 @@
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
             [weakSelf.delegate identityContextQuerySuccess:weakSelf identityResults:response.data];
         }
-        [self pause];
+        [weakSelf pause];
         if (weakSelf.displayIdentityResultContext == nil) {
              weakSelf.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:weakSelf.mapView identityResults:response.data];
             [weakSelf.displayIdentityResultContext setShowPopup:weakSelf.showPopup];
@@ -139,7 +139,7 @@
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
         dispatch_async(dispatch_get_main_queue(), ^{
              [weakSelf hidenAccessoryView];
-             [self showToast:@"未查询到数据"];
+             [weakSelf showToast:@"未查询到数据"];
         });
        
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
@@ -176,9 +176,20 @@
     [MBProgressHUD hideHUDForView:view animated:YES];
 }
 
+- (void)clear {
+    if (![self.identityRequest isExecuting]) {
+        [self.displayIdentityResultContext dismiss];
+        [self resume];
+    }
+}
+
 - (void)dissmiss {
-    [self.displayIdentityResultContext dismiss];
-    [self resume];
+    if ([self.identityRequest isExecuting]) {
+        [self.identityRequest.requestTask cancel];
+        [self hidenAccessoryView];
+        self.identityRequest = nil;
+    }
+    [self clear];
 }
 
 - (void)pause {

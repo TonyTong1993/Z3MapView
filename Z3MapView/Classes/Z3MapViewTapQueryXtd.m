@@ -19,6 +19,11 @@
     [graphic setSelected:YES];
 }
 
+- (void)dismiss {
+    [super dismiss];
+    [self dissmissGraphicsForQuery];
+}
+
 - (void)dissmissGraphicsForQuery {
     if (self.queryGraphicsOverlay) {
         [self.queryGraphicsOverlay.graphics removeAllObjects];

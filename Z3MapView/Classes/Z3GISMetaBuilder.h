@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Z3DeviceMetaBuilder : NSObject
+@interface Z3GISMetaBuilder : NSObject
 + (instancetype)builder;
 
 /**
@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSDictionary *)buildDeviceMetaWithTargetLayerName:(NSString *)layerName
                                        targetLayerId:(NSInteger)layerId;
+
+- (NSString *)allGISMetaLayerIDs;
 @end
 
 NS_ASSUME_NONNULL_END

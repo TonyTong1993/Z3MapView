@@ -32,7 +32,6 @@
 }
 
 - (void)dealloc {
-    [self dismiss];
     _identityContext = nil;
 }
 
@@ -47,8 +46,6 @@
     self.targetViewController.navigationItem.rightBarButtonItem = cleanItem;
 }
 
-
-
 - (void)dismiss {
     [super dismiss];
     [_identityContext dissmiss];
@@ -59,7 +56,7 @@
 }
 
 - (void)clear {
-    [_identityContext dissmiss];
+    [_identityContext clear];
     
 }
 
