@@ -15,6 +15,7 @@ typedef void(^OnComplicationBlock)(void);
 @property (nonatomic,weak,readonly) UIViewController *targetViewController;
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,copy,readonly) OnComplicationBlock listener;
+@property (nonatomic,copy) NSDictionary *userInfo;
 
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
