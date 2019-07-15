@@ -43,4 +43,17 @@
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:normalSymbol attributes:attributes];
     return graphic;
 }
+
+- (AGSGraphic *)buildSimplePolygonGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes{
+    if ([geometry isKindOfClass:[AGSPoint class]]) {
+        return [self buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+    }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
+         return [self buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:attributes];
+    }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
+         return [self buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)geometry attributes:attributes];
+    }
+    NSAssert(nil, @"please check geometry type");
+    return nil;
+}
+
 @end

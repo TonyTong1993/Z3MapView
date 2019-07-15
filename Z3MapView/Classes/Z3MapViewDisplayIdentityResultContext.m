@@ -36,8 +36,6 @@
 
 - (void)dealloc {
     [self dismiss];
-    [self.mapView.graphicsOverlays removeObject:self.mGraphicsOverlay];
-    self.mGraphicsOverlay = nil;
 }
 
 - (void)setShowPopup:(BOOL)showPopup {
@@ -187,8 +185,8 @@
     }
     [self.mapView setViewpointCenter:center completion:^(BOOL finished) {
         double scale =  self.mapView.mapScale;
-        if (scale > 1000) {
-            [self.mapView setViewpointScale:1000 completion:^(BOOL finished) {
+        if (scale > 2000) {
+            [self.mapView setViewpointScale:2000 completion:^(BOOL finished) {
                 [self dispalyPopview];
             }];
         }else {

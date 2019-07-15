@@ -20,6 +20,7 @@ extern NSString * const TRACK_GRAPHICS_OVERLAY_ID;
 - (void)dismiss;
 - (void)updateNavigationBar;
 - (void)rollbackNavgationBar;
+- (void)clearSubViewsInMapView;
 @end
 @class AGSSketchStyle,AGSSketchEditConfiguration;
 @interface Z3MapViewMeasureXtd (Private)

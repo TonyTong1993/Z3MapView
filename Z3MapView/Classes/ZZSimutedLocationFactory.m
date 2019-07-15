@@ -10,7 +10,7 @@
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MobileConfig.h"
 #import "CoorTranUtil.h"
-#import "AGSPointFactory.h"
+#import "Z3CoordinateConvertFactory.h"
 @implementation Z3SimutedLocationFactory
 + (instancetype)factory {
     return [[super alloc] init];
@@ -44,8 +44,7 @@
         [[obj.points array] enumerateObjectsUsingBlock:^(AGSPoint * _Nonnull point, NSUInteger idx, BOOL * _Nonnull stop) {
             CoorTranUtil *coorTrans = [Z3MobileConfig shareConfig].coorTrans;
             CGPoint position = [coorTrans CoorTransReverse:point.x Y:point.y];
-//             CLLocationCoordinate2D coordinate  = CLLocationCoordinate2DMake(position.x, position.y);
-            CLLocationCoordinate2D coordinate = [point toCLLocationCoordinate2D];
+            CLLocationCoordinate2D coordinate  = CLLocationCoordinate2DMake(position.x, position.y);
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate altitude:0.0 horizontalAccuracy:50 verticalAccuracy:50 timestamp:[NSDate date]];
             [points addObject:location];
         }];
@@ -65,7 +64,7 @@
         double latitude = [[obj valueForKey:@"lat"] doubleValue];
         double longitude = [[obj valueForKey:@"lon"] doubleValue];
         
-        AGSPoint *point = [[AGSPointFactory factory] pointWithLatitude:latitude longitude:longitude wkid:2437];
+        AGSPoint *point = [[Z3CoordinateConvertFactory factory] pointWithLatitude:latitude longitude:longitude wkid:2437];
         [temp addObject:point];
     }];
     AGSPolylineBuilder *builder = [[AGSPolylineBuilder alloc] initWithPoints:temp];

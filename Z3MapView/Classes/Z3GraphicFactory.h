@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class AGSGraphic,Z3FlashGraphic,AGSPoint,AGSPolyline,AGSEnvelope,AGSPolygon;
+@class AGSGraphic,Z3FlashGraphic,AGSPoint,AGSPolyline,AGSEnvelope,AGSPolygon,AGSGeometry;
 @interface Z3GraphicFactory : NSObject
 + (instancetype)factory;
 
@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
                                           attributes:(NSDictionary * _Nullable)attributes;
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
                                           attributes:(NSDictionary *)attributes;
+- (AGSGraphic *)buildSimplePolygonGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

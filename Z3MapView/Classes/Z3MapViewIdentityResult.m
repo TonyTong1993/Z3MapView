@@ -8,6 +8,7 @@
 
 #import "Z3MapViewIdentityResult.h"
 #import <ArcGIS/ArcGIS.h>
+#import "Z3CoordinateConvertFactory.h"
 @implementation Z3MapViewIdentityResult
 
 - (AGSGeometry *)toGeometry {
@@ -19,6 +20,10 @@
         NSAssert(false, @"conver to AGSGeometry failure");
     }
     return geometry;
+}
+
+- (CLLocation *)destination {
+   return [[Z3CoordinateConvertFactory factory] locaitonWithGeometry:[self toGeometry]];
 }
 
 

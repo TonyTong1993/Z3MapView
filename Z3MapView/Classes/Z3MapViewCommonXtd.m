@@ -62,6 +62,13 @@
     }
 }
 
+- (void)clearSubViewsInMapView{
+    NSArray *subViews = [self.mapView subviews];
+    for (UIView *subView in subViews) {
+        [subView removeFromSuperview];
+    }
+}
+
 
 @end
 

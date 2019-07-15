@@ -26,6 +26,7 @@
         Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];
         NSString *identityURL = [task.baseURL stringByAppendingPathComponent:@"identify"];
         [_identityContext setIdentityURL:identityURL];
+       
     }
     
     return self;

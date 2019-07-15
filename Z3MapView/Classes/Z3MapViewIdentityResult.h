@@ -75,6 +75,14 @@ NS_ASSUME_NONNULL_BEGIN
 //获取IdentityResult的地理信息 构建点类型
 - (AGSGeometry *)toGeometry;
 
+/**
+ 获取导航的目的地
+
+ @return 目的地
+ */
+- (CLLocation *)destination;
+
+
 
 @end
 
