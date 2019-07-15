@@ -10,7 +10,7 @@
 #import <CoreLocation/CLLocation.h>
 NS_ASSUME_NONNULL_BEGIN
 @class AGSPoint,AGSSpatialReference;
-@interface AGSPointFactory : NSObject
+@interface Z3CoordinateConvertFactory : NSObject
 + (instancetype)factory;
 //WGS48
 - (AGSPoint *)pointWithCLLocation:(CLLocation *)location
