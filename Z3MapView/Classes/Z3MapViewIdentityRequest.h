@@ -6,7 +6,7 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 
-#import <Z3Network/Z3Network.h>
+#import "Z3Network.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
