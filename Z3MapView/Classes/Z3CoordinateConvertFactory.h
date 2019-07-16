@@ -7,7 +7,7 @@
 //坐标转换的工具类
 
 #import <Foundation/Foundation.h>
-
+#import <CoreLocation/CoreLocation.h>
 NS_ASSUME_NONNULL_BEGIN
 @class AGSPoint,AGSSpatialReference,CLLocation,AGSGeometry;
 @interface Z3CoordinateConvertFactory : NSObject

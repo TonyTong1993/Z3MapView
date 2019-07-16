@@ -7,12 +7,15 @@
 //
 
 #import "Z3AppDelegate.h"
-
+#import <Z3Login/Z3LoginViewController.h>
 @implementation Z3AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    Z3LoginViewController *login = [[Z3LoginViewController alloc] initWithLoginSuccessBlock:^(id result) {
+        
+    }];
     return YES;
 }
 
