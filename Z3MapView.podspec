@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Z3MapView'
-  s.version          = '0.1.0'
+  s.version          = '0.1.2'
   s.summary          = 'Z3MapView for zzht to build mapView'
 
 # This description is used to generate tags and improve search results.
@@ -39,7 +39,7 @@ TODO: Add long description of the pod here.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'MapKit'
-  s.vendored_frameworks = 'ArcGIS.framework'
+  s.vendored_frameworks = 'Frameworks/ArcGIS.framework'
   #s.dependency 'ArcGIS-Runtime-SDK-iOS', '~> 100.4'
   s.dependency 'Z3Login','~> 0.1.1'
   s.dependency 'Z3Network', '~>0.0.1'

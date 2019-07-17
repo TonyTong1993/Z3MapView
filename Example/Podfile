@@ -1,7 +1,7 @@
 use_frameworks!
 #CocoaPods 重复生成 UUID 的解决
 install! 'cocoapods', :deterministic_uuids => false
-platform :ios, '10.0'
+platform :ios, '11.0'
 target 'Z3MapView_Example' do
   pod 'Z3MapView', :path => '../'
   pod 'Z3Login', :path => '../../Z3Login'

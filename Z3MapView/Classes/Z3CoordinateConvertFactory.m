@@ -7,10 +7,10 @@
     //
 
 #import "Z3CoordinateConvertFactory.h"
-#import <ArcGIS/AGSSpatialReference.h>
 #import <ArcGIS/ArcGIS.h>
 #import "CoorTranUtil.h"
 #import "Z3MobileConfig.h"
+
 @implementation Z3CoordinateConvertFactory
 + (instancetype)factory {
     return [[super alloc] init];
