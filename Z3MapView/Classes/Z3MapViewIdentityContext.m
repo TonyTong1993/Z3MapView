@@ -55,6 +55,8 @@
            AGSGraphic *graphic = [identifyResult.graphics firstObject];
             if (graphic) {
                 [weaksSelf.displayIdentityResultContext setSelectedIdentityGraphic:graphic];
+            }else {
+                [weaksSelf clear];
             }
         }];
         return;

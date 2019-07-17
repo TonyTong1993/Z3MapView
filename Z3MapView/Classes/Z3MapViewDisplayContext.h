@@ -32,6 +32,10 @@ typedef void(^MapViewLoadStatusListener)(NSInteger status);
 - (void)zoomToInitialEnvelop;
 
 /**
+  显示中心点所在位置的控件
+ */
+- (void)showCenterPropertyView;
+/**
  弹窗图层控制的popup view
 
  @param dataSource 图层数据源

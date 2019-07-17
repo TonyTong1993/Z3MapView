@@ -143,8 +143,15 @@
         [self.mGraphicsOverlay.graphics removeAllObjects];
         [self.graphics removeAllObjects];
     }
-    if (_displayIdentityResultView) {
-        [self dismissPopupView];
+    
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+        if (_displayIdentityResultView) {
+            [self dismissPopupView];
+        }
+    }
+    
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        [self.mapView.callout dismiss];
     }
 }
 

@@ -13,9 +13,16 @@
 #import "Z3MapViewOperationBuilder.h"
 #import "Z3SettingsManager.h"
 #import <YYKit/YYKit.h>
+#import "Z3MapViewCenterPropertyView.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
 @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
+
+/**
+ 显示当前地图中心点的文本
+ */
+@property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
+
 @end
 @implementation Z3MapViewDisplayContext
 
@@ -31,16 +38,25 @@ static NSString *context = @"Z3MapViewDisplayContext";
 - (void)loadAGSLayers {
     AGSMap *map = self.mapView.map;
     NSAssert(map, @"map must not be null,please set map before to loadAGSLayers");
-    NSArray *layers = [[Z3AGSLayerFactory factory] loadMapLayers];
-    NSAssert(layers.count, @"layers count is 0,please check Z3AGSLayerFactory loadMapLayers method");
-    [map.operationalLayers addObjectsFromArray:layers];
-    [self notifyMapViewLoadStatus];
+    Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
+    NSArray *layers = [factory loadMapLayers];
+    if (!layers.count) {
+        [factory loadOfflineMapLayersFromGeoDatabase:^(NSArray * _Nonnull layers) {
+            [map.operationalLayers addObjectsFromArray:layers];
+        }];
+    }else {
+        [map.operationalLayers addObjectsFromArray:layers];
+    }
+    
+     [self notifyMapViewLoadStatus];
 }
 
 - (void)notifyMapViewLoadStatus {
     AGSMap *map = self.mapView.map;
     [map addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
+    [self.mapView addObserver:self forKeyPath:@"visibleArea" options:NSKeyValueObservingOptionNew context:&context];
 }
+
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"loadStatus"]) {
@@ -64,12 +80,17 @@ static NSString *context = @"Z3MapViewDisplayContext";
                 self.loadStatusListener(status);
             }
         });
+    }else if ([keyPath isEqualToString:@"visibleArea"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateCenterPropertyView];
+        });
     }
 }
 
 - (void)dealloc {
     AGSMap *map = self.mapView.map;
     [map removeObserver:self forKeyPath:@"loadStatus"];
+    [self.mapView removeObserver:self forKeyPath:@"visibleArea"];
 }
 
 - (void)setMapViewLoadStatusListener:(MapViewLoadStatusListener)listener {
@@ -101,9 +122,10 @@ static NSString *context = @"Z3MapViewDisplayContext";
 }
 
 - (void)zoomToEnvelope:(AGSEnvelope *)envelop {
-    NSAssert(!envelop.isEmpty, @"envelop must not be empty");
-    AGSViewpoint *viewpoint = [[AGSViewpoint alloc] initWithTargetExtent:envelop];
-    [self.mapView setViewpoint:viewpoint];
+    if (envelop) {
+        AGSViewpoint *viewpoint = [[AGSViewpoint alloc] initWithTargetExtent:envelop];
+        [self.mapView setViewpoint:viewpoint];
+    }
 }
 
 - (void)zoomToPoint:(AGSPoint *)point withScale:(double)scale {
@@ -123,6 +145,32 @@ static NSString *context = @"Z3MapViewDisplayContext";
 }
 
 #pragma mark - Control PopupView
+- (void)showCenterPropertyView {
+    if (!_centerPropertyView) {
+        _centerPropertyView = [[Z3MapViewCenterPropertyView alloc] init];
+        _centerPropertyView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.mapView addSubview:_centerPropertyView];
+        [_centerPropertyView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.mapView.mas_left).offset(25);
+            make.bottom.mas_equalTo(self.mapView.mas_bottom).offset(-18);
+            make.width.mas_equalTo(206);
+            make.height.mas_equalTo(18);
+        }];
+    }
+    [self updateCenterPropertyView];
+}
+
+- (void)updateCenterPropertyView {
+    if (_centerPropertyView) {
+        CGPoint centerP = self.mapView.center;
+        AGSPoint *center = [self.mapView screenToLocation:centerP];
+        [_centerPropertyView updateX:center.x Y:center.y];
+        
+    }
+}
+
+
+
 - (void)showLayerFilterPopUpViewWithDataSource:(NSArray *)dataSource delegate:(id<Z3MapViewOperationDelegate>)delegate{
     UIWindow *window = [UIApplication sharedApplication].delegate.window;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
@@ -174,7 +222,6 @@ static NSString *context = @"Z3MapViewDisplayContext";
     operationView.transform = CGAffineTransformIdentity;//先让要显示的view最小直至消失
     [UIView commitAnimations]; //启动动画
 }
-
 
 
 @end

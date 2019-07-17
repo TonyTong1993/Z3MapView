@@ -38,7 +38,10 @@
 
 - (NSString *)materialWithAttributes:(NSDictionary *)attribues {
     NSString *material = attribues[@"材质"];
-    return [NSString stringWithFormat:@"材质：%@",material];
+    if (material.length) {
+        return [NSString stringWithFormat:@"材质：%@",material];
+    }
+    return @"";
 }
 
 - (NSString *)addressWithAttributes:(NSDictionary *)attribues {
