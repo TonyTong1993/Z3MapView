@@ -22,6 +22,7 @@
     for (Z3MapLayer *mapLayer in sources) {
         AGSLayer *layer = [self loadMapLayer:mapLayer];
         if (layer != nil) {
+            layer.visible = mapLayer.visible;
             [layers addObject:layer];
         }
     }
