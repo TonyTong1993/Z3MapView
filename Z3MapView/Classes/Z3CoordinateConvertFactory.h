@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 //WGS48
 - (AGSPoint *)pointWithCLLocation:(CLLocation *)location
                   wkid:(NSUInteger)wkid;
+
+- (CGPoint)cg_pointWithCLLocation:(CLLocation *)location
+                             wkid:(NSUInteger)wkid;
+
 - (AGSPoint *)pointWithCLLocation:(CLLocation *)location
                   spatialRefrence:(AGSSpatialReference *)spatialRefrence;
 - (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate

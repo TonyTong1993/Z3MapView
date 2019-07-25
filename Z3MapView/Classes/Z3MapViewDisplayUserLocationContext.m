@@ -12,8 +12,10 @@
 #import "Z3AGSSymbolFactory.h"
 #import "Z3SettingsManager.h"
 #import "Z3SimutedLocationFactory.h"
+#import "Z3GraphicFactory.h"
 @interface Z3MapViewDisplayUserLocationContext()
 @property (nonatomic,assign) BOOL showTrack;
+@property (nonatomic,strong) AGSGraphic *locationGraphic;
 @end
 @implementation Z3MapViewDisplayUserLocationContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
@@ -25,8 +27,6 @@
     return self;
 }
 
-
-
 - (void)showUserTrack:(BOOL)show {
     _showTrack = show;
 }
@@ -34,8 +34,17 @@
 - (void)showUserLocation {
     [self setLocationDataSource];
     self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeOff;
-    [self.mapView.locationDisplay.dataSource startWithCompletion:nil];
-    
+    [self.mapView.locationDisplay.dataSource startWithCompletion:^(NSError * _Nullable error) {
+        if (error) {
+            [MBProgressHUD showError:[error localizedDescription]];
+        }
+    }];
+    self.mapView.locationDisplay.showLocation = NO;
+    [[self trackGraphicsOverlay].graphics addObject:self.locationGraphic];
+}
+
+- (void)updateLocation:(AGSPoint *)point {
+    [self.locationGraphic setGeometry:point];
 }
 
 //TODO: 国际化
@@ -65,15 +74,32 @@
         AGSSimulatedLocationDataSource *dataSource = [[AGSSimulatedLocationDataSource alloc] init];
         [dataSource setLocationsWithPolyline:polyline];
         [self.mapView.locationDisplay setDataSource:dataSource];
+        [dataSource startWithCompletion:^(NSError * _Nullable error) {
+            if (error) {
+                [MBProgressHUD showError:[error localizedDescription]];
+            }
+        }];
     }else {
        AGSCLLocationDataSource *dataSource = [[AGSCLLocationDataSource alloc] init];
         dataSource.locationManager.distanceFilter = 5.0f;
        [self.mapView.locationDisplay setDataSource:dataSource];
+        [dataSource startWithCompletion:^(NSError * _Nullable error) {
+            if (error) {
+                [MBProgressHUD showError:[error localizedDescription]];
+            }
+        }];
     }
 }
 
+- (AGSGraphic *)locationGraphic {
+    if (!_locationGraphic) {
+       _locationGraphic = [[Z3GraphicFactory factory] buildLocationMarkGraphicWithPoint:nil attributes:nil];
+    }
+    
+    return _locationGraphic;
+}
 
-- (AGSGraphicsOverlay *)identityGraphicsOverlay {
+- (AGSGraphicsOverlay *)trackGraphicsOverlay {
     AGSGraphicsOverlay *result = nil;
     for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
         if ([overlay.overlayID isEqualToString:TRACK_GRAPHICS_OVERLAY_ID]) {

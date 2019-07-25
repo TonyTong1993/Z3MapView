@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSSymbol *)buildDefaultSymbol;
 - (AGSSymbol *)buildHeadingSymbol;
 
+- (AGSSymbol *)buildLocationSymbol;
+
 
 @end
 

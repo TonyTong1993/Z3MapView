@@ -167,8 +167,7 @@
     hud.mode = MBProgressHUDModeText;
     hud.label.text = message;
     [hud showAnimated:YES];
-    
-    [hud hideAnimated:YES afterDelay:2.5];
+    [hud hideAnimated:YES afterDelay:1];
 }
 
 

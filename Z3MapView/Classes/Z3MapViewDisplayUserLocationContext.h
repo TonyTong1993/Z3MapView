@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class AGSMapView;
+@class AGSMapView,AGSPoint;
 @interface Z3MapViewDisplayUserLocationContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 
@@ -23,6 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param show default NO
  */
 - (void)showUserTrack:(BOOL)show;
+
+/**
+ 更新用户位置
+
+ @param point 当前位置
+ */
+- (void)updateLocation:(AGSPoint *)point;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -29,6 +29,11 @@
     return [self pointWithCLLocation:location spatialRefrence:sp];
 }
 
+- (CGPoint)cg_pointWithCLLocation:(CLLocation *)location wkid:(NSUInteger)wkid {
+   AGSPoint *point = [self pointWithCLLocation:location wkid:wkid];
+    return CGPointMake(point.x, point.y);
+}
+
 - (AGSPoint *)pointWithCLLocation:(CLLocation *)location spatialRefrence:(AGSSpatialReference *)spatialRefrence {
     return [self pointWithCoordinate2D:location.coordinate spatialRefrence:spatialRefrence];
 }
