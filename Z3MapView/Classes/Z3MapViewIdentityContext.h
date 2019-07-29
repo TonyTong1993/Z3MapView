@@ -94,6 +94,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context;
 @end
 
+typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
+    Z3MapViewIdentityContextModeIdentity,
+    Z3MapViewIdentityContextModeQuery
+};
 @interface Z3MapViewIdentityContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak) id<Z3MapViewIdentityContextDelegate> delegate;
@@ -112,12 +116,31 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setDisplayPopup:(BOOL)showPopup;
 
+- (void)setMode:(Z3MapViewIdentityContextMode)mode;
+
 - (void)clear;//清除查询数据，并执行resume操作,如果当前正在查询，则不处理响应
 - (void)dissmiss;//清除数据，结束查询
 - (void)resume;//恢复查询触摸交换事件
 - (void)pause;//阻止查询触摸交换事件
 - (void)stop;//禁止触摸事件的交换
 
+
+/**
+ 默认查询
+
+ @param geometry 地理信息
+ @param userInfo 用户额外数据
+ */
+- (void)identifyGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary * _Nullable)userInfo;
+
+
+/**
+ 指定图层的query
+
+ @param geometry 查询范围
+ @param userInfo 用户额外数据
+ */
+- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo;
 
 /**
  开放查询操作

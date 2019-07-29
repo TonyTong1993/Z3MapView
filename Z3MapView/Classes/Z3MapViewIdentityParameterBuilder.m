@@ -45,13 +45,16 @@
         NSAssert(false, @"geometry to json string failure");
     }
     NSString *imageDisplay = @"1080,1767,96";
-        //获取查询的图层
-    NSString *layerIDs = [Z3GISMetaBuilder builder].allGISMetaLayerIDs;
+    
     NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
     if (userInfo) {
         [mparams addEntriesFromDictionary:userInfo];
     }
-    mparams[@"layers"] = layerIDs;
+    if (![mparams.allKeys containsObject:@"layers"]) {
+        //获取查询的图层
+        NSString *layerIDs = [Z3GISMetaBuilder builder].allGISMetaLayerIDs;
+        mparams[@"layers"] = layerIDs;
+    }
     mparams[@"geometryType"] = geometryType;
     mparams[@"geometry"] = geometryJsonString;
     mparams[@"mapExtent"] = extentJsonString ;
@@ -61,6 +64,41 @@
     mparams[@"returnGeometry"] = @"true";
     mparams[@"returnZ"] = @(false);
     mparams[@"returnM"] = @(false);
+    return [mparams copy];
+}
+
+- (NSDictionary *)buildQueryParameterWithGeometry:(AGSGeometry *)geometry
+                                            userInfo:(NSDictionary *)userInfo{
+    NSString *geometryType = @"esriGeometryEnvelope";
+    AGSEnvelope *envelop = nil;
+    if ([geometry isKindOfClass:[AGSPoint class]]) {
+        geometryType = @"esriGeometryEnvelope";
+        envelop = [geometry extent];
+    }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
+        geometryType = @"line";
+        envelop = [geometry extent];
+    }else if ([geometry isKindOfClass:[AGSEnvelope class]]) {
+        geometryType = @"esriGeometryEnvelope";
+        envelop = (AGSEnvelope *)geometry;
+    }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
+        geometryType = @"esriGeometryEnvelope";
+        envelop = [geometry extent];
+    }
+    NSError * __autoreleasing error = nil;
+    NSDictionary *geometryJson= [envelop toJSON:&error];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:geometryJson options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *geometryJsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if (error) {
+        NSAssert(false, @"geometry to json string failure");
+    }
+    NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
+    if (userInfo) {
+        [mparams addEntriesFromDictionary:userInfo];
+    }
+    
+    mparams[@"geometryType"] = geometryType;
+    mparams[@"geometry"] = geometryJsonString;
+    mparams[@"returnGeometry"] = @"true";
     return [mparams copy];
 }
 @end

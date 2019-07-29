@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
                                            mapExtent:(AGSGeometry *)mapExtent
                                            tolerance:(double)tolerance
                                             userInfo:(NSDictionary *)userInfo;
+- (NSDictionary *)buildQueryParameterWithGeometry:(AGSGeometry *)geometry
+                                         userInfo:(NSDictionary *)userInfo;
 @end
 
 NS_ASSUME_NONNULL_END

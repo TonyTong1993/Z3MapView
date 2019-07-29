@@ -15,6 +15,7 @@
 #import "Z3MobileTask.h"
 @interface Z3MapViewCommonQueryXtd()
 @property (nonatomic,strong) NSArray *buttons;
+@property (nonatomic,copy) ComplicationHander handler;
 @end
 @implementation Z3MapViewCommonQueryXtd
 @synthesize identityContext = _identityContext;
@@ -61,23 +62,58 @@
     
 }
 
+- (void)setIdentityUserInfo:(NSDictionary *)userInfo {
+    self.userInfo = userInfo;
+}
+
+- (void)setIdentityMode:(Z3MapViewIdentityContextMode)mode {
+    [self.identityContext setMode:mode];
+}
+
 - (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
     
     return (AGSGeometry *)mapPoint;
 }
 
+- (NSDictionary *)userInfoForIdentityContext:(Z3MapViewIdentityContext *)context {
+    return self.userInfo;
+}
+
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(nonnull NSArray *)results {
-    if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
-        [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
-        [self.targetViewController.tabBarController.tabBar setHidden:YES];
-        [self.mapView setNeedsUpdateConstraints];
-    }else {
-        
+    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)) {
+        if (self.targetViewController.tabBarController) {
+            [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
+            [self.targetViewController.tabBarController.tabBar setHidden:YES];
+            [self.mapView setNeedsUpdateConstraints];
+        }
+    }
+    
+    if (self.handler) {
+        self.handler(results, nil);
     }
     
 }
 
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context {
+    if (self.handler) {
+        NSErrorDomain domain = @"mapView.identity.failure";
+        NSInteger errorCode = 444;
+        NSError *error = [NSError errorWithDomain:domain code:errorCode userInfo:nil];
+        self.handler(nil, error);
+    }
+}
+
+- (void)queryWithGeometry:(AGSGeometry *)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable, NSError * _Nullable))complcation {
+    self.handler =  complcation;
+    Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];
+    NSNumber *layerId = arguments[@"layers"];
+    NSString *layerStr = [layerId stringValue];
+    NSString *layerPath = [task.baseURL stringByAppendingPathComponent:layerStr];
+    NSString *identityURL = [layerPath stringByAppendingPathComponent:@"query"];
+    [_identityContext setIdentityURL:identityURL];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:arguments];
+    [userInfo removeObjectForKey:@"layers"];
+    [self.identityContext queryFeaturesWithGeometry:geometry userInfo:userInfo];
     
 }
 

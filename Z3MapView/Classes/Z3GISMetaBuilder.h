@@ -24,6 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
                                        targetLayerId:(NSInteger)layerId;
 
 - (NSString *)allGISMetaLayerIDs;
+
+/**
+ 创建查询条件
+
+ @return 查询条件集合
+ */
+- (NSArray *)buildFeatureQueryConditions;
+
 @end
 
 NS_ASSUME_NONNULL_END

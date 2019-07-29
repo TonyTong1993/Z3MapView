@@ -11,7 +11,7 @@
 #import "Z3MapViewMeasureXtd.h"
 #import <ArcGIS/AGSEnumerations.h>
 NS_ASSUME_NONNULL_BEGIN
-
+typedef void (^ComplicationHander)(NSArray * _Nullable results,NSError * _Nullable error);
 extern NSString * const IDENTITY_GRAPHICS_OVERLAY_ID;
 extern NSString * const QUERY_GRAPHICS_OVERLAY_ID;
 extern NSString * const TRACK_GRAPHICS_OVERLAY_ID;

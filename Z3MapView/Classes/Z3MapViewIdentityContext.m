@@ -10,17 +10,21 @@
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewIdentityRequest.h"
 #import "Z3MapViewIdentityResponse.h"
+
+#import "Z3MapViewQueryRequest.h"
+#import "Z3MapViewQueryResponse.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "Z3MapViewDisplayIdentityResultContext.h"
 #import "Z3MapViewIdentityParameterBuilder.h"
 #import "Z3MapViewPrivate.h"
 @interface Z3MapViewIdentityContext()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSLayer *identityLayer;
-@property (nonatomic,strong) Z3MapViewIdentityRequest *identityRequest;
+@property (nonatomic,strong) Z3BaseRequest *identityRequest;
 @property (nonatomic,strong) Z3MapViewDisplayIdentityResultContext *displayIdentityResultContext;
 @property (nonatomic,assign,getter=isPause) BOOL pause;
 @property (nonatomic,copy) NSString *identityURL;
 @property (nonatomic,assign,getter=isDisplayPopup) BOOL showPopup;
+@property (nonatomic,assign) Z3MapViewIdentityContextMode mode;
 @end
 @implementation Z3MapViewIdentityContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
@@ -74,7 +78,17 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(userInfoForIdentityContext:)]) {
             userInfo = [self.delegate userInfoForIdentityContext:self];
         }
-        [self identifyGeometry:geometory userInfo:userInfo];
+        
+        switch (self.mode) {
+            case Z3MapViewIdentityContextModeIdentity:
+                [self identifyGeometry:geometory userInfo:userInfo];
+                break;
+                
+            default:
+                [self queryFeaturesWithGeometry:geometory userInfo:userInfo];
+                break;
+        }
+        
     }
 }
 
@@ -103,6 +117,11 @@
     [self identityFeaturesWithGisServer:self.identityURL geometry:geometry userInfo:userInfo];
 }
 
+- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo{
+    NSAssert(self.identityURL.length, @"identity url must not be nil");
+    [self queryFeaturesWithGisServer:self.identityURL geometry:geometry userInfo:userInfo];
+}
+
 
 - (void)identityFeaturesWithGisServer:(NSString *)url
                              geometry:(AGSGeometry *)geometry
@@ -120,34 +139,57 @@
     NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
-        [weakSelf hidenAccessoryView];
-        if ([response.data count] == 0) {
-            [weakSelf showToast:@"未查询到数据"];
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
-                [weakSelf.delegate identityContextQueryFailure:weakSelf];
-            }
-            return;
-        }
-        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
-            [weakSelf.delegate identityContextQuerySuccess:weakSelf identityResults:response.data];
-        }
-        [weakSelf pause];
-        if (weakSelf.displayIdentityResultContext == nil) {
-             weakSelf.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:weakSelf.mapView identityResults:response.data];
-            [weakSelf.displayIdentityResultContext setShowPopup:weakSelf.showPopup];
-        }else {
-            [weakSelf.displayIdentityResultContext updateIdentityResults:response.data];
-        }
+        [weakSelf handleSuccessResponse:response];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-             [weakSelf hidenAccessoryView];
-             [weakSelf showToast:@"未查询到数据"];
-        });
-       
-        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
-            [weakSelf.delegate identityContextQueryFailure:weakSelf];
-        }
+        [weakSelf handleFailureResponse:response];
     }];
+     [self.identityRequest  start];
+}
+
+- (void)queryFeaturesWithGisServer:(NSString *)url
+                             geometry:(AGSGeometry *)geometry
+                             userInfo:(NSDictionary *)userInfo {
+    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
+    __weak typeof(self) weakSelf = self;
+    self.identityRequest = [[Z3MapViewQueryRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
+        [weakSelf handleSuccessResponse:response];
+    } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
+        [weakSelf handleFailureResponse:response];
+    }];
+    [self.identityRequest  start];
+}
+
+- (void)handleSuccessResponse:(Z3BaseResponse *)response {
+    [self hidenAccessoryView];
+    if ([response.data count] == 0) {
+        //TODO: 国际化
+        [self showToast:@"未查询到数据"];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
+            [self.delegate identityContextQueryFailure:self];
+        }
+        return;
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
+        [self.delegate identityContextQuerySuccess:self identityResults:response.data];
+    }
+    [self pause];
+    if (self.displayIdentityResultContext == nil) {
+        self.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:self.mapView identityResults:response.data];
+        [self.displayIdentityResultContext setShowPopup:self.showPopup];
+    }else {
+        [self.displayIdentityResultContext updateIdentityResults:response.data];
+    }
+}
+
+- (void)handleFailureResponse:(Z3BaseResponse *)response {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hidenAccessoryView];
+        [self showToast:@"未查询到数据"];
+    });
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
+        [self.delegate identityContextQueryFailure:self];
+    }
     
     [self.identityRequest start];
     [self showAccessoryView];

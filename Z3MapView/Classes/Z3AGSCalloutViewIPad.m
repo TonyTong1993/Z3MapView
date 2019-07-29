@@ -8,6 +8,7 @@
 
 #import "Z3AGSCalloutViewIPad.h"
 #import "Z3MapViewIdentityResult.h"
+#import "Z3MobileConfig.h"
 @interface Z3AGSCalloutViewIPad()<UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,copy) NSDictionary *attributes;
@@ -53,9 +54,10 @@ static  CGFloat CalloutViewHeight = 568.0f;
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
     }
+   NSDictionary *fieldAliases = [Z3MobileConfig shareConfig].fieldAliases;
    NSString *key = [self.attributes allKeys][indexPath.row];
    NSString *value = self.attributes[key];
-   cell.textLabel.text = key;
+   cell.textLabel.text = fieldAliases[key];
    cell.detailTextLabel.text = value;
    return cell;
 }

@@ -7,7 +7,9 @@
 //
 
 #import "Z3GISMeta.h"
-
+#import "Z3FeatureLayer.h"
 @implementation Z3GISMeta
-
++ (NSDictionary<NSString *,id> *)modelContainerPropertyGenericClass {
+    return @{@"net":[Z3FeatureLayer class]};
+}
 @end

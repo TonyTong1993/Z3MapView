@@ -14,6 +14,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong,readonly) Z3MapViewIdentityContext *identityContext;
 @property (nonatomic,strong,readonly) AGSGraphicsOverlay *queryGraphicsOverlay;
 
+/**
+ 查询地理信息数据
+
+ @param geometry 地理信息
+ @param arguments 参数
+ @param complcation 结果回调
+ */
+- (void)queryWithGeometry:(AGSGeometry *)geometry
+                    arguments:(NSDictionary *)arguments
+                 complcation:(void (^)(NSArray * _Nullable results,NSError * _Nullable error))complcation;
+
+
+- (void)setIdentityMode:(Z3MapViewIdentityContextMode)mode;
+- (void)setIdentityUserInfo:(NSDictionary *)userInfo;
 //隐藏查询结果
 - (void)dismiss;
 @end

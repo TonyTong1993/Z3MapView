@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Z3MapViewRectQueryXtd : Z3MapViewCommonQueryXtd
 
+- (void)setArguments:(NSDictionary *)arguments;
+- (void)registerQueryComplcation:(void (^)(NSArray * _Nullable results,NSError * _Nullable error))complcation;
 @end
 
 NS_ASSUME_NONNULL_END
