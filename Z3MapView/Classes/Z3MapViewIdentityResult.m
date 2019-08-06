@@ -14,11 +14,22 @@
 
 - (AGSGeometry *)toGeometry {
     NSDictionary *geometryJson = self.geometry;
-    if (![[geometryJson allKeys] containsObject:@"spatialReference"]) {
+    NSDictionary *spatialReference = geometryJson[@"spatialReference"];
+    if (!(spatialReference == nil)) {
         NSMutableDictionary *mgeometry = [NSMutableDictionary dictionaryWithDictionary:geometryJson];
         [mgeometry addEntriesFromDictionary:[Z3MobileConfig shareConfig].spatialReference];
         geometryJson = [mgeometry copy];
     }
+    
+   NSInteger wkid = [spatialReference[@"spatialReference"] integerValue];
+    if (wkid <= 0) {
+        NSMutableDictionary *mSpatialReference = [NSMutableDictionary dictionaryWithDictionary:spatialReference];
+        [mSpatialReference setValue:@([Z3MobileConfig shareConfig].wkid) forKey:@"wkid"];
+        NSMutableDictionary *mgeometry = [NSMutableDictionary dictionaryWithDictionary:geometryJson];
+        [mgeometry setValue:[mSpatialReference copy] forKey:@"spatialReference"];
+        geometryJson = [mgeometry copy];
+    }
+    
     NSAssert(geometryJson, @"geometry info is null");
     NSError * __autoreleasing error = nil;
     AGSGeometry *geometry = (AGSGeometry *)[AGSGeometry fromJSON:geometryJson error:&error];

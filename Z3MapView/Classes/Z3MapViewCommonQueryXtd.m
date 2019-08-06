@@ -18,7 +18,7 @@
 @property (nonatomic,copy) ComplicationHander handler;
 @end
 @implementation Z3MapViewCommonQueryXtd
-@synthesize identityContext = _identityContext;
+@synthesize identityContext = _identityContext,queryGraphicsOverlay = _queryGraphicsOverlay;
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView {
     self = [super initWithTargetViewController:targetViewController mapView:mapView];
     if (self) {
@@ -34,6 +34,7 @@
 }
 
 - (void)dealloc {
+    _displayIdentityResultContext = nil;
     _identityContext = nil;
 }
 
@@ -51,7 +52,7 @@
 - (void)dismiss {
     [super dismiss];
     [_identityContext dissmiss];
-    if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
+    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)) {
         [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
         [self.targetViewController.tabBarController.tabBar setHidden:NO];
     }
@@ -59,7 +60,7 @@
 
 - (void)clear {
     [_identityContext clear];
-    
+    [self.displayIdentityResultContext dismiss];
 }
 
 - (void)setIdentityUserInfo:(NSDictionary *)userInfo {
@@ -88,9 +89,17 @@
         }
     }
     
+    if (self.displayIdentityResultContext == nil) {
+        self.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:self.mapView];
+        self.displayIdentityResultContext.delegate = self;
+        [self.displayIdentityResultContext setShowPopup:YES];
+    }
+   
     if (self.handler) {
         self.handler(results, nil);
     }
+    
+    [self.displayIdentityResultContext updateIdentityResults:results];
     
 }
 
@@ -101,6 +110,14 @@
         NSError *error = [NSError errorWithDomain:domain code:errorCode userInfo:nil];
         self.handler(nil, error);
     }
+}
+
+- (void)identityGraphicSuccess:(AGSGraphic *)graphic {
+     [self.displayIdentityResultContext setSelectedIdentityGraphic:graphic];
+}
+
+- (void)identityGraphicFailure {
+    [self clear];
 }
 
 - (void)queryWithGeometry:(AGSGeometry *)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable, NSError * _Nullable))complcation {
@@ -118,15 +135,16 @@
 }
 
 - (AGSGraphicsOverlay *)queryGraphicsOverlay {
-    AGSGraphicsOverlay *result = nil;
-    for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
-        if ([overlay.overlayID isEqualToString:IDENTITY_GRAPHICS_OVERLAY_ID]) {
-            result = overlay;
-            break;
+    if (_queryGraphicsOverlay == nil) {
+        for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
+            if ([overlay.overlayID isEqualToString:QUERY_GRAPHICS_OVERLAY_ID]) {
+                _queryGraphicsOverlay = overlay;
+                break;
+            }
         }
+        NSAssert(_queryGraphicsOverlay, @"query.graphics.overlay did not create");
     }
-    NSAssert(result, @"query.graphics.overlay did not create");
-    return result;
+    return _queryGraphicsOverlay;
 }
 
 @end

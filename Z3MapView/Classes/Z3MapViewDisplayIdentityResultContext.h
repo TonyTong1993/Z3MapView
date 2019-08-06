@@ -7,26 +7,60 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "Z3CalloutViewDelegate.h"
 NS_ASSUME_NONNULL_BEGIN
-@class Z3MapViewDisplayIdentityResultContext,Z3MapViewIdentityResult;
+@class Z3MapViewDisplayIdentityResultContext,Z3MapViewIdentityResult,AGSGraphic,AGSGeometry,AGSPoint;
 @protocol Z3MapViewDisplayIdentityResultContextDelegate <NSObject>
-
-
-
+- (AGSGraphic *)pointGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
+- (AGSGraphic *)polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
+- (AGSGraphic *)polygonGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
+- (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResultInMapView;
+- (AGSPoint *)tapLocationForDisplayCalloutView;
 @end
 
 
-@class AGSMapView,AGSGraphic;
+@class AGSMapView,AGSGraphic,Z3MapViewPipeAnaylseResult;
 @interface Z3MapViewDisplayIdentityResultContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak,readonly) AGSGraphic *selectedGraphic;
+@property (nonatomic,weak) id<Z3MapViewDisplayIdentityResultContextDelegate> delegate;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithAGSMapView:(AGSMapView *)mapView identityResults:(NSArray *)results;
+- (instancetype)initWithAGSMapView:(AGSMapView *)mapView;
+
+/**
+ 将Identity or Query 接口返回的数据显示到地图上
+
+ @param results 查询数据结果
+ */
 - (void)updateIdentityResults:(NSArray *)results;
-- (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic;
+
+/**
+ 将爆管分析结果绘制到地图上
+
+ @param result 分析结果
+ */
+- (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result;
+
+/**
+ 设置选中的Graphic
+
+ @param graphic 要素
+ */
+- (void)setSelectedIdentityGraphic:(AGSGraphic * _Nullable)graphic;
+
+/**
+ 控制是否显示popup view
+
+ @param showPopup default No
+ */
 - (void)setShowPopup:(BOOL)showPopup;
+
+
+/**
+ 移除图层中的所有要素,并隐藏callout
+ */
 - (void)dismiss;
 @end
 

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Z3MapViewCommonXtd.h"
 #import "Z3MapViewMeasureXtd.h"
+#import "Z3MapViewCommonQueryXtd.h"
 #import <ArcGIS/AGSEnumerations.h>
 NS_ASSUME_NONNULL_BEGIN
 typedef void (^ComplicationHander)(NSArray * _Nullable results,NSError * _Nullable error);

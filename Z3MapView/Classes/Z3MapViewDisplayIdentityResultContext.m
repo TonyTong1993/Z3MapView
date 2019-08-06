@@ -8,12 +8,13 @@
 
 #import "Z3MapViewDisplayIdentityResultContext.h"
 #import "Z3MapViewIdentityResult.h"
+#import "Z3MapViewPipeAnaylseResult.h"
 #import "Z3DisplayIdentityResultView.h"
 #import "Z3AGSCalloutViewIPad.h"
 #import "Z3GraphicFactory.h"
 #import "Z3AGSPopupFactory.h"
 #import "Z3MapViewPrivate.h"
-
+#import "Z3MapView.h"
 #import <ArcGIS/ArcGIS.h>
 @interface Z3MapViewDisplayIdentityResultContext()<Z3DisplayIdentityResultViewDelegate>
 @property (nonatomic,copy) NSArray *results;
@@ -25,17 +26,19 @@
 @property (nonatomic,assign) BOOL showPopup;
 @end
 @implementation Z3MapViewDisplayIdentityResultContext
-- (instancetype)initWithAGSMapView:(AGSMapView *)mapView identityResults:(NSArray *)results{
+- (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
     self = [super init];
     if (self) {
         _mapView = mapView;
-        [self updateIdentityResults:results];
+        //注册通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityResultDiplayViewDidChangeSelectIndexNotification:) name:Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotification object:nil];
     }
     return self;
 }
 
 - (void)dealloc {
     [self dismiss];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotification object:nil];
 }
 
 - (void)setShowPopup:(BOOL)showPopup {
@@ -46,15 +49,34 @@
     for (Z3MapViewIdentityResult *result in self.results) {
         AGSGeometry *geometry = [result toGeometry];
         if ([geometry isKindOfClass:[AGSPoint class]]) {
-            AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:result.attributes];
+            AGSGraphic *graphic;
+            if (_delegate && [_delegate respondsToSelector:@selector(pointGraphicForDisplayIdentityResultInMapViewWithGeometry:attributes:)]) {
+                graphic =  [_delegate pointGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:result.attributes];
+            }else {
+                graphic  = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:result.attributes];
+            }
+            graphic.zIndex = 1;
             [self.graphics addObject:graphic];
         }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
-            AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:result.attributes];
+            AGSGraphic *graphic;
+            if (_delegate && [_delegate respondsToSelector:@selector(polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:attributes:)]) {
+                graphic =  [_delegate polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:result.attributes];
+            }else {
+                graphic  = [[Z3GraphicFactory factory] buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:result.attributes];
+            }
+            graphic.zIndex = 0;
             [self.graphics addObject:graphic];
         }
     }
 }
 
+- (void)buildPolygonGraphicWithGeometry:(AGSPolygon *)geometry {
+     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimplePolygonGraphicWithPolygon:geometry attributes:nil];
+     graphic.zIndex = -1;
+     [self.graphics addObject:graphic];
+     self.mGraphicsOverlay = [self identityGraphicsOverlay];
+    [self.mGraphicsOverlay.graphics addObject:graphic];
+}
 
 - (AGSGraphicsOverlay *)identityGraphicsOverlay {
     AGSGraphicsOverlay *result = nil;
@@ -67,7 +89,6 @@
     NSAssert(result, @"identityGraphicsOverlay not create");
     return result;
 }
-
 
 - (void)display {
     if (_results.count) {
@@ -84,9 +105,9 @@
     [self.mGraphicsOverlay.graphics addObjectsFromArray:self.graphics];
 }
 
-
 - (void)dispalyPopview {
-    if (!_showPopup) return;
+#warning 限制当属性为nil时,不显示popView
+    if (!_showPopup || (self.selectedGraphic.attributes == nil)) return;
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         [self dispalyPopviewForIpad];
     }else if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
@@ -95,11 +116,23 @@
 }
 
 - (void)dispalyPopviewForIpad {
-    Z3AGSCalloutViewIPad *callout = [Z3AGSCalloutViewIPad calloutView];
-    [callout setIdentityAttributes:self.selectedGraphic.attributes];
+    UIView<Z3CalloutViewDelegate> *callout = nil;
+    if (_delegate && [_delegate respondsToSelector:@selector(calloutViewForDisplayIdentityResultInMapView)]) {
+        callout =  [_delegate calloutViewForDisplayIdentityResultInMapView];
+         self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionBottom;
+    }else {
+        callout = [Z3AGSCalloutViewIPad calloutView];
+        self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionLeft;
+    }
+    NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
+    Z3MapViewIdentityResult *result = self.results[index];
+    [callout setIdentityResult:result];
     [self.mapView.callout setCustomView:callout];
-    self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionLeft;
-    [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:nil animated:YES];
+    AGSPoint *tapLocation = nil;
+    if (_delegate && [_delegate respondsToSelector:@selector(tapLocationForDisplayCalloutView)]) {
+       tapLocation =  [_delegate tapLocationForDisplayCalloutView];
+    }
+    [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:tapLocation animated:YES];
 }
 
 - (void)displayPopViewForIphone {
@@ -142,6 +175,7 @@
     if (self.mGraphicsOverlay) {
         [self.mGraphicsOverlay.graphics removeAllObjects];
         [self.graphics removeAllObjects];
+        [self post:Z3MapViewIdentityContextDeselectIndexNotification message:nil];
     }
     
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
@@ -177,11 +211,21 @@
     [self display];
 }
 
+- (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result {
+    NSMutableArray *resluts = [[NSMutableArray alloc] initWithArray:result.valves];
+    [resluts addObjectsFromArray:result.users];
+    [resluts addObjectsFromArray:result.closeLines];
+    [resluts addObjectsFromArray:result.closeNodes];
+    [self updateIdentityResults:[resluts copy]];
+    [self buildPolygonGraphicWithGeometry:result.closearea];
+}
+
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic {
     if (_selectedGraphic != nil) {
          [_selectedGraphic setSelected:false];
     }
-    _selectedGraphic = graphic;
+     _selectedGraphic = graphic;
+    if (_selectedGraphic == nil) return;
     [graphic setSelected:YES];
     AGSPoint *center = nil;
     if ([graphic.geometry isKindOfClass:[AGSPoint class]]) {
@@ -190,6 +234,8 @@
         AGSPolyline *line = (AGSPolyline *) graphic.geometry;
         center = [[line.parts partAtIndex:0] startPoint];
     }
+    NSUInteger index = [self.graphics indexOfObject:graphic];
+    [self post:Z3MapViewIdentityContextDidChangeSelectIndexNotification message:@(index)];
     [self.mapView setViewpointCenter:center completion:^(BOOL finished) {
         double scale =  self.mapView.mapScale;
         if (scale > 2000) {
@@ -200,6 +246,28 @@
             [self dispalyPopview];
         }
     }];
+}
+
+- (void)post:(NSNotificationName)notificationName message:(id)message {
+    if (message) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:@{@"message":message}];
+    }else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
+    }
+}
+
+- (void)identityResultDiplayViewDidChangeSelectIndexNotification:(NSNotification *)notification {
+    NSIndexPath *indexPath = notification.userInfo[@"message"];
+    if (self.graphics.count) {
+        AGSGraphic *graphic = self.graphics[indexPath.row];
+        [self setSelectedIdentityGraphic:graphic];
+    }else {
+        [self buildGraphics];
+        [self displayGraphics];
+        AGSGraphic *graphic = self.graphics[indexPath.row];
+        [self setSelectedIdentityGraphic:graphic];
+    }
+   
 }
 
 - (Z3DisplayIdentityResultView *)displayIdentityResultView {

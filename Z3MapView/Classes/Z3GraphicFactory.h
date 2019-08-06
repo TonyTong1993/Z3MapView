@@ -25,6 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (AGSGraphic *)buildLocationMarkGraphicWithPoint:(AGSPoint *)point
                                      attributes:(NSDictionary * _Nullable)attributes;
+
+//爆管分析-爆管点
+- (AGSGraphic *)buildPipeLeakMarkGraphicWithPoint:(AGSPoint *)point
+                                     attributes:(NSDictionary * _Nullable)attributes;
+//爆管分析-阀门
+- (AGSGraphic *)buildPipeLeakValvesMarkGraphicWithPoint:(AGSPoint *)point
+                                       attributes:(NSDictionary * _Nullable)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

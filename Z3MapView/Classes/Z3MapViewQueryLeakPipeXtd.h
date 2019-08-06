@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Z3MapViewQueryLeakPipeXtd : Z3MapViewTapQueryXtd
 
+/**
+ 关阀搜索
+ */
+- (void)searchRelativeValves;
 @end
 
 NS_ASSUME_NONNULL_END

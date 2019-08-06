@@ -101,4 +101,17 @@
     mparams[@"returnGeometry"] = @"true";
     return [mparams copy];
 }
+
+- (NSDictionary *)buildPipeAnalyseParameterWithGeometry:(AGSPoint *)geometry
+                                         userInfo:(NSDictionary *)userInfo{
+  
+    NSString *geometryStr = [NSString stringWithFormat:@"%lf,%lf",geometry.x,geometry.y];
+    NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
+    if (userInfo) {
+        [mparams addEntriesFromDictionary:userInfo];
+    }
+    mparams[@"geometry"] = geometryStr;
+    mparams[@"returnGeometry"] = @"true";
+    return [mparams copy];
+}
 @end

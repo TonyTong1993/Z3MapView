@@ -39,6 +39,27 @@
     return deviceInfo;
 }
 
+- (Z3FeatureLayer *)aomen_buildDeviceMetaWithTargetLayerName:(NSString *)layerName targetLayerId:(NSInteger)layerId {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block Z3GISMeta *targetMeta = nil;
+    [metas enumerateObjectsUsingBlock:^(Z3GISMeta *meta, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([meta.layername isEqualToString:layerName]) {
+            targetMeta = meta;
+            *stop = YES;
+        }
+    }];
+    NSAssert(targetMeta, @"not find meta in config xml");
+    __block Z3FeatureLayer *deviceInfo = nil;
+    [targetMeta.net enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(Z3FeatureLayer *feature, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (feature.layerid  == layerId) {
+            deviceInfo = feature;
+            *stop = YES;
+        }
+    }];
+    NSAssert(deviceInfo, @"not find device info in config xml");
+    return deviceInfo;
+}
+
 - (NSArray *)buildFeatureQueryConditions {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableArray *conditons = [NSMutableArray array];
@@ -79,9 +100,25 @@
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableString *mstr = [[NSMutableString alloc] initWithString:@"all:"];
     for (Z3GISMeta *meta in metas) {
-        [mstr appendFormat:@"%@,",meta.layerid];
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [mstr appendFormat:@"%ld,",obj.layerid];
+        }];
     }
     return mstr;
+}
+
+- (NSString *)pipeLayerID {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSString *layerID = @"";
+    for (Z3GISMeta *meta in metas) {
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+#warning 获取管段的图层ID因项目而定
+            if ([obj.dname isEqualToString:@"PIPE"]) {
+                layerID = [NSString stringWithFormat:@"%ld,",obj.layerid];
+            }
+        }];
+    }
+    return layerID;
 }
 
 

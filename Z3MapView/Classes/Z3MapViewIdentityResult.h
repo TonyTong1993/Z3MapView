@@ -28,6 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSDictionary *attributes;
 @property (nonatomic,copy) NSArray *fields;
 @property (nonatomic,copy) NSDictionary *fieldAliases;
+
+
+/**
+ pipe leak,设置显示popUp点的位置
+ */
+@property (nonatomic,strong) AGSGeometry *displayGeometry;
+
 //获取IdentityResult的地理信息 构建点类型
 - (AGSGeometry *)toGeometry;
 

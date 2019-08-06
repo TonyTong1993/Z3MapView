@@ -78,9 +78,26 @@
 - (AGSSymbol *)buildLocationSymbol {
     //inner color EA3323 234 52 35 outer color F2A93C 242 169 60
     //TODO: 内存优化
-   AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_event_manager_location"]];
+//   AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_event_manager_location"]];
+//    return symbol;
+    
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipeleak_normal"]];
     return symbol;
     
+}
+
+- (AGSSymbol *)buildPipeLeakNormalSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipeleak_normal"]];
+    return symbol;
+}
+- (AGSSymbol *)buildPipeLeakSelectedSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipeleak_selected"]];
+    return symbol;
+}
+
+- (AGSSymbol *)buildPipeLeakValvesSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipeleak_valves"]];
+    return symbol;
 }
 
 @end

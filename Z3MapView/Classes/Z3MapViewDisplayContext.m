@@ -14,6 +14,7 @@
 #import "Z3SettingsManager.h"
 #import <YYKit/YYKit.h>
 #import "Z3MapViewCenterPropertyView.h"
+#import "Z3MapView.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
 @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
@@ -43,12 +44,25 @@ static NSString *context = @"Z3MapViewDisplayContext";
     if (!layers.count) {
         [factory loadOfflineMapLayersFromGeoDatabase:^(NSArray * _Nonnull layers) {
             [map.operationalLayers addObjectsFromArray:layers];
+            for (AGSFeatureLayer *layer in layers) {
+                [layer addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
+            }
+            
         }];
     }else {
         [map.operationalLayers addObjectsFromArray:layers];
+        for (AGSLayer *layer in layers) {
+            [layer addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
+            [layer loadWithCompletion:^(NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"%@",[error localizedDescription]);
+                }
+            }];
+        }
+        
     }
     
-     [self notifyMapViewLoadStatus];
+    [self notifyMapViewLoadStatus];
 }
 
 - (void)notifyMapViewLoadStatus {
@@ -59,7 +73,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"loadStatus"]) {
+    if ([keyPath isEqualToString:@"loadStatus"] && object == self.mapView.map) {
         NSNumber *value = change[NSKeyValueChangeNewKey];
         AGSLoadStatus status =  [value intValue];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -84,6 +98,25 @@ static NSString *context = @"Z3MapViewDisplayContext";
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateCenterPropertyView];
         });
+    }else if ([keyPath isEqualToString:@"loadStatus"] && object != self.mapView.map) {
+        NSNumber *value = change[NSKeyValueChangeNewKey];
+        AGSLoadStatus status =  [value intValue];
+        if (status == AGSLoadStatusLoaded) {
+            if ([object isKindOfClass:[AGSFeatureLayer class]]) {
+                AGSFeatureLayer *layer = object;
+                AGSFeatureTable *table = layer.featureTable;
+            }else if ([object isKindOfClass:[AGSArcGISMapImageLayer class]]) {
+                AGSArcGISMapImageLayer *layer = object;
+#warning 澳门管网宝用于区分底图和要素图层的图层名 GWDT MWS SL 代表的是澳门的要素图层
+                if ([layer.name isEqualToString:Z3MapViewOnlineFeatureLayerNameKey]) {
+                    [[Z3AGSLayerFactory factory] subLayersForOnlineWithAGSArcGISMapImageLayer:layer];
+                }
+            }else if ([object isKindOfClass:[AGSArcGISVectorTiledLayer class]]) {
+                AGSArcGISVectorTiledLayer *layer = object;
+                NSLog(@"AGSArcGISVectorTiledLayer load success");
+            }
+        }
+        
     }
 }
 
@@ -91,6 +124,9 @@ static NSString *context = @"Z3MapViewDisplayContext";
     AGSMap *map = self.mapView.map;
     [map removeObserver:self forKeyPath:@"loadStatus"];
     [self.mapView removeObserver:self forKeyPath:@"visibleArea"];
+    for (AGSLayer *layer in map.operationalLayers) {
+        [layer removeObserver:self forKeyPath:@"loadStatus"];
+    }
 }
 
 - (void)setMapViewLoadStatusListener:(MapViewLoadStatusListener)listener {
@@ -131,7 +167,10 @@ static NSString *context = @"Z3MapViewDisplayContext";
 - (void)zoomToPoint:(AGSPoint *)point withScale:(double)scale {
     NSAssert(!point.isEmpty, @"point must not be empty");
     AGSViewpoint *viewpoint = [[AGSViewpoint alloc] initWithCenter:point scale:scale];
-    [self.mapView setViewpoint:viewpoint];
+    __weak typeof(self) weakSelf = self;
+    [self.mapView setViewpoint:viewpoint completion:^(BOOL finished) {
+         NSLog(@"mapScale = %lf",weakSelf.mapView.mapScale);
+    }];
 }
 
 - (void)zoomToInitialEnvelop {

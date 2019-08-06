@@ -20,6 +20,9 @@
     [self measure];
 }
 
+- (void)dealloc {
+    [self dismiss];
+}
 
 - (void)dismiss {
     [super dismiss];
@@ -31,7 +34,6 @@
 
 - (void)updateNavigationBar {
     [super updateNavigationBar];
-    
     NSMutableArray *rightItems = [NSMutableArray arrayWithCapacity:3];
     UIImage *cleanImage = [UIImage imageNamed:@"nav_clear"];
     UIBarButtonItem *cleanItem = [[UIBarButtonItem alloc] initWithImage:cleanImage style:UIBarButtonItemStylePlain target:self action:@selector(clear)];

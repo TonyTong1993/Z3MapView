@@ -27,11 +27,16 @@
 }
 
 - (void)dealloc {
-    [self rollbackNavgationBar];
+    if (!self.targetViewController.navigationController.isNavigationBarHidden) {
+        [self rollbackNavgationBar];
+    }
+    [self dismiss];
 }
 
 - (void)display {
-    [self updateNavigationBar];
+    if (!self.targetViewController.navigationController.isNavigationBarHidden) {
+        [self updateNavigationBar];
+    }
 }
 
 - (void)setOnComplicationListener:(OnComplicationBlock)complication {

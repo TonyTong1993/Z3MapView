@@ -7,15 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Z3CalloutViewDelegate.h"
 NS_ASSUME_NONNULL_BEGIN
 @class Z3MapViewIdentityResult;
-@interface Z3AGSCalloutViewIPad : UIView
+@interface Z3AGSCalloutViewIPad : UIView<Z3CalloutViewDelegate>
 + (instancetype)calloutView;
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
-- (void)setIdentityAttributes:(NSDictionary *)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

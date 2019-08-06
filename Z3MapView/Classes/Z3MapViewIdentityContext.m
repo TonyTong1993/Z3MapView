@@ -10,17 +10,19 @@
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewIdentityRequest.h"
 #import "Z3MapViewIdentityResponse.h"
-
 #import "Z3MapViewQueryRequest.h"
 #import "Z3MapViewQueryResponse.h"
+#import "Z3MapViewPipeAnalyseRequest.h"
+#import "Z3MapViewPipeAnalyseResponse.h"
 #import <MBProgressHUD/MBProgressHUD.h>
-#import "Z3MapViewDisplayIdentityResultContext.h"
 #import "Z3MapViewIdentityParameterBuilder.h"
 #import "Z3MapViewPrivate.h"
+#import "Z3MapView.h"
 @interface Z3MapViewIdentityContext()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSLayer *identityLayer;
+@property (nonatomic,strong) AGSGraphicsOverlay *identityGraphicsOverlay;
 @property (nonatomic,strong) Z3BaseRequest *identityRequest;
-@property (nonatomic,strong) Z3MapViewDisplayIdentityResultContext *displayIdentityResultContext;
+
 @property (nonatomic,assign,getter=isPause) BOOL pause;
 @property (nonatomic,copy) NSString *identityURL;
 @property (nonatomic,assign,getter=isDisplayPopup) BOOL showPopup;
@@ -33,15 +35,17 @@
         _mapView = mapView;
         _mapView.touchDelegate = self;
         _showPopup = YES;
+        //注册通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityResultDiplayViewDidChangeSelectIndexNotification:) name:Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotification object:nil];
     }
     return self;
 }
 
 - (void)dealloc {
-    self.displayIdentityResultContext = nil;
     if ([self.identityRequest isExecuting]) {
         [self.identityRequest.requestTask cancel];
     }
+    
 }
 
 - (void)setIdentityURL:(NSString *)url {
@@ -55,12 +59,17 @@
 - (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
     if (self.isPause) {
         __weak typeof(self) weaksSelf = self;
-        [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:2 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
+        [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:12 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
            AGSGraphic *graphic = [identifyResult.graphics firstObject];
             if (graphic) {
-                [weaksSelf.displayIdentityResultContext setSelectedIdentityGraphic:graphic];
+                if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicSuccess:)]) {
+                    [weaksSelf.delegate identityGraphicSuccess:graphic];
+                }
+                
             }else {
-                [weaksSelf clear];
+                if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicFailure)]) {
+                    [weaksSelf.delegate identityGraphicFailure];
+                }
             }
         }];
         return;
@@ -93,21 +102,6 @@
 }
 
 
-- (void)geoView:(AGSGeoView *)geoView didLongPressAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
-    if (self.isPause && self.displayIdentityResultContext) {
-        __weak typeof(self) weakSelf = self;
-        [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:2 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
-            AGSGraphic *graphic = [identifyResult.graphics firstObject];
-            if (graphic == nil) {
-                return;
-            }
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContext:longTapAtScreenPoint:mapPoint:graphic:)]) {
-                [weakSelf.delegate identityContext:weakSelf doubleTapAtScreenPoint:screenPoint mapPoint:mapPoint graphic:graphic];
-            }
-        }];
-    };
-}
-
 - (void)setIdentityLayer:(AGSLayer *)layer {
     _identityLayer = layer;
 }
@@ -126,7 +120,7 @@
 - (void)identityFeaturesWithGisServer:(NSString *)url
                              geometry:(AGSGeometry *)geometry
                              userInfo:(NSDictionary *)userInfo {
-    AGSGeometry *temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:2];
+    AGSGeometry *temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
     [self identityFeaturesWithGisServer:url geometry:temp tolerance:2 userInfo:userInfo];
 }
 
@@ -138,6 +132,7 @@
     AGSEnvelope *extent = self.mapView.visibleArea.extent;
     NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
+     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleSuccessResponse:response];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
@@ -151,6 +146,7 @@
                              userInfo:(NSDictionary *)userInfo {
     NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
+    [self showAccessoryView];
     self.identityRequest = [[Z3MapViewQueryRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleSuccessResponse:response];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
@@ -159,11 +155,49 @@
     [self.identityRequest  start];
 }
 
+- (void)pipeAnalyseFeatureWithGisServer:(NSString *)url
+                               geometry:(AGSGeometry *)geometry
+                               userInfo:(NSDictionary *)userInfo{
+    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildPipeAnalyseParameterWithGeometry:geometry userInfo:userInfo];
+    __weak typeof(self) weakSelf = self;
+    [self showAccessoryView];
+    self.identityRequest = [[Z3MapViewPipeAnalyseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
+        [weakSelf handlePipeAnalyseSuccessResponse:response];
+    } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
+        [weakSelf handleFailureResponse:response];
+    }];
+    [self.identityRequest  start];
+}
+
+- (void)handlePipeAnalyseSuccessResponse:(Z3MapViewPipeAnalyseResponse *)response {
+    [self hidenAccessoryView];
+    if (response.data) {
+        if (_delegate && [_delegate respondsToSelector:@selector(identityContextPipeAnaylseSuccess:pipeAnaylseResult:)]) {
+            [_delegate identityContextPipeAnaylseSuccess:self pipeAnaylseResult:response.data];
+            [self pause];
+        }
+    }else {
+        if (_delegate && [_delegate respondsToSelector:@selector(identityContextPipeAnaylseFailure:)]) {
+            [_delegate identityContextPipeAnaylseFailure:self];
+        }
+    }
+   
+}
+
+- (void)handlePipeAnalyseFailureResponse:(Z3BaseResponse *)response {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hidenAccessoryView];
+        [self showToast:NSLocalizedString(@"query_failure_tips", @"查询失败,请稍后再试")];
+    });
+    if (_delegate && [_delegate respondsToSelector:@selector(identityContextPipeAnaylseFailure:)]) {
+        [_delegate identityContextPipeAnaylseFailure:self];
+    }
+}
+
 - (void)handleSuccessResponse:(Z3BaseResponse *)response {
     [self hidenAccessoryView];
     if ([response.data count] == 0) {
-        //TODO: 国际化
-        [self showToast:@"未查询到数据"];
+        [self showToast:NSLocalizedString(@"query_resluts_empty", @"未查询到数据")];
         if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
             [self.delegate identityContextQueryFailure:self];
         }
@@ -173,38 +207,31 @@
         [self.delegate identityContextQuerySuccess:self identityResults:response.data];
     }
     [self pause];
-    if (self.displayIdentityResultContext == nil) {
-        self.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:self.mapView identityResults:response.data];
-        [self.displayIdentityResultContext setShowPopup:self.showPopup];
-    }else {
-        [self.displayIdentityResultContext updateIdentityResults:response.data];
-    }
+
 }
 
 - (void)handleFailureResponse:(Z3BaseResponse *)response {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hidenAccessoryView];
-        [self showToast:@"未查询到数据"];
+        [self showToast:NSLocalizedString(@"query_failure_tips", @"查询失败,请稍后再试")];
     });
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
         [self.delegate identityContextQueryFailure:self];
     }
     
-    [self.identityRequest start];
-    [self showAccessoryView];
 }
 
 - (void)showAccessoryView {
-    UIView *view = [self.mapView superview];
+    UIView *view = [[UIApplication sharedApplication].delegate window];
     NSAssert(view, @"mapView don`t have superview");
     [MBProgressHUD showHUDAddedTo:view animated:YES];
 }
 
 //TODO:国际化
 - (void)showToast:(NSString *)message {
-    UIView *view = [self.mapView superview];
-    NSAssert(view, @"mapView don`t have superview");
+   UIView *view = [[UIApplication sharedApplication].delegate window];
+   NSAssert(view, @"mapView don`t have superview");
    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.label.text = message;
@@ -214,14 +241,13 @@
 
 
 - (void)hidenAccessoryView {
-    UIView *view = [self.mapView superview];
+    UIView *view = [[UIApplication sharedApplication].delegate window];
     NSAssert(view, @"mapView don`t have superview");
     [MBProgressHUD hideHUDForView:view animated:YES];
 }
 
 - (void)clear {
     if (![self.identityRequest isExecuting]) {
-        [self.displayIdentityResultContext dismiss];
         [self resume];
     }
 }
@@ -245,19 +271,24 @@
 
 - (void)stop {
     [self pause];
-    self.displayIdentityResultContext = nil;
+   
+}
+
+- (void)identityResultDiplayViewDidChangeSelectIndexNotification:(NSNotification *)notification {
+    [self pause];
 }
 
 - (AGSGraphicsOverlay *)identityGraphicsOverlay {
-    AGSGraphicsOverlay *result = nil;
-    for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
-        if ([overlay.overlayID isEqualToString:IDENTITY_GRAPHICS_OVERLAY_ID]) {
-            result = overlay;
-            break;
+    if (_identityGraphicsOverlay == nil) {
+        for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
+            if ([overlay.overlayID isEqualToString:IDENTITY_GRAPHICS_OVERLAY_ID]) {
+                _identityGraphicsOverlay = overlay;
+                break;
+            }
         }
+        NSAssert(_identityGraphicsOverlay, @"identityGraphicsOverlay not create");
     }
-    NSAssert(result, @"identityGraphicsOverlay not create");
-    return result;
+    return _identityGraphicsOverlay;
 }
 
 @end

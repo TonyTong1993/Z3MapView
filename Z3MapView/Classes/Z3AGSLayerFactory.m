@@ -36,6 +36,8 @@
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
+        layer.minScale = [mapLayer.dispMinScale doubleValue];
+        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
        [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisfeaturelayer"]) {
@@ -45,6 +47,16 @@
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
+        layer.minScale = 520000; //[mapLayer.dispMinScale doubleValue];
+        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
+        [layer setLayerID:mapLayer.ID];
+        return layer;
+    }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"agcgisvectortiledlayer"]) {
+        NSAssert(mapLayer.url.length, @"map layer url if not valid");
+        NSURL *url = [NSURL URLWithString:mapLayer.url];
+        AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
+//        layer.minScale = [mapLayer.dispMinScale doubleValue];
+//        layer.maxScale = 250;//[mapLayer.dispMaxScale doubleValue];
         [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisimageservicelayer"]) {
@@ -53,7 +65,6 @@
             //        [[AGSServiceImageTiledLayer alloc] initWithTileInfo:<#(nonnull AGSTileInfo *)#> fullExtent:<#(nonnull AGSEnvelope *)#>]
     
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"ecitytiledmapservicelayer"]) {
-        
         NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
         [layer setLayerID:mapLayer.ID];
@@ -70,8 +81,13 @@
 }
 
 - (AGSBasemap *)localBaseMap {
-    AGSArcGISTiledLayer *baseMapLayer = [self localBaseMapLayer];
+    AGSArcGISTiledLayer *baseMapLayer = (AGSArcGISTiledLayer *)[self localBaseMapLayer];
    return [[AGSBasemap alloc] initWithBaseLayer:baseMapLayer];
+}
+
+- (AGSBasemap *)onlineBaseMap {
+    AGSArcGISTiledLayer *baseMapLayer = (AGSArcGISTiledLayer *)[self localBaseMapLayer];
+    return [[AGSBasemap alloc] initWithBaseLayer:baseMapLayer];
 }
 
 - (AGSLayer *)localBaseMapLayer {
@@ -139,14 +155,70 @@
                 [MBProgressHUD showError:@"加载管网图层失败"];
             }else {
                 NSArray *tables = gdb.geodatabaseFeatureTables;
-                for (AGSFeatureTable *table in tables) {
+                for (AGSGeodatabaseFeatureTable *table in tables) {
                     AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
                     [layers addObject:layer];
                 }
+               
+              
             }
             complicationHandler([layers copy]);
         }];
     }
+    
+}
+
+- (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer {
+    NSArray *mapImageSublayers =  layer.mapImageSublayers;
+    NSMutableArray *lines = [NSMutableArray array];
+    NSMutableArray *points = [NSMutableArray array];
+    NSArray *contents = layer.subLayerContents;
+    for (int i = 0; i < mapImageSublayers.count; i++) {
+        AGSArcGISMapImageSublayer *subLayer = mapImageSublayers[i];
+        id<AGSLayerContent> content = contents[i];
+        Z3MapLayer *mapLayer = [[Z3MapLayer alloc] init];
+        mapLayer.name = subLayer.name;
+        mapLayer.visible = subLayer.visible;
+        mapLayer.ID = [@(subLayer.sublayerID) stringValue];
+#warning 区分不同类型的图层
+        if (content.subLayerContents.count) {
+              [lines addObject:mapLayer];
+        }else {
+             [points addObject:mapLayer];
+        }
+    }
+    
+    [Z3MobileConfig shareConfig].mapConfig.sources = @[lines,points];
+    
+}
+
+- (void)filterSubLayesForOnLineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer
+                                                      ids:(NSArray *)ids
+                                                  visible:(BOOL)visible{
+    NSArray *mapImageSublayers =  layer.mapImageSublayers;
+    NSArray *sources = [Z3MobileConfig shareConfig].mapConfig.sources;
+    NSMutableArray *lines = [sources firstObject];
+    NSMutableArray *points = [sources lastObject];
+    [ids enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger layerId = [obj integerValue];
+        for (AGSArcGISMapImageSublayer *layer in mapImageSublayers) {
+            if (layerId == layer.sublayerID) {
+                layer.visible = visible;
+            }
+        }
+        
+        for (Z3MapLayer *layer in lines) {
+            if (layerId == [layer.ID integerValue]) {
+                layer.visible = visible;
+            }
+        }
+        
+        for (Z3MapLayer *layer in points) {
+            if (layerId == [layer.ID integerValue]) {
+                layer.visible = visible;
+            }
+        }
+    }];
     
 }
 

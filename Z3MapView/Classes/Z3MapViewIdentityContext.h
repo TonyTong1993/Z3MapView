@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 NS_ASSUME_NONNULL_BEGIN
-@class AGSMapView,AGSLayer,AGSGeometry,AGSPoint,AGSGraphic,Z3MapViewIdentityContext;
+@class AGSMapView,AGSLayer,AGSGeometry,AGSPoint,AGSGraphic,Z3MapViewIdentityContext,Z3MapViewPipeAnaylseResult;
 
 @protocol Z3MapViewIdentityContextDelegate <NSObject>
-
 
 /**
  返回查询的地理类型
@@ -92,12 +91,50 @@ NS_ASSUME_NONNULL_BEGIN
  @param context 当前查询的上下文
  */
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context;
+
+
+/**
+ 爆管分析查询成功
+
+ @param context 当前查询的上下文
+ @param result 分析结果
+ */
+- (void)identityContextPipeAnaylseSuccess:(Z3MapViewIdentityContext *)context
+                        pipeAnaylseResult:(Z3MapViewPipeAnaylseResult *)result;
+
+/**
+ 查询失败
+ 
+ @param context 当前查询的上下文
+ */
+- (void)identityContextPipeAnaylseFailure:(Z3MapViewIdentityContext *)context;
+
+
+/**
+ 当查询到数据后,点击地图触发对graphic的查询
+
+ @param graphic 查询结果列表中的第一个
+ */
+- (void)identityGraphicSuccess:(AGSGraphic *)graphic;
+
+/**
+ 当查询到数据后,点击地图触发对graphic的查询
+ */
+- (void)identityGraphicFailure;
+
 @end
 
+/**
+ GIS 查询模式 分为 Identity和Query接口
+
+ - Z3MapViewIdentityContextModeIdentity: identity 模式
+ - Z3MapViewIdentityContextModeQuery: query 模式
+ */
 typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
     Z3MapViewIdentityContextModeIdentity,
     Z3MapViewIdentityContextModeQuery
 };
+
 @interface Z3MapViewIdentityContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak) id<Z3MapViewIdentityContextDelegate> delegate;
@@ -166,6 +203,18 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
                              geometry:(AGSGeometry *)geometry
                             tolerance:(double)tolerance
                              userInfo:(NSDictionary  * _Nullable )userInfo;
+
+
+/**
+ 开放爆管分析操作
+
+ @param url 爆管分析的URL
+ @param geometry 爆管点
+ @param userInfo  用户额外数据
+ */
+- (void)pipeAnalyseFeatureWithGisServer:(NSString *)url
+                               geometry:(AGSGeometry *)geometry
+                               userInfo:(NSDictionary *)userInfo;
 @end
 
 NS_ASSUME_NONNULL_END
