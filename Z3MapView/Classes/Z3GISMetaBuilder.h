@@ -41,6 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)pipeLayerID;
 
+/**
+ 管网图层ID
+ 
+ @return 阀门图层
+ */
+- (NSInteger )valveLayerID;
+
 
 /**
  创建查询条件

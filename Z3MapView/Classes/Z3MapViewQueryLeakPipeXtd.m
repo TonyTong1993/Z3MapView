@@ -72,6 +72,7 @@
                         pipeAnaylseResult:(Z3MapViewPipeAnaylseResult *)result {
     //将数据显示到图层上
     [self.displayIdentityResultContext updatePipeAnalyseResult:result];
+    [self post:Z3MapViewQueryLeakPipeXtdAnaylseSuccessNotification message:result];
 }
 
 - (void)identityContextPipeAnaylseFailure:(Z3MapViewIdentityContext *)context {
@@ -79,18 +80,17 @@
 }
 
 - (void)identityGraphicFailure {
-    [self post:Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification message:nil];
     [self.displayIdentityResultContext setSelectedIdentityGraphic:nil];
     [self.mapView.callout dismiss];
 }
 
-- (void)searchRelativeValves {
+- (void)searchRelativeValves:(NSString *)valveNods {
     NSString *layerID = [[Z3GISMetaBuilder builder] pipeLayerID];
     NSString *objectId = self.attributes[@"gid"];
     NSDictionary *arguments = @{
                                 @"layerId":layerID,
                                 @"objectId":objectId,
-                                @"valveNods":@""
+                                @"valveNods":valveNods?:@""
                                 };
     
     Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];

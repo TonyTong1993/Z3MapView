@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
  pipe leak,设置显示popUp点的位置
  */
 @property (nonatomic,strong) AGSGeometry *displayGeometry;
+@property (nonatomic,copy) NSString *value;
+
 
 //获取IdentityResult的地理信息 构建点类型
 - (AGSGeometry *)toGeometry;

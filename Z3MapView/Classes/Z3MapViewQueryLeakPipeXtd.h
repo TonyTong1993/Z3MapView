@@ -11,10 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Z3MapViewQueryLeakPipeXtd : Z3MapViewTapQueryXtd
 
+
 /**
  关阀搜索
+
+ @param valveNods 二次关阀的阀门GID
  */
-- (void)searchRelativeValves;
+- (void)searchRelativeValves:(NSString * _Nullable)valveNods;
 @end
 
 NS_ASSUME_NONNULL_END

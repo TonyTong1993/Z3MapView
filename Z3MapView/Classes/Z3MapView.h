@@ -36,10 +36,14 @@ extern NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryValueNotifi
 extern NSNotificationName const Z3PipeLeakAnalysisViewControllerClearNotification;
 //爆管分析查看详情页
 extern NSNotificationName const Z3HUDPipeLeakCalloutViewQuickLookDetailNotification;
+//分析爆管点成功
+extern NSNotificationName const Z3MapViewQueryLeakPipeXtdAnaylseSuccessNotification;
 //已选中爆管点
 extern NSNotificationName const Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNotification;
 //已取消选中爆管点
 extern NSNotificationName const Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification;
+//二次关阀
+extern NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification;
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 
 

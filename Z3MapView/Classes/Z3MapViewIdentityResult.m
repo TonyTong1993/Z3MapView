@@ -43,11 +43,16 @@
    return [[Z3CoordinateConvertFactory factory] locaitonWithGeometry:[self toGeometry]];
 }
 
+#warning 因项目而定
+//FACILITYID gid INSTALL_DATE
 - (NSArray *)displayProperties {
+    NSString *gid = self.attributes[@"gid"] ?: @"";
+    NSString *code = self.attributes[@"FACILITYID"] ?:@"";
+    NSString *installDate = self.attributes[@"INSTALL_DATE"] ?:@"";
     return @[
-             @"79427",
-             @"M24198",
-             @"2002/11/21 12:21:15",
+             gid,
+             code,
+             installDate,
              ];
 }
 

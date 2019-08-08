@@ -100,4 +100,14 @@
     return symbol;
 }
 
+- (AGSSymbol *)buildPOISymbolWithText:(NSString *)text {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"bg_mark_btn_normal"]];
+    symbol.width = 24;
+    symbol.height = 31.5;
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor colorWithHex:@"#2c78ce"] size:15 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentMiddle];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+   AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
 @end

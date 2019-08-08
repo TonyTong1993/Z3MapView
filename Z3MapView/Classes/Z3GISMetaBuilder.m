@@ -41,9 +41,10 @@
 
 - (Z3FeatureLayer *)aomen_buildDeviceMetaWithTargetLayerName:(NSString *)layerName targetLayerId:(NSInteger)layerId {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSString *pLayerName = [[layerName componentsSeparatedByString:@"_"] firstObject];
     __block Z3GISMeta *targetMeta = nil;
     [metas enumerateObjectsUsingBlock:^(Z3GISMeta *meta, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([meta.layername isEqualToString:layerName]) {
+        if ([meta.layername isEqualToString:pLayerName]) {
             targetMeta = meta;
             *stop = YES;
         }
@@ -121,5 +122,9 @@
     return layerID;
 }
 
+#warning 获取阀门ID ID从元数据中获取
+- (NSInteger )valveLayerID {
+    return 1;
+}
 
 @end

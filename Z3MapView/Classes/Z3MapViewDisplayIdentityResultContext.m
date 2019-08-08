@@ -106,12 +106,13 @@
 }
 
 - (void)dispalyPopview {
-#warning 限制当属性为nil时,不显示popView
-    if (!_showPopup || (self.selectedGraphic.attributes == nil)) return;
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        [self dispalyPopviewForIpad];
-    }else if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-        [self displayPopViewForIphone];
+#warning 限制当属性为空时,不显示popView
+    if (_showPopup && (self.selectedGraphic.attributes.allKeys.count)) {
+        if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+            [self dispalyPopviewForIpad];
+        }else if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+            [self displayPopViewForIphone];
+        }
     }
 }
 

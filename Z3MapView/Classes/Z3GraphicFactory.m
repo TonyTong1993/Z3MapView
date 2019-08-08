@@ -78,4 +78,12 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildPOIGraphicWithPoint:(AGSPoint *)point
+                                    text:(NSString *)text
+                              attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPOISymbolWithText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 @end

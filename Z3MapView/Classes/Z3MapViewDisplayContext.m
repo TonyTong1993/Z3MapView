@@ -208,8 +208,6 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
 }
 
-
-
 - (void)showLayerFilterPopUpViewWithDataSource:(NSArray *)dataSource delegate:(id<Z3MapViewOperationDelegate>)delegate{
     UIWindow *window = [UIApplication sharedApplication].delegate.window;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];

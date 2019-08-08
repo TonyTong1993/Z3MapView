@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSSymbol *)buildPipeLeakSelectedSymbol;
 //爆管分析-爆管点关联的阀门symbol
 - (AGSSymbol *)buildPipeLeakValvesSymbol;
+- (AGSSymbol *)buildPOISymbolWithText:(NSString *)text;
 @end
 
 NS_ASSUME_NONNULL_END

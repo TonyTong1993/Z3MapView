@@ -31,10 +31,16 @@ NSNotificationName const Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotifi
  NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryLeakPipeNotification = @"zzht.pipe.analysis.query.pipe";;
  NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryValueNotification = @"zzht.pipe.analysis.query.value";
  NSNotificationName const Z3PipeLeakAnalysisViewControllerClearNotification = @"zzht.pipe.analysis.clear.results";
+//爆管分析-查看设备详情
 NSNotificationName const Z3HUDPipeLeakCalloutViewQuickLookDetailNotification = @"zzht.pipe.analysis.quick.look.detail";
+//爆管点分析,接口返回成功
+NSNotificationName const Z3MapViewQueryLeakPipeXtdAnaylseSuccessNotification = @"zzht.pipe.analysis.success";
+//选中爆管点
 NSNotificationName const Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNotification = @"zzht.pipe.analysis.quick.selected.pipe";
 //已取消选中爆管点
 NSNotificationName const Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification = @"zzht.pipe.analysis.deselect.pipe";
+//二次关阀
+NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification = @"zzht.pipe.analysis.close.valve";
 #warning 因项目而变化
 NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"GWDT MWS SL";
 
