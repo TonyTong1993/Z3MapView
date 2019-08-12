@@ -15,6 +15,7 @@
 #import <YYKit/YYKit.h>
 #import "Z3MapViewCenterPropertyView.h"
 #import "Z3MapView.h"
+#import <Masonry/Masonry.h>
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
 @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;

@@ -21,6 +21,7 @@ typedef void(^OnComplicationBlock)(void);
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (void)setOnComplicationListener:(OnComplicationBlock)conmplication;
+- (void)post:(NSNotificationName)notificationName message:(id _Nullable)message;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -74,6 +74,13 @@
     }
 }
 
+- (void)post:(NSNotificationName)notificationName message:(id)message {
+    if (message) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:@{@"message":message}];
+    }else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
+    }
+}
 
 @end
 

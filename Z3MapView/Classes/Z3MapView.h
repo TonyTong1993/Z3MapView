@@ -30,9 +30,18 @@ extern NSNotificationName const ZZCommonMapViewControllerShowLayerFilterViewNoti
 extern NSNotificationName const Z3MapViewLayerFilterViewControllerSelectIndexNotification;
 extern NSNotificationName const Z3MapViewLayerFilterViewControllerDeselectIndexNotification;
 
+//点击查询
+extern NSNotificationName const Z3MapViewTapQueryXtdIdentitySuccessNotification;
+extern NSNotificationName const Z3MapViewTapQueryXtdIdentityGraphicFailureNotification;
+extern NSNotificationName const Z3TapIdentityResultViewControllerDoneNotification;
+extern NSNotificationName const Z3TapIdentityResultViewControllerCancelNotification;
+
 //爆管分析页面数据通信
+//爆管分析-点击爆管点
 extern NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryLeakPipeNotification;
+//爆管分析-点击关阀搜索
 extern NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryValueNotification;
+//爆管分析-点击清除
 extern NSNotificationName const Z3PipeLeakAnalysisViewControllerClearNotification;
 //爆管分析查看详情页
 extern NSNotificationName const Z3HUDPipeLeakCalloutViewQuickLookDetailNotification;
@@ -44,6 +53,11 @@ extern NSNotificationName const Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNo
 extern NSNotificationName const Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification;
 //二次关阀
 extern NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification;
+
+//问题反馈
+extern NSNotificationName const Z3DevicePickerViewCellTapForSelectDeviceNotification;
+extern NSNotificationName const Z3LocationChoiceCellTapForLocationDeviceNotification;
+extern NSNotificationName const Z3IssueFeedbackViewControllerClearMapViewNotification;
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 
 

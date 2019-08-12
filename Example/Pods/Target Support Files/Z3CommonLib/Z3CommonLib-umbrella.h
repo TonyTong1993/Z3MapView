@@ -11,6 +11,7 @@
 #endif
 
 #import "MBProgressHUD+Z3.h"
+#import "NSString+Chinese.h"
 #import "UIColor+Z3.h"
 #import "Z3AppMenu.h"
 #import "Z3BaseTableViewController.h"

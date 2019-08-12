@@ -8,6 +8,8 @@
 
 #import "Z3AGSSymbolFactory.h"
 #import <ArcGIS/ArcGIS.h>
+#import "Z3Theme.h"
+#import "UIColor+Z3.h"
 @implementation Z3AGSSymbolFactory
 + (instancetype)factory {
     return [[super alloc] init];

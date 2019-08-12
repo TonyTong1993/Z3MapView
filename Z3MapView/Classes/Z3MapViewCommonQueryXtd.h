@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setIdentityMode:(Z3MapViewIdentityContextMode)mode;
 - (void)setIdentityUserInfo:(NSDictionary *)userInfo;
-//隐藏查询结果
+//结束查询操作
 - (void)dismiss;
 @end
 

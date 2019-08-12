@@ -221,6 +221,12 @@
     [self buildPolygonGraphicWithGeometry:result.closearea];
 }
 
+
+- (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result {
+     [self updateIdentityResults:@[result]];
+}
+
+
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic {
     if (_selectedGraphic != nil) {
          [_selectedGraphic setSelected:false];

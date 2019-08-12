@@ -28,8 +28,14 @@ NSNotificationName const Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotifi
  NSNotificationName const Z3MapViewLayerFilterViewControllerSelectIndexNotification = @"zzht.filter.layer.view.change.select.index";
  NSNotificationName const Z3MapViewLayerFilterViewControllerDeselectIndexNotification = @"zzht.filter.layer.view.change.deselect.index";
 
- NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryLeakPipeNotification = @"zzht.pipe.analysis.query.pipe";;
+NSNotificationName const Z3MapViewTapQueryXtdIdentitySuccessNotification = @"zzht.mapview.tap.identity.success";
+NSNotificationName const Z3MapViewTapQueryXtdIdentityGraphicFailureNotification = @"zzht.mapview.tap.identity.graphic.failure";
+NSNotificationName const Z3TapIdentityResultViewControllerDoneNotification = @"zzht.identity.result.view.done";
+NSNotificationName const Z3TapIdentityResultViewControllerCancelNotification = @"zzht.identity.result.view.cancel";
+
+ NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryLeakPipeNotification = @"zzht.pipe.analysis.query.pipe";
  NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryValueNotification = @"zzht.pipe.analysis.query.value";
+
  NSNotificationName const Z3PipeLeakAnalysisViewControllerClearNotification = @"zzht.pipe.analysis.clear.results";
 //爆管分析-查看设备详情
 NSNotificationName const Z3HUDPipeLeakCalloutViewQuickLookDetailNotification = @"zzht.pipe.analysis.quick.look.detail";
@@ -41,6 +47,12 @@ NSNotificationName const Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNotificat
 NSNotificationName const Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification = @"zzht.pipe.analysis.deselect.pipe";
 //二次关阀
 NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification = @"zzht.pipe.analysis.close.valve";
+
+//问题反馈
+ NSNotificationName const Z3DevicePickerViewCellTapForSelectDeviceNotification = @"zzht.issue.feedback.select.device";
+ NSNotificationName const Z3LocationChoiceCellTapForLocationDeviceNotification = @"zzht.issue.feedback.select.location";
+ NSNotificationName const Z3IssueFeedbackViewControllerClearMapViewNotification = @"zzht.issue.feedback.clear.mapview";
+
 #warning 因项目而变化
 NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"GWDT MWS SL";
 

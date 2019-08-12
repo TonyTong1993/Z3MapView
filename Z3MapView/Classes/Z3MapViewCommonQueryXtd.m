@@ -38,10 +38,6 @@
     _identityContext = nil;
 }
 
-- (void)display {
-    [super display];
-}
-
 - (void)updateNavigationBar {
     [super updateNavigationBar];
     UIImage *cleanImage = [UIImage imageNamed:@"nav_clear"];
@@ -56,6 +52,7 @@
         [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
         [self.targetViewController.tabBarController.tabBar setHidden:NO];
     }
+    [self.mapView.callout setCustomView:nil];
 }
 
 - (void)clear {

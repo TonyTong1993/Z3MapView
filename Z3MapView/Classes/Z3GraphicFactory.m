@@ -50,7 +50,7 @@
     return graphic;
 }
 
-- (AGSGraphic *)buildSimplePolygonGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes{
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes{
     if ([geometry isKindOfClass:[AGSPoint class]]) {
         return [self buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
     }else if ([geometry isKindOfClass:[AGSPolyline class]]) {

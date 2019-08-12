@@ -13,6 +13,7 @@
 #import "Z3SettingsManager.h"
 #import "Z3SimutedLocationFactory.h"
 #import "Z3GraphicFactory.h"
+#import "MBProgressHUD+Z3.h"
 @interface Z3MapViewDisplayUserLocationContext()
 @property (nonatomic,assign) BOOL showTrack;
 @property (nonatomic,strong) AGSGraphic *locationGraphic;

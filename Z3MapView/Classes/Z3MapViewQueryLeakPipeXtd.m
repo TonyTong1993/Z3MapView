@@ -104,6 +104,7 @@
     graphic.zIndex = 2;
     [self.queryGraphicsOverlay.graphics addObject:graphic];
     [graphic setSelected:YES];
+    
 }
 
 - (void)dismiss {
@@ -118,11 +119,5 @@
     }
 }
 
-- (void)post:(NSNotificationName)notificationName message:(id)message {
-    if (message) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:@{@"message":message}];
-    }else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
-    }
-}
+
 @end

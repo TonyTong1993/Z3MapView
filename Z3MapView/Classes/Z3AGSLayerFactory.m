@@ -10,6 +10,8 @@
 #import "Z3MobileConfig.h"
 #import "Z3MapConfig.h"
 #import <ArcGIS/ArcGIS.h>
+#import <YYKit/YYKit.h>
+#import "MBProgressHUD+Z3.h"
 @implementation Z3AGSLayerFactory
 + (instancetype)factory {
     return [[super alloc] init];

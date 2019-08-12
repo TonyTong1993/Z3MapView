@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
                                           attributes:(NSDictionary * _Nullable)attributes;
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
                                           attributes:(NSDictionary *)attributes;
-- (AGSGraphic *)buildSimplePolygonGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
 
 - (AGSGraphic *)buildLocationMarkGraphicWithPoint:(AGSPoint *)point
                                      attributes:(NSDictionary * _Nullable)attributes;

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Z3CalloutViewDelegate.h"
 NS_ASSUME_NONNULL_BEGIN
-@class Z3MapViewDisplayIdentityResultContext,Z3MapViewIdentityResult,AGSGraphic,AGSGeometry,AGSPoint;
+@class Z3MapViewDisplayIdentityResultContext,Z3MapViewIdentityResult,Z3MapViewPipeAnaylseResult,AGSGraphic,AGSGeometry,AGSPoint;
 @protocol Z3MapViewDisplayIdentityResultContextDelegate <NSObject>
 - (AGSGraphic *)pointGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
 - (AGSGraphic *)polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@class AGSMapView,AGSGraphic,Z3MapViewPipeAnaylseResult;
+@class AGSMapView;
 @interface Z3MapViewDisplayIdentityResultContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak,readonly) AGSGraphic *selectedGraphic;
@@ -42,6 +42,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param result 分析结果
  */
 - (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result;
+
+/**
+ 将设备选中结果绘制到地图上
+ 
+ @param result 设备选中结果
+ */
+- (void)updateDevicePickerResult:(Z3MapViewIdentityResult *)result;
 
 /**
  设置选中的Graphic

@@ -1,6 +1,6 @@
 {
   "name": "Z3MapView",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "summary": "Z3MapView for zzht to build mapView",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/TonyTong1993/Z3MapView",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/TonyTong1993/Z3MapView.git",
-    "tag": "0.1.0"
+    "tag": "0.1.2"
   },
   "platforms": {
     "ios": "10.0"
