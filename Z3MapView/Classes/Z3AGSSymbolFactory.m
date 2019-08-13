@@ -53,13 +53,12 @@
     return symbol;
 }
 
-
-- (AGSSymbol *)buildSketchEditorStartPonitSymbol {
+- (AGSSymbol *)buildSelectedVertexSymbol {
         //inner color 75FB4C 117 251 76 outer color F2A93C 242 169 60
     return [self buildSelectedPonitSymbol];
 }
 
-- (AGSSymbol *)buildSketchEditorMidPonitSymbol {
+- (AGSSymbol *)buildMidVertexSymbol {
         //inner color 1500F5 21 0 245 outer color F2A93C 242 169 60
     UIColor *deepBlue = [UIColor colorWithRed:21/255.0 green:0/255.0 blue:245/255.0 alpha:1];
     UIColor *orange = [UIColor colorWithRed:117/255.0 green:251/255.0 blue:76/255.0 alpha:1];
@@ -68,10 +67,9 @@
     return symbol;
 }
 
-- (AGSSymbol *)buildSketchEditorEndPonitSymbol {
+- (AGSSymbol *)buildNormalVertexSymbol {
     return [self buildNormalPonitSymbol];
 }
-
 
 - (AGSSymbol *)buildDefaultSymbol {
     return [self buildNormalPonitSymbol];

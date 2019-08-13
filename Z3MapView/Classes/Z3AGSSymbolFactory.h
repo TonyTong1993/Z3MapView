@@ -20,12 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSSymbol *)buildNormalPolygonSymbol;
 - (AGSSymbol *)buildNormalEnvelopSymbol;
 
-    //创建SketchEditor模式下，start点x样式
-- (AGSSymbol *)buildSketchEditorStartPonitSymbol;
+    //创建SketchEditor模式下，select vet点x样式
+- (AGSSymbol *)buildSelectedVertexSymbol;
+    //创建SketchEditor模式下，normal点x样式
+- (AGSSymbol *)buildNormalVertexSymbol;
     //创建SketchEditor模式下，end点x样式
-- (AGSSymbol *)buildSketchEditorEndPonitSymbol;
-    //创建SketchEditor模式下，end点x样式
-- (AGSSymbol *)buildSketchEditorMidPonitSymbol;
+- (AGSSymbol *)buildMidVertexSymbol;
 
 //Show User Location
 - (AGSSymbol *)buildAccuracySymbol;
