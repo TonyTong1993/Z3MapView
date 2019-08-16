@@ -36,6 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)buildPOIGraphicWithPoint:(AGSPoint *)point
                                     text:(NSString *)text
                               attributes:(NSDictionary * _Nullable)attributes;
+
+//地址查询-POI
+- (AGSGraphic *)buildAddressGraphicWithPoint:(AGSPoint *)point
+                                  attributes:(NSDictionary * _Nullable)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

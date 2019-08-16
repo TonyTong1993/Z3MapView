@@ -18,6 +18,7 @@
                                                 wkid:(NSInteger)wkid
                                            mapExtent:(AGSGeometry *)mapExtent
                                            tolerance:(double)tolerance
+                                     excludePipeLine:(BOOL)exclude
                                             userInfo:(NSDictionary *)userInfo{
     NSString *geometryType = @"esriGeometryEnvelope";
     AGSEnvelope *envelop = nil;
@@ -50,6 +51,12 @@
     if (userInfo) {
         [mparams addEntriesFromDictionary:userInfo];
     }
+    
+    if (exclude) {
+        NSString *layerIDs = [Z3GISMetaBuilder builder].allExcludePipelineLayerIDs;
+        mparams[@"layers"] = layerIDs;
+    }
+    
     if (![mparams.allKeys containsObject:@"layers"]) {
         //获取查询的图层
         NSString *layerIDs = [Z3GISMetaBuilder builder].allGISMetaLayerIDs;

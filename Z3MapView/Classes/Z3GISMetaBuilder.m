@@ -108,6 +108,20 @@
     return mstr;
 }
 
+- (NSString *)allExcludePipelineLayerIDs {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSMutableString *mstr = [[NSMutableString alloc] initWithString:@"all:"];
+    for (Z3GISMeta *meta in metas) {
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+#warning 获取管段的图层ID因项目而定
+            if (![obj.dname isEqualToString:@"PIPE"]) {
+                [mstr appendFormat:@"%ld,",obj.layerid];
+            }
+        }];
+    }
+    return mstr;
+}
+
 - (NSString *)pipeLayerID {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     __block NSString *layerID = @"";

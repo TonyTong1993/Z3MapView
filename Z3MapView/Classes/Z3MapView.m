@@ -32,6 +32,7 @@ NSNotificationName const Z3MapViewTapQueryXtdIdentitySuccessNotification = @"zzh
 NSNotificationName const Z3MapViewTapQueryXtdIdentityGraphicFailureNotification = @"zzht.mapview.tap.identity.graphic.failure";
 NSNotificationName const Z3TapIdentityResultViewControllerDoneNotification = @"zzht.identity.result.view.done";
 NSNotificationName const Z3TapIdentityResultViewControllerCancelNotification = @"zzht.identity.result.view.cancel";
+ NSNotificationName const Z3MapViewIdentityContextDidTapAtScreenNotification  = @"zzht.identity.context.tap.screen";;
 
  NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryLeakPipeNotification = @"zzht.pipe.analysis.query.pipe";
  NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryValueNotification = @"zzht.pipe.analysis.query.value";
@@ -50,7 +51,9 @@ NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification = @"zzht
 
 //问题反馈
  NSNotificationName const Z3DevicePickerViewCellTapForSelectDeviceNotification = @"zzht.issue.feedback.select.device";
+ NSNotificationName const Z3DevicePickerViewCellTapForReSelectDeviceNotification = @"zzht.issue.feedback.reselect.device";
  NSNotificationName const Z3LocationChoiceCellTapForLocationDeviceNotification = @"zzht.issue.feedback.select.location";
+ NSNotificationName const Z3LocationChoiceCellTapForCancelLocationDeviceNotification = @"zzht.issue.feedback.cancel.select.location";
  NSNotificationName const Z3IssueFeedbackViewControllerClearMapViewNotification = @"zzht.issue.feedback.clear.mapview";
 
 #warning 因项目而变化

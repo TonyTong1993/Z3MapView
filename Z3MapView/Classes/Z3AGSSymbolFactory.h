@@ -43,6 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
 //爆管分析-爆管点关联的阀门symbol
 - (AGSSymbol *)buildPipeLeakValvesSymbol;
 - (AGSSymbol *)buildPOISymbolWithText:(NSString *)text;
+
+/**
+ 显示位置的AGSSymbol
+
+ @return AGSSymbol
+ */
+- (AGSSymbol *)buildAddressSymbol;
 @end
 
 NS_ASSUME_NONNULL_END

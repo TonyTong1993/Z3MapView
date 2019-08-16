@@ -64,6 +64,18 @@ typedef void(^MapViewLoadStatusListener)(NSInteger status);
 - (void)showGraphicsFilterPopUpViewWithDataSource:(NSArray *)dataSource delegate:(id<Z3MapViewOperationDelegate>)delegate;
 
 
+/**
+ 显示位置到地图上  使用场景,事件管理->点击位置按钮
+
+ @param address 地址
+ @param location map 上的位置
+ */
+- (void)showAddress:(NSString *)address location:(AGSPoint *)location;
+
+/**
+ 移除位置AnotationView
+ */
+- (void)removeAddressAnotationView;
 
 @end
 

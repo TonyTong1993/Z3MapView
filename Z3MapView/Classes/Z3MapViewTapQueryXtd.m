@@ -19,6 +19,11 @@
  当前已有选中的设备,showPickedDevice YES
  */
 @property (nonatomic,assign) BOOL showPickedDevice;
+
+/**
+ 点选位置状态 tapForLocationEnable YES,
+ */
+@property (nonatomic,assign) BOOL tapForLocationEnable;
 @end
 @implementation Z3MapViewTapQueryXtd
 - (void)display {
@@ -26,15 +31,20 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tapIdentityResultViewControllerDoneNotification:) name:Z3TapIdentityResultViewControllerDoneNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tapIdentityResultViewControllerCancelNotification:) name:Z3TapIdentityResultViewControllerCancelNotification object:nil];
      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devicePickerViewCellTapForSelectDeviceNotification:) name:Z3DevicePickerViewCellTapForSelectDeviceNotification object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devicePickerViewCellTapForReselectDeviceNotification:) name:Z3DevicePickerViewCellTapForReSelectDeviceNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(issueFeedbackViewControllerClearMapViewNotification:) name:Z3IssueFeedbackViewControllerClearMapViewNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationChoiceCellTapForLocationDeviceNotification:) name:Z3LocationChoiceCellTapForLocationDeviceNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationChoiceCellTapForCancelLocationDeviceNotification:) name:Z3LocationChoiceCellTapForCancelLocationDeviceNotification object:nil];
+
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3TapIdentityResultViewControllerDoneNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3TapIdentityResultViewControllerCancelNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3DevicePickerViewCellTapForSelectDeviceNotification object:nil];
-     [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3IssueFeedbackViewControllerClearMapViewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3IssueFeedbackViewControllerClearMapViewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3LocationChoiceCellTapForLocationDeviceNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3LocationChoiceCellTapForCancelLocationDeviceNotification object:nil];
 }
 
 - (void)displayGraphicWithGeometry:(AGSPoint *)geometry {
@@ -70,18 +80,21 @@
     
 }
 
+/*
+ *功能描述:点击查询;设备选择;位置选择
+ *当处于设备选择和位置选择状态时,不执行父类的clear方法
+ */
 - (void)identityGraphicFailure {
-    if (!_showPickedDevice) {
+    if (self.tapForLocationEnable || self.showPickedDevice) {
+          [self.mapView.callout dismiss];
+    }else {
         [super identityGraphicFailure];
         [self post:Z3MapViewTapQueryXtdIdentityGraphicFailureNotification message:nil];
-    }else{
-        [self.mapView.callout dismiss];
     }
 }
 
 - (void)tapIdentityResultViewControllerDoneNotification:(NSNotification *)notification {
      [self.displayIdentityResultContext dismiss];
-    //TODO:将选中设备绘制到查询图层上
     Z3MapViewIdentityResult *result = notification.userInfo[@"message"];
     [self.displayIdentityResultContext updateDevicePickerResult:result];
     [self.identityContext stop];
@@ -89,21 +102,48 @@
 }
 
 - (void)devicePickerViewCellTapForSelectDeviceNotification:(NSNotification *)notification  {
-     [self.identityContext resume];
+    [self.displayIdentityResultContext dismiss];
+    [self.identityContext resume];
+    [self.identityContext setIdentityExcludePipeline:YES];
+    Z3MapViewIdentityResult *result = notification.userInfo[@"message"];
+    if (result) {
+         [self.displayIdentityResultContext updateIdentityResults:@[result] showPopup:NO];
+    }
+    _tapForLocationEnable = NO;
+}
+
+- (void)devicePickerViewCellTapForReselectDeviceNotification:(NSNotification *)notification  {
+    Z3MapViewIdentityResult *result = notification.userInfo[@"message"];
+    if (result) {
+        [self.displayIdentityResultContext updateIdentityResults:@[result] showPopup:NO];
+    }
+    
 }
 
 - (void)tapIdentityResultViewControllerCancelNotification:(NSNotification *)notification {
-    if (!_showPickedDevice) {
-         [self.displayIdentityResultContext dismiss];
-    }
+    [self.displayIdentityResultContext dismiss];
 }
 
 - (void)issueFeedbackViewControllerClearMapViewNotification:(NSNotification *)notification {
      [self.displayIdentityResultContext dismiss];
     _showPickedDevice = NO;
+    [self.identityContext setIdentityExcludePipeline:NO];
 }
 
+- (void)locationChoiceCellTapForLocationDeviceNotification:(NSNotification *)notification {
+     [self.identityContext stop];
+    if (!_showPickedDevice) {
+         [self.displayIdentityResultContext dismiss];
+    }
+    _tapForLocationEnable = YES;
+}
 
+- (void)locationChoiceCellTapForCancelLocationDeviceNotification:(NSNotification *)notification {
+    if (!_showPickedDevice) {
+        [self.identityContext resume];
+    }
+    _tapForLocationEnable = NO;
+}
 
 
 @end

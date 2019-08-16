@@ -32,7 +32,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (Z3FeatureLayer *)aomen_buildDeviceMetaWithTargetLayerName:(NSString *)layerName targetLayerId:(NSInteger)layerId;
 
+/**
+ 获取所有图层ID 集合
+
+ @return  获取所有图层ID
+ */
 - (NSString *)allGISMetaLayerIDs;
+
+
+/**
+ 获取非管线点,图层ID
+
+ @return 图层ID集合字符串
+ */
+- (NSString *)allExcludePipelineLayerIDs;
 
 /**
  管网图层ID

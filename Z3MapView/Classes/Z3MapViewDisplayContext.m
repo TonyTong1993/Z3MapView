@@ -16,6 +16,8 @@
 #import "Z3MapViewCenterPropertyView.h"
 #import "Z3MapView.h"
 #import <Masonry/Masonry.h>
+#import "Z3GraphicFactory.h"
+#import "Z3MapViewPrivate.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
 @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
@@ -25,6 +27,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
  */
 @property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
 
+@property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
 @end
 @implementation Z3MapViewDisplayContext
 
@@ -184,6 +187,27 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
 }
 
+- (void)showAddress:(NSString *)address location:(AGSPoint *)location {
+    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildAddressGraphicWithPoint:location attributes:nil];
+    [self.addressGraphicsOverlay.graphics addObject:graphic];
+    if (self.mapView.mapScale > 2000) {
+         [self zoomToPoint:location withScale:2000];
+    }
+   
+}
+
+//- (void)showTaplocationAnotationView:(AGSPoint *)location {
+//    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildAddressGraphicWithPoint:location attributes:nil];
+//    [self.tapGraphicsOverlay.graphics addObject:graphic];
+//    if (self.mapView.mapScale > 2000) {
+//        [self zoomToPoint:location withScale:2000];
+//    }
+//
+//}
+
+- (void)removeAddressAnotationView {
+     [self.addressGraphicsOverlay.graphics removeAllObjects];
+}
 #pragma mark - Control PopupView
 - (void)showCenterPropertyView {
     if (!_centerPropertyView) {
@@ -259,6 +283,20 @@ static NSString *context = @"Z3MapViewDisplayContext";
     [UIView setAnimationDuration:0.3f];//动画时间
     operationView.transform = CGAffineTransformIdentity;//先让要显示的view最小直至消失
     [UIView commitAnimations]; //启动动画
+}
+
+
+- (AGSGraphicsOverlay *)addressGraphicsOverlay {
+    if (_addressGraphicsOverlay == nil) {
+        for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
+            if ([overlay.overlayID isEqualToString:TRACK_GRAPHICS_OVERLAY_ID]) {
+                _addressGraphicsOverlay = overlay;
+                break;
+            }
+        }
+        NSAssert(_addressGraphicsOverlay, @"identityGraphicsOverlay not create");
+    }
+    return _addressGraphicsOverlay;
 }
 
 

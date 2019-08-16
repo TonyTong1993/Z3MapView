@@ -215,6 +215,14 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
 - (void)pipeAnalyseFeatureWithGisServer:(NSString *)url
                                geometry:(AGSGeometry *)geometry
                                userInfo:(NSDictionary *)userInfo;
+
+
+/**
+ 设置点击查询,是否排除管线查询
+
+ @param exclude 默认为NO
+ */
+- (void)setIdentityExcludePipeline:(Boolean)exclude;
 @end
 
 NS_ASSUME_NONNULL_END

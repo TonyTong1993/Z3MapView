@@ -36,6 +36,8 @@ extern NSNotificationName const Z3MapViewTapQueryXtdIdentityGraphicFailureNotifi
 extern NSNotificationName const Z3TapIdentityResultViewControllerDoneNotification;
 extern NSNotificationName const Z3TapIdentityResultViewControllerCancelNotification;
 
+extern NSNotificationName const Z3MapViewIdentityContextDidTapAtScreenNotification;
+
 //爆管分析页面数据通信
 //爆管分析-点击爆管点
 extern NSNotificationName const Z3PipeLeakAnalysisViewControllerQueryLeakPipeNotification;
@@ -56,7 +58,11 @@ extern NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification;
 
 //问题反馈
 extern NSNotificationName const Z3DevicePickerViewCellTapForSelectDeviceNotification;
+extern NSNotificationName const Z3DevicePickerViewCellTapForReSelectDeviceNotification;
+//通知去进行地图选点
 extern NSNotificationName const Z3LocationChoiceCellTapForLocationDeviceNotification;
+//通知取消进行地图选点
+extern NSNotificationName const Z3LocationChoiceCellTapForCancelLocationDeviceNotification;
 extern NSNotificationName const Z3IssueFeedbackViewControllerClearMapViewNotification;
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 

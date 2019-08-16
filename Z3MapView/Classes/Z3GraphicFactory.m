@@ -86,4 +86,10 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildAddressGraphicWithPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes {
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildAddressSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 @end

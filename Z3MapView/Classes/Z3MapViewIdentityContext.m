@@ -27,6 +27,7 @@
 @property (nonatomic,copy) NSString *identityURL;
 @property (nonatomic,assign,getter=isDisplayPopup) BOOL showPopup;
 @property (nonatomic,assign) Z3MapViewIdentityContextMode mode;
+@property (nonatomic,assign) BOOL  excludePipeLine;
 @end
 @implementation Z3MapViewIdentityContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
@@ -56,6 +57,10 @@
     _showPopup = showPopup;
 }
 
+- (void)setIdentityExcludePipeline:(Boolean)exclude {
+    _excludePipeLine = exclude;
+}
+
 - (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
     if (self.isPause) {
         __weak typeof(self) weaksSelf = self;
@@ -70,6 +75,8 @@
                 if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicFailure)]) {
                     [weaksSelf.delegate identityGraphicFailure];
                 }
+                
+                [self post:Z3MapViewIdentityContextDidTapAtScreenNotification message:mapPoint];
             }
         }];
         return;
@@ -130,7 +137,7 @@
                              userInfo:(NSDictionary *)userInfo {
     NSInteger wkid =  self.mapView.spatialReference.WKID;
     AGSEnvelope *extent = self.mapView.visibleArea.extent;
-    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance userInfo:userInfo];
+    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance excludePipeLine:self.excludePipeLine userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
      [self showAccessoryView];
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
@@ -272,6 +279,14 @@
 - (void)stop {
     [self pause];
    
+}
+
+- (void)post:(NSNotificationName)notificationName message:(id)message {
+    if (message) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:@{@"message":message}];
+    }else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
+    }
 }
 
 - (void)identityResultDiplayViewDidChangeSelectIndexNotification:(NSNotification *)notification {

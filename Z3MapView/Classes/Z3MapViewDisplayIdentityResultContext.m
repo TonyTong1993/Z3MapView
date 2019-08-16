@@ -91,12 +91,16 @@
 }
 
 - (void)display {
+    [self display:YES];
+}
+
+- (void)display:(BOOL)showPopup {
     if (_results.count) {
         [self buildGraphics];
         [self displayGraphics];
         //默认选中第一个
         AGSGraphic *graphic = [self.graphics firstObject];
-        [self setSelectedIdentityGraphic:graphic];
+        [self setSelectedIdentityGraphic:graphic showPopup:showPopup];
     }
 }
 
@@ -206,10 +210,15 @@
 }
 
 - (void)updateIdentityResults:(NSArray *)results {
+    [self updateIdentityResults:results showPopup:YES];
+}
+
+- (void)updateIdentityResults:(NSArray *)results
+                    showPopup:(BOOL)showPopup{
     [self dismiss];
     _results = results;
     _graphics = [NSMutableArray arrayWithCapacity:_results.count];
-    [self display];
+    [self display:showPopup];
 }
 
 - (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result {
@@ -226,12 +235,22 @@
      [self updateIdentityResults:@[result]];
 }
 
+- (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result
+                       showPopup:(BOOL)showPopup{
+    [self updateIdentityResults:@[result] showPopup:showPopup];
+}
+
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic {
+    [self setSelectedIdentityGraphic:graphic showPopup:YES];
+}
+
+- (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
+                         showPopup:(BOOL)showPopup{
     if (_selectedGraphic != nil) {
-         [_selectedGraphic setSelected:false];
+        [_selectedGraphic setSelected:false];
     }
-     _selectedGraphic = graphic;
+    _selectedGraphic = graphic;
     if (_selectedGraphic == nil) return;
     [graphic setSelected:YES];
     AGSPoint *center = nil;
@@ -247,10 +266,15 @@
         double scale =  self.mapView.mapScale;
         if (scale > 2000) {
             [self.mapView setViewpointScale:2000 completion:^(BOOL finished) {
-                [self dispalyPopview];
+                if (showPopup) {
+                    [self dispalyPopview];
+                }
+                
             }];
         }else {
-            [self dispalyPopview];
+            if (showPopup) {
+                [self dispalyPopview];
+            }
         }
     }];
 }

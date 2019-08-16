@@ -36,6 +36,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updateIdentityResults:(NSArray *)results;
 
+
+/**
+ 将Identity or Query 接口返回的数据显示到地图上
+
+ @param results 查询数据结果
+ @param showPopup 是否显示popup
+ */
+- (void)updateIdentityResults:(NSArray *)results
+                    showPopup:(BOOL)showPopup;
+
 /**
  将爆管分析结果绘制到地图上
 
@@ -49,6 +59,15 @@ NS_ASSUME_NONNULL_BEGIN
  @param result 设备选中结果
  */
 - (void)updateDevicePickerResult:(Z3MapViewIdentityResult *)result;
+
+/**
+ 将设备选中结果绘制到地图上
+
+ @param result 设备选中结果
+ @param showPopup 是否显示popup
+ */
+- (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result
+                       showPopup:(BOOL)showPopup;
 
 /**
  设置选中的Graphic

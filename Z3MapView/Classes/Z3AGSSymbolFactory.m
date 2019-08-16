@@ -110,4 +110,11 @@
     return compositeSymbol;
 }
 
+- (AGSSymbol *)buildAddressSymbol{
+    UIImage *userLocationImage = [UIImage imageNamed:@"icon_event_manager_location"];
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:userLocationImage];
+    symbol.offsetY = userLocationImage.size.height/2;
+    return symbol;
+}
+
 @end
