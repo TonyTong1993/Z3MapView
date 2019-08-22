@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 NS_ASSUME_NONNULL_BEGIN
-@class AGSPoint,AGSSpatialReference,CLLocation,AGSGeometry;
+@class AGSPoint,AGSSpatialReference,CLLocation,AGSGeometry,Z3BaseRequest;
 @interface Z3CoordinateConvertFactory : NSObject
 + (instancetype)factory;
 //WGS48
@@ -42,6 +42,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSPoint *)labelPointForGeometry:(AGSGeometry *)geometry;
 
 - (CLLocation *)locaitonWithGeometry:(AGSGeometry *)geometry;
+
+- (Z3BaseRequest *)requestConvertWGS48Location:(CLLocation *)location
+                                  complication:(void(^)(AGSPoint *point))complication;
+
+- (Z3BaseRequest *)requestConvertWGS48Latitude:(double)latitude
+                                     longitued:(double)longitude
+                                  complication:(void(^)(AGSPoint *point))complication;
+
+- (Z3BaseRequest *)requestReverseAGSPoint:(AGSPoint *)point
+                             complication:(void(^)(CLLocation *location))complication;
 
 
 @end

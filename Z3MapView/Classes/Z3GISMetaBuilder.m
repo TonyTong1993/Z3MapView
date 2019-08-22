@@ -141,4 +141,16 @@
     return 1;
 }
 
+- (NSInteger )gisErrorReportLayerID {
+     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSInteger layerID = -1;
+    [metas enumerateObjectsUsingBlock:^(Z3GISMeta *meta, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([meta.layername isEqualToString:@"GISERRORREPORT"]) {
+            layerID = [meta.layerid integerValue];
+            *stop = YES;
+        }
+    }];
+    return layerID;
+}
+
 @end

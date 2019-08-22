@@ -70,18 +70,20 @@
 - (AGSSymbol *)buildNormalVertexSymbol {
     return [self buildNormalPonitSymbol];
 }
+- (AGSSymbol *)buildFillSymbolWithColor:(UIColor *)color {
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor blackColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleDiagonalCross color:color outline:outline];
+    return symbol;
+}
+
 
 - (AGSSymbol *)buildDefaultSymbol {
     return [self buildNormalPonitSymbol];
 }
 
 - (AGSSymbol *)buildLocationSymbol {
-    //inner color EA3323 234 52 35 outer color F2A93C 242 169 60
-    //TODO: 内存优化
-//   AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_event_manager_location"]];
-//    return symbol;
-    
-    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipeleak_normal"]];
+    //inner color EA3323 234 52 35 outer color F2A93C 242 169 6
+   AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_event_manager_location"]];
     return symbol;
     
 }
@@ -108,6 +110,12 @@
     textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
     return compositeSymbol;
+}
+
+- (AGSSymbol *)buildTextSymbolWithText:(NSString *)text {
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor colorWithHex:@"#2c78ce"] size:15 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentMiddle];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    return textSymbol;
 }
 
 - (AGSSymbol *)buildAddressSymbol{

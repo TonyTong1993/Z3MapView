@@ -64,6 +64,17 @@ extern NSNotificationName const Z3LocationChoiceCellTapForLocationDeviceNotifica
 //通知取消进行地图选点
 extern NSNotificationName const Z3LocationChoiceCellTapForCancelLocationDeviceNotification;
 extern NSNotificationName const Z3IssueFeedbackViewControllerClearMapViewNotification;
+extern NSNotificationName const Z3IssueFeedbackViewControllerFinishMapViewNotification;
+
+//点击标记按钮
+extern NSNotificationName const Z3ImagePickerCellStartMarkMapViewNotification;
+
+
+//通知取消标记功能
+extern NSNotificationName const ZZCommonMapViewControllerCancelMarkMapViewNotification;
+extern NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotification;
+
+
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 
 

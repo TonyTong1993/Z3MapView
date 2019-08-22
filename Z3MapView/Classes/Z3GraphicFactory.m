@@ -50,6 +50,14 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
+                                            fillColr:(UIColor *)fillColor
+                                          attributes:(NSDictionary *)attributes {
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildFillSymbolWithColor:fillColor];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 - (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes{
     if ([geometry isKindOfClass:[AGSPoint class]]) {
         return [self buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
@@ -82,6 +90,14 @@
                                     text:(NSString *)text
                               attributes:(NSDictionary * _Nullable)attributes{
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPOISymbolWithText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
+                                    text:(NSString *)text
+                              attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildTextSymbolWithText:text];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
     return graphic;
 }

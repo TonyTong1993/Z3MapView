@@ -69,6 +69,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray *)buildFeatureQueryConditions;
 
+/**
+ GIS错误上报的图层ID
+
+ @return layerID
+ */
+- (NSInteger )gisErrorReportLayerID;
+
 @end
 
 NS_ASSUME_NONNULL_END

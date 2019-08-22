@@ -10,6 +10,8 @@
 #import <ArcGIS/ArcGIS.h>
 #import "CoorTranUtil.h"
 #import "Z3MobileConfig.h"
+#import "Z3BaseRequest.h"
+#import "Z3BaseResponse.h"
 
 @implementation Z3CoordinateConvertFactory
 + (instancetype)factory {
@@ -85,4 +87,76 @@
     AGSPoint *point = [self labelPointForGeometry:geometry];
     return [self locaitonWithPoint:point];
 }
+
+- (Z3BaseRequest *)requestConvertWGS48Location:(CLLocation *)location
+                                  complication:(void(^)(AGSPoint *point))complication {
+    if ([Z3MobileConfig shareConfig].coorTransToken && location) {
+        CLLocationCoordinate2D coordinate = location.coordinate;
+        return [self requestConvertWGS48Latitude:coordinate.latitude longitued:coordinate.longitude complication:complication];
+    }
+    return nil;
+}
+
+- (Z3BaseRequest *)requestConvertWGS48Latitude:(double)latitude
+                                     longitued:(double)longitude
+                                  complication:(void(^)(AGSPoint *point))complication {
+    
+    if ([Z3MobileConfig shareConfig].coorTransToken) {
+        NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/trans";
+        NSDictionary *params = @{
+                                 @"x":@(latitude),
+                                 @"y":@(longitude),
+                                 @"h":@(0),
+                                 @"configId":[Z3MobileConfig shareConfig].coorTransToken,
+                                 };
+        Z3BaseRequest *request = [[Z3BaseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
+            NSInteger code = [response.responseJSONObject[@"code"] intValue];
+            if (code == 200) {
+                NSDictionary *data = response.responseJSONObject[@"data"];
+                double x = [data[@"x"] doubleValue];
+                double y = [data[@"y"] doubleValue];
+                AGSPoint *point = [self pointWithX:x y:y wkid:[Z3MobileConfig shareConfig].wkid];
+                complication(point);
+            }else {
+//                [MBProgressHUD showError:@"坐标转换失败,请稍后再试!"];
+            }
+        } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
+//            [MBProgressHUD showError:@"坐标转换失败,请稍后再试!"];
+        }];
+        [request start];
+        return request;
+    }
+    return nil;
+}
+
+- (Z3BaseRequest *)requestReverseAGSPoint:(AGSPoint *)point
+                                  complication:(void(^)(CLLocation *location))complication {
+    if ([Z3MobileConfig shareConfig].coorTransToken && point) {
+        NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/transReverse";
+        NSDictionary *params = @{
+                                 @"x":@(point.x),
+                                 @"y":@(point.y),
+                                 @"h":@(0),
+                                 @"configId":[Z3MobileConfig shareConfig].coorTransToken,
+                                 };
+        Z3BaseRequest *request = [[Z3BaseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
+            NSInteger code = [response.responseJSONObject[@"code"] intValue];
+            if (code == 200) {
+                NSDictionary *data = response.responseJSONObject[@"data"];
+                double x = [data[@"x"] doubleValue];
+                double y = [data[@"y"] doubleValue];
+               CLLocation *location = [[CLLocation alloc] initWithLatitude:y longitude:x];
+                complication(location);
+            }else {
+//                [MBProgressHUD showError:@"坐标反转失败,请稍后再试!"];
+            }
+        } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
+//            [MBProgressHUD showError:@"坐标反转失败,请稍后再试!"];
+        }];
+        [request start];
+        return request;
+    }
+    return nil;
+}
+
 @end

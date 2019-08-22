@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
                                           attributes:(NSDictionary * _Nullable)attributes;
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
                                           attributes:(NSDictionary *)attributes;
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
+                                            fillColr:(UIColor *)fillColor
+                                          attributes:(NSDictionary *)attributes;
 - (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
 
 - (AGSGraphic *)buildLocationMarkGraphicWithPoint:(AGSPoint *)point
@@ -40,6 +43,18 @@ NS_ASSUME_NONNULL_BEGIN
 //地址查询-POI
 - (AGSGraphic *)buildAddressGraphicWithPoint:(AGSPoint *)point
                                   attributes:(NSDictionary * _Nullable)attributes;
+
+/**
+ 构建文本的graphic
+
+ @param point 地图上的位置
+ @param text 文字
+ @param attributes 属性
+ @return graphic
+ */
+- (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
+                                     text:(NSString *)text
+                               attributes:(NSDictionary * _Nullable)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -55,7 +55,11 @@ NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification = @"zzht
  NSNotificationName const Z3LocationChoiceCellTapForLocationDeviceNotification = @"zzht.issue.feedback.select.location";
  NSNotificationName const Z3LocationChoiceCellTapForCancelLocationDeviceNotification = @"zzht.issue.feedback.cancel.select.location";
  NSNotificationName const Z3IssueFeedbackViewControllerClearMapViewNotification = @"zzht.issue.feedback.clear.mapview";
+NSNotificationName const Z3IssueFeedbackViewControllerFinishMapViewNotification = @"zzht.issue.feedback.finish.mapview";
+NSNotificationName const Z3ImagePickerCellStartMarkMapViewNotification = @"zzht.image.picker.mark";
 
+NSNotificationName const ZZCommonMapViewControllerCancelMarkMapViewNotification = @"zzht.mapview.cancel.mark";
+NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotification = @"zzht.mapview.finish.mark";
 #warning 因项目而变化
 NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"GWDT MWS SL";
 

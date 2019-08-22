@@ -27,6 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
     //创建SketchEditor模式下，end点x样式
 - (AGSSymbol *)buildMidVertexSymbol;
 
+/**
+ 设置SketchEditor模式下,FillSymbol
+
+ @param color 填充色
+ @return FillSymbol
+ */
+- (AGSSymbol *)buildFillSymbolWithColor:(UIColor *)color;
+
 //Show User Location
 - (AGSSymbol *)buildAccuracySymbol;
 - (AGSSymbol *)buildAcquiringSymbol;
@@ -50,6 +58,15 @@ NS_ASSUME_NONNULL_BEGIN
  @return AGSSymbol
  */
 - (AGSSymbol *)buildAddressSymbol;
+
+
+/**
+ 文本symbol
+
+ @param text 需要显示的文字
+ @return 文本symbol
+ */
+- (AGSSymbol *)buildTextSymbolWithText:(NSString *)text;
 @end
 
 NS_ASSUME_NONNULL_END
