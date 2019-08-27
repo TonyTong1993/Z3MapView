@@ -60,6 +60,10 @@ NSNotificationName const Z3ImagePickerCellStartMarkMapViewNotification = @"zzht.
 
 NSNotificationName const ZZCommonMapViewControllerCancelMarkMapViewNotification = @"zzht.mapview.cancel.mark";
 NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotification = @"zzht.mapview.finish.mark";
+
+//设备属性相关
+NSNotificationName const Z3AGSCalloutViewIPadAddPhotoNotification = @"zzht.device.add.attachment";
+NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification = @"zzht.device.browser.attachment";
 #warning 因项目而变化
 NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"GWDT MWS SL";
 

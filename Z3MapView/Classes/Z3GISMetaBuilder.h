@@ -32,6 +32,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (Z3FeatureLayer *)aomen_buildDeviceMetaWithTargetLayerName:(NSString *)layerName targetLayerId:(NSInteger)layerId;
 
+
+/**
+ 根据DNO查询layerId
+
+ @param dno dno
+ @return layerId
+ */
+- (NSString *)layerIdWithDNO:(NSString *)dno;
+
 /**
  获取所有图层ID 集合
 

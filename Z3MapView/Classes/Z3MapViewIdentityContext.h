@@ -86,6 +86,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(NSArray *)results;
 
 /**
+ 查询成功的
+ 
+ @param context 当前查询的上下文
+ */
+- (void)identityContextOfflineQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(NSArray *)results;
+
+/**
  查询失败
 
  @param context 当前查询的上下文

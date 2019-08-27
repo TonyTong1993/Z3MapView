@@ -46,32 +46,33 @@
 }
 
 - (void)buildGraphics {
-    for (Z3MapViewIdentityResult *result in self.results) {
-        AGSGeometry *geometry = [result toGeometry];
+    for (AGSArcGISFeature *result in self.results) {
+        AGSGeometry *geometry = result.geometry;
+        NSDictionary *attributes = result.attributes;
+        AGSGraphic *graphic;
         if ([geometry isKindOfClass:[AGSPoint class]]) {
-            AGSGraphic *graphic;
             if (_delegate && [_delegate respondsToSelector:@selector(pointGraphicForDisplayIdentityResultInMapViewWithGeometry:attributes:)]) {
-                graphic =  [_delegate pointGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:result.attributes];
+                graphic =  [_delegate pointGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:attributes];
             }else {
-                graphic  = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:result.attributes];
+                graphic  = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
             }
             graphic.zIndex = 1;
             [self.graphics addObject:graphic];
         }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
-            AGSGraphic *graphic;
             if (_delegate && [_delegate respondsToSelector:@selector(polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:attributes:)]) {
-                graphic =  [_delegate polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:result.attributes];
+                graphic =  [_delegate polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:attributes];
             }else {
-                graphic  = [[Z3GraphicFactory factory] buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:result.attributes];
+                graphic  = [[Z3GraphicFactory factory] buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:attributes];
+                graphic.zIndex = 0;
+                [self.graphics addObject:graphic];
             }
-            graphic.zIndex = 0;
-            [self.graphics addObject:graphic];
+           
         }
     }
 }
 
 - (void)buildPolygonGraphicWithGeometry:(AGSPolygon *)geometry {
-     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimplePolygonGraphicWithPolygon:geometry attributes:nil];
+    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimplePolygonGraphicWithPolygon:geometry attributes:nil];
      graphic.zIndex = -1;
      [self.graphics addObject:graphic];
      self.mGraphicsOverlay = [self identityGraphicsOverlay];
@@ -130,8 +131,8 @@
         self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionLeft;
     }
     NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
-    Z3MapViewIdentityResult *result = self.results[index];
-    [callout setIdentityResult:result];
+    AGSArcGISFeature *feature = self.results[index];
+    [callout setIdentityResult:feature];
     [self.mapView.callout setCustomView:callout];
     AGSPoint *tapLocation = nil;
     if (_delegate && [_delegate respondsToSelector:@selector(tapLocationForDisplayCalloutView)]) {

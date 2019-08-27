@@ -49,7 +49,7 @@
     __block AGSPoint *tapLocation = nil;
     [results enumerateObjectsUsingBlock:^(Z3MapViewIdentityResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.geometryType isEqualToString:@"esriGeometryPolyline"]) {
-            AGSPolyline *line = (AGSPolyline *)[obj toGeometry];
+            AGSPolyline *line = (AGSPolyline *)[obj geometry];
            AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:line toPoint:self.tapPoint];
            AGSPoint  *temPoint = proximityResult.point;
            double distance = [AGSGeometryEngine distanceBetweenGeometry1:temPoint geometry2:self.tapPoint];

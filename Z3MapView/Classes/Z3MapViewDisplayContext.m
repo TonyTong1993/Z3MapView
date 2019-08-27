@@ -72,6 +72,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
 - (void)notifyMapViewLoadStatus {
     AGSMap *map = self.mapView.map;
     [map addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
+    [self.mapView addObserver:self forKeyPath:@"drawStatus" options:NSKeyValueObservingOptionNew context:&context];
     [self.mapView addObserver:self forKeyPath:@"visibleArea" options:NSKeyValueObservingOptionNew context:&context];
 }
 
@@ -121,6 +122,15 @@ static NSString *context = @"Z3MapViewDisplayContext";
             }
         }
         
+    }else if ([keyPath isEqualToString:@"drawStatus"] && object == self.mapView) {
+        NSNumber *value = change[NSKeyValueChangeNewKey];
+        AGSLoadStatus status =  [value intValue];
+        if (status == AGSDrawStatusCompleted) {
+//           NSArray *layers = self.mapView.map.operationalLayers;
+//            for (AGSFeatureLayer *layer in layers) {
+//
+//            }
+        }
     }
 }
 
@@ -128,6 +138,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     AGSMap *map = self.mapView.map;
     [map removeObserver:self forKeyPath:@"loadStatus"];
     [self.mapView removeObserver:self forKeyPath:@"visibleArea"];
+    [self.mapView removeObserver:self forKeyPath:@"drawStatus"];
     for (AGSLayer *layer in map.operationalLayers) {
         [layer removeObserver:self forKeyPath:@"loadStatus"];
     }

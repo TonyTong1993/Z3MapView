@@ -125,4 +125,26 @@
     return symbol;
 }
 
+- (AGSSymbol *)buildTextSymbolWithText:(NSString *)text
+                             textColor:(UIColor *)textColor
+                            fontFamily:(NSString *)fontFamily
+                              fontSize:(CGFloat)fontSize {
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:textColor size:fontSize horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentMiddle];
+    textSymbol.fontFamily = fontFamily;
+    return textSymbol;
+}
+
+- (AGSSymbol *)buildLineSymbolWithColor:(UIColor *)color
+                                  width:(CGFloat)width {
+    AGSSimpleLineSymbol *symbol = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:color width:width];
+    return symbol;
+}
+
+- (AGSSymbol *)buildFillSymbolWithOutLineColor:(UIColor *)color
+                                  outLineWidth:(CGFloat)outLineWidth
+                                     fillColor:(UIColor *)fillColor {
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:color width:outLineWidth];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:fillColor outline:outline];
+    return symbol;
+}
 @end

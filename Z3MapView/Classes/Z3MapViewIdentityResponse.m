@@ -16,7 +16,7 @@
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:results.count];
     for (NSDictionary *info in results) {
       Z3MapViewIdentityResult *result=  [Z3MapViewIdentityResult modelWithJSON:info];
-        [models addObject:result];
+      [models addObject:result];
     }
     _data = models;
 }

@@ -16,13 +16,14 @@
 #import <Masonry/Masonry.h>
 #import "Z3Theme.h"
 #import "UIColor+Z3.h"
+#import <ArcGIS/ArcGIS.h>
+#import "DateUtil.h"
 @interface Z3FeatureAttributesDisplayView()<UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
-@property (nonatomic,strong) Z3MapViewIdentityResult *result;
 @property (nonatomic,copy) NSArray *dataSource;
 @end
 @implementation Z3FeatureAttributesDisplayView
-
+@synthesize result = _result;
 + (BOOL)requiresConstraintBasedLayout {
     return YES;
 }
@@ -60,7 +61,7 @@
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result {
     _result = result;
       __block NSMutableArray *properties = [[NSMutableArray alloc] init];
-    if (_result.layerName) {
+    if (result.layerName) {
         Z3FeatureLayer *feature = [[Z3GISMetaBuilder builder] aomen_buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
         NSArray *fields = feature.fields;
         [fields enumerateObjectsUsingBlock:^(Z3FeatureLayerProperty *property, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -91,6 +92,39 @@
      [self.tableView reloadData];
 }
 
+- (void)setFeature:(AGSArcGISFeature *)feature {
+    if ([feature isKindOfClass:[Z3MapViewIdentityResult class]]) {
+        [self setIdentityResult:(Z3MapViewIdentityResult *)feature];
+        return;
+    }
+    _result = feature;
+    NSArray<AGSField*> *fields = feature.featureTable.fields;
+    NSDictionary *attributes = feature.attributes;
+    __block NSMutableArray *properties = [[NSMutableArray alloc] init];
+    [fields enumerateObjectsUsingBlock:^(AGSField * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *name = obj.name;
+        NSString *alias = obj.alias;
+        if ([alias isChinese]) {
+            Z3FeatureLayerProperty *property = [[Z3FeatureLayerProperty alloc] init];
+            property.alias = alias;
+            id value = attributes[name];
+            if ([value isKindOfClass:[NSDate class]]) {
+                value = [DateUtil stringFromDateDay:value];
+            }else if ([value isKindOfClass:[NSNull class]]) {
+                value = @"";
+            }else if ([value isKindOfClass:[NSNumber class]]) {
+                value = [value stringValue];
+            }
+            property.displayValue = [value description];
+            [properties addObject:property];
+        }
+    }];
+    
+    self.dataSource = properties;
+    [self.tableView reloadData];
+    
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataSource.count;
@@ -104,9 +138,9 @@
     }
     Z3FeatureLayerProperty *property = self.dataSource[indexPath.row];
     cell.textLabel.text = property.alias;
-    cell.textLabel.font = [UIFont fontWithName:[Z3Theme themeFontFamilyName] size:15];
-    cell.detailTextLabel.text = property.displayValue;
-    cell.detailTextLabel.font = [UIFont fontWithName:[Z3Theme themeFontFamilyName] size:14];
+    cell.textLabel.font = [UIFont fontWithName:[Z3Theme themeFontFamilyName] size:13];
+    cell.detailTextLabel.text = [property.displayValue description];
+    cell.detailTextLabel.font = [UIFont fontWithName:[Z3Theme themeFontFamilyName] size:13];
     return cell;
 }
 

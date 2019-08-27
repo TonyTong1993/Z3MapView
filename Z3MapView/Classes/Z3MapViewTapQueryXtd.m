@@ -24,6 +24,8 @@
  点选位置状态 tapForLocationEnable YES,
  */
 @property (nonatomic,assign) BOOL tapForLocationEnable;
+
+
 @end
 @implementation Z3MapViewTapQueryXtd
 - (void)display {

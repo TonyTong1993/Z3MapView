@@ -6,10 +6,11 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 #import <Foundation/Foundation.h>
+#import <ArcGIS/AGSArcGISFeature.h>
 #import "YYKit.h"
 NS_ASSUME_NONNULL_BEGIN
 @class AGSGeometry;
-@interface Z3MapViewIdentityResult : NSObject<YYModel>
+@interface Z3MapViewIdentityResult : AGSArcGISFeature<YYModel>
 /**
  Identity
  */
@@ -18,14 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSString *displayFieldName;
 @property (nonatomic,assign) NSInteger count;
 @property (nonatomic,copy) NSString *geometryType;
-@property (nonatomic,copy) NSDictionary *geometry;
-
-
+@property (nonatomic,copy) NSDictionary *mGeometry;
+@property (nonatomic,strong) NSMutableDictionary *mAttributes;
 /**
  query
  */
 @property (nonatomic,copy) NSDictionary *spatialReference;
-@property (nonatomic,copy) NSDictionary *attributes;
 @property (nonatomic,copy) NSArray *fields;
 @property (nonatomic,copy) NSDictionary *fieldAliases;
 
@@ -35,10 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,strong) AGSGeometry *displayGeometry;
 @property (nonatomic,copy) NSString *value;
-
-
-//获取IdentityResult的地理信息 构建点类型
-- (AGSGeometry *)toGeometry;
 
 /**
  获取导航的目的地

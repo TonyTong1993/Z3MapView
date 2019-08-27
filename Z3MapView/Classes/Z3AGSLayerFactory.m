@@ -145,8 +145,7 @@
     //        //指明是同步整个数据库，还是同步某些图层
     //    generateGeodatabaseParameters.syncModel = AGSSyncModelGeodatabase;
     NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgs.geodatabase"];
-    
+    NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgss.geodatabase"];
     NSURL *gdbURL = [NSURL URLWithString:geodatabasePath];
     BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:geodatabasePath];
     NSMutableArray *layers = [[NSMutableArray alloc] init];
@@ -154,20 +153,17 @@
         AGSGeodatabase *gdb =  [[AGSGeodatabase alloc] initWithFileURL:gdbURL];
         [gdb loadWithCompletion:^(NSError * _Nullable error) {
             if (error) {
-                [MBProgressHUD showError:@"加载管网图层失败"];
+                [MBProgressHUD showError:NSLocalizedString(@"str_toast_load_offline_map_failure", @"加载离线图层失败") ];
             }else {
                 NSArray *tables = gdb.geodatabaseFeatureTables;
                 for (AGSGeodatabaseFeatureTable *table in tables) {
                     AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
                     [layers addObject:layer];
                 }
-               
-              
             }
             complicationHandler([layers copy]);
         }];
     }
-    
 }
 
 - (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer {

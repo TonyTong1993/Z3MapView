@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class Z3MapViewIdentityResult;
+@class Z3MapViewIdentityResult,AGSArcGISFeature;
 @protocol Z3CalloutViewDelegate <NSObject>
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result;
+- (void)setFeature:(AGSArcGISFeature *)featrue;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,11 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)buildSimpleEnvelopGraphicWithEnvelop:(AGSEnvelope *)envelop
                                           attributes:(NSDictionary * _Nullable)attributes;
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
-                                          attributes:(NSDictionary *)attributes;
+                                          attributes:(NSDictionary * _Nullable)attributes;
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon
                                             fillColr:(UIColor *)fillColor
                                           attributes:(NSDictionary *)attributes;
-- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary * _Nullable)attributes;
 
 - (AGSGraphic *)buildLocationMarkGraphicWithPoint:(AGSPoint *)point
                                      attributes:(NSDictionary * _Nullable)attributes;
@@ -55,6 +55,65 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
                                      text:(NSString *)text
                                attributes:(NSDictionary * _Nullable)attributes;
+
+/**
+ 文本AGSGraphic
+ 
+ @param text 需要显示的文字
+ @param textColor 文字颜色
+ @param fontFamily 字体名
+ @param fontSize 字体大小
+ @return 文本AGSGraphic
+ */
+
+/**
+ 文本AGSGraphic
+
+ @param point 绘制的位置
+ @param text 需要显示的文字
+ @param textColor 文字颜色
+ @param fontFamily 字体名
+ @param fontSize 字体大小
+ @param attributes 属性
+ @return 文本AGSGraphic
+ */
+- (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
+                                     text:(NSString *)text
+                             textColor:(UIColor *)textColor
+                            fontFamily:(NSString *)fontFamily
+                              fontSize:(CGFloat)fontSize
+                               attributes:(NSDictionary * _Nullable)attributes;
+
+
+/**
+ 构建线graphic
+
+ @param line 线地理信息
+ @param color 颜色
+ @param width 线款
+ @param attributes 属性
+ @return graphic
+ */
+- (AGSGraphic *)buildLineGraphicWithPolyline:(AGSPolyline *)line
+                                       color:(UIColor *)color
+                                       width:(CGFloat)width
+                               attributes:(NSDictionary * _Nullable)attributes;
+
+/**
+ 圆、矩形、多边形、箭头的AGSGraphic
+
+ @param geometry 填充区域
+ @param color 外边线颜色
+ @param outLineWidth 外边线宽
+ @param fillColor 填充色
+ @param attributes 属性
+ @return 圆、矩形、多边形、箭头的AGSGraphic
+ */
+- (AGSGraphic *)buildFillGraphicWithGeometry:(AGSGeometry *)geometry
+                                 outLineColor:(UIColor *)color
+                                  outLineWidth:(CGFloat)outLineWidth
+                                     fillColor:(UIColor *)fillColor
+                                  attributes:(NSDictionary * _Nullable)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -18,6 +18,7 @@
 #import "Z3MapViewIdentityParameterBuilder.h"
 #import "Z3MapViewPrivate.h"
 #import "Z3MapView.h"
+#import "Z3MobileConfig.h"
 @interface Z3MapViewIdentityContext()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSLayer *identityLayer;
 @property (nonatomic,strong) AGSGraphicsOverlay *identityGraphicsOverlay;
@@ -81,7 +82,33 @@
         }];
         return;
     };
-
+//离线
+     __weak typeof(self) weakSelf = self;
+    if ([Z3MobileConfig shareConfig].offlineLogin) {
+        [geoView identifyLayersAtScreenPoint:screenPoint tolerance:22 returnPopupsOnly:NO completion:^(NSArray<AGSIdentifyLayerResult *> * _Nullable identifyResults, NSError * _Nullable error) {
+            if (error) {
+                DLog(@"error = %@",error);
+                return;
+            }
+            NSMutableArray *results = [[NSMutableArray alloc] init];
+            AGSIdentifyLayerResult *layerResult = [identifyResults firstObject];
+            if (layerResult) {
+                NSArray *geoElements = layerResult.geoElements;
+                for (AGSArcGISFeature *feature in geoElements) {
+                    [results addObject:feature];
+                }
+                if (results.count) {
+                    if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
+                        [weakSelf.delegate identityContextQuerySuccess:weakSelf identityResults:results];
+                        [weakSelf pause];
+                    }
+                }
+                
+            }
+        }];
+        return;
+    }
+//在线
     AGSGeometry *geometory = nil;
     if (self.delegate && [self.delegate respondsToSelector:@selector(identityContext:didTapAtScreenPoint:mapPoint:)]) {
        geometory = [self.delegate identityContext:self didTapAtScreenPoint:screenPoint mapPoint:mapPoint];
@@ -235,11 +262,11 @@
     [MBProgressHUD showHUDAddedTo:view animated:YES];
 }
 
-//TODO:国际化
+
 - (void)showToast:(NSString *)message {
-   UIView *view = [[UIApplication sharedApplication].delegate window];
-   NSAssert(view, @"mapView don`t have superview");
-   MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    UIView *view = [[UIApplication sharedApplication].delegate window];
+    NSAssert(view, @"mapView don`t have superview");
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.label.text = message;
     [hud showAnimated:YES];

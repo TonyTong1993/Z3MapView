@@ -153,4 +153,23 @@
     return layerID;
 }
 
+- (NSString *)layerIdWithDNO:(NSString *)dno {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSString *layerId = nil;
+    [metas enumerateObjectsUsingBlock:^(Z3GISMeta *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSArray *features = obj.net;
+        [features enumerateObjectsUsingBlock:^(Z3FeatureLayer *feature, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([dno integerValue] == feature.dno) {
+                layerId = [@(feature.layerid) stringValue];
+                *stop = YES;
+            }
+        }];
+        if (layerId != nil) {
+            *stop = YES;
+        }
+    }];
+    
+    return layerId;
+}
+
 @end

@@ -67,10 +67,19 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     [super updateConstraints];
 }
 
+- (CGSize)intrinsicContentSize {
+    CGSize size = CGSizeZero;
+    if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
+        size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
+    }else {
+        size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
+    }
+    return size;
+}
+
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result {
     _result = result;
     if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
-         self.bounds = CGRectMake(0, 0, PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
         [_closeValve setHidden:NO];
     }else {
         [_closeValve setHidden:YES];

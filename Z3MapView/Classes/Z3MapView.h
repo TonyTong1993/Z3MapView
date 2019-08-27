@@ -74,6 +74,11 @@ extern NSNotificationName const Z3ImagePickerCellStartMarkMapViewNotification;
 extern NSNotificationName const ZZCommonMapViewControllerCancelMarkMapViewNotification;
 extern NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotification;
 
+//设备属性相关
+extern NSNotificationName const Z3AGSCalloutViewIPadAddPhotoNotification;
+extern NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification;
+
+
 
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 
