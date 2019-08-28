@@ -95,10 +95,6 @@ static  CGFloat CalloutViewHeight = 335.0f;
     [_displayView setIdentityResult:result];
 }
 
-- (void)setFeature:(AGSArcGISFeature *)featrue {
-    [_displayView setFeature:featrue];
-}
-
 - (void)onTakePhotoBtnClicked:(id)sender {
     [self post:Z3AGSCalloutViewIPadAddPhotoNotification message:_displayView.result];
 }

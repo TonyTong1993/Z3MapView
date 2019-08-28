@@ -61,69 +61,62 @@
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result {
     _result = result;
       __block NSMutableArray *properties = [[NSMutableArray alloc] init];
-    if (result.layerName) {
-        Z3FeatureLayer *feature = [[Z3GISMetaBuilder builder] aomen_buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
-        NSArray *fields = feature.fields;
-        [fields enumerateObjectsUsingBlock:^(Z3FeatureLayerProperty *property, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([property.alias isChinese]) {
-                property.displayValue = result.attributes[property.name];
+    if ([result respondsToSelector:@selector(layerName)]) {
+        if (result.layerName) {
+            Z3FeatureLayer *feature = [[Z3GISMetaBuilder builder] aomen_buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
+            NSArray *fields = feature.fields;
+            [fields enumerateObjectsUsingBlock:^(Z3FeatureLayerProperty *property, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([property.alias isChinese]) {
+                    property.displayValue = result.attributes[property.name];
+                    [properties addObject:property];
+                }
+            }];
+            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"findex" ascending:YES];
+            self.dataSource = [properties sortedArrayUsingDescriptors:@[sort]];
+        }else {
+            NSDictionary *attributes = result.attributes;
+            NSArray *fields =  [Z3MobileConfig shareConfig].fields;
+            [fields enumerateObjectsUsingBlock:^(NSDictionary *field, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString *name = field[@"name"];
+                NSString *alias = field[@"alias"];
+                if ([alias isChinese]) {
+                    Z3FeatureLayerProperty *property = [[Z3FeatureLayerProperty alloc] init];
+                    property.alias = alias;
+                    property.displayValue = attributes[name];
+                    [properties addObject:property];
+                }
+            }];
+            self.dataSource = properties;
+        }
+    }else {
+        NSArray<AGSField*> *fields = result.featureTable.fields;
+        NSDictionary *attributes = result.attributes;
+        __block NSMutableArray *properties = [[NSMutableArray alloc] init];
+        [fields enumerateObjectsUsingBlock:^(AGSField * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *name = obj.name;
+            NSString *alias = obj.alias;
+            if ([alias isChinese]) {
+                Z3FeatureLayerProperty *property = [[Z3FeatureLayerProperty alloc] init];
+                property.alias = alias;
+                id value = attributes[name];
+                if ([value isKindOfClass:[NSDate class]]) {
+                    value = [DateUtil stringFromDateDay:value];
+                }else if ([value isKindOfClass:[NSNull class]]) {
+                    value = @"";
+                }else if ([value isKindOfClass:[NSNumber class]]) {
+                    value = [value stringValue];
+                }
+                property.displayValue = [value description];
                 [properties addObject:property];
             }
         }];
-        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"findex" ascending:YES];
-        self.dataSource = [properties sortedArrayUsingDescriptors:@[sort]];
-       
-    }else {
-        NSDictionary *attributes = result.attributes;
-        NSArray *fields =  [Z3MobileConfig shareConfig].fields;
-        [fields enumerateObjectsUsingBlock:^(NSDictionary *field, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString *name = field[@"name"];
-            NSString *alias = field[@"alias"];
-             if ([alias isChinese]) {
-                  Z3FeatureLayerProperty *property = [[Z3FeatureLayerProperty alloc] init];
-                 property.alias = alias;
-                 property.displayValue = attributes[name];
-                 [properties addObject:property];
-             }
-        }];
-        self.dataSource = properties;
+          self.dataSource = properties;
     }
+    
     
      [self.tableView reloadData];
 }
 
-- (void)setFeature:(AGSArcGISFeature *)feature {
-    if ([feature isKindOfClass:[Z3MapViewIdentityResult class]]) {
-        [self setIdentityResult:(Z3MapViewIdentityResult *)feature];
-        return;
-    }
-    _result = feature;
-    NSArray<AGSField*> *fields = feature.featureTable.fields;
-    NSDictionary *attributes = feature.attributes;
-    __block NSMutableArray *properties = [[NSMutableArray alloc] init];
-    [fields enumerateObjectsUsingBlock:^(AGSField * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSString *name = obj.name;
-        NSString *alias = obj.alias;
-        if ([alias isChinese]) {
-            Z3FeatureLayerProperty *property = [[Z3FeatureLayerProperty alloc] init];
-            property.alias = alias;
-            id value = attributes[name];
-            if ([value isKindOfClass:[NSDate class]]) {
-                value = [DateUtil stringFromDateDay:value];
-            }else if ([value isKindOfClass:[NSNull class]]) {
-                value = @"";
-            }else if ([value isKindOfClass:[NSNumber class]]) {
-                value = [value stringValue];
-            }
-            property.displayValue = [value description];
-            [properties addObject:property];
-        }
-    }];
-    
-    self.dataSource = properties;
-    [self.tableView reloadData];
-    
-}
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

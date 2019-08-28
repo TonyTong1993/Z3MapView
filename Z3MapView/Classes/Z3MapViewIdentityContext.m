@@ -60,6 +60,7 @@
 
 - (void)setIdentityExcludePipeline:(Boolean)exclude {
     _excludePipeLine = exclude;
+    
 }
 
 - (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
