@@ -77,7 +77,9 @@
     return self.userInfo;
 }
 
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(nonnull NSArray *)results {
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
+                           mapPoint:mapPoint
+                    identityResults:(nonnull NSArray *)results {
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)) {
         if (self.targetViewController.tabBarController) {
             [[self.mapView subviews] setValue:@(YES) forKey:NSStringFromSelector(@selector(hidden))];
@@ -96,7 +98,7 @@
         self.handler(results, nil);
     }
     
-    [self.displayIdentityResultContext updateIdentityResults:results];
+    [self.displayIdentityResultContext updateIdentityResults:results mapPoint:mapPoint];
     
 }
 
@@ -109,8 +111,8 @@
     }
 }
 
-- (void)identityGraphicSuccess:(AGSGraphic *)graphic {
-     [self.displayIdentityResultContext setSelectedIdentityGraphic:graphic];
+- (void)identityGraphicSuccess:(AGSGraphic *)graphic mapPoint:(AGSPoint *)mapPoint {
+     [self.displayIdentityResultContext setSelectedIdentityGraphic:graphic mapPoint:mapPoint];
 }
 
 - (void)identityGraphicFailure {

@@ -71,8 +71,10 @@
     [self.identityContext dissmiss];
 }
 
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(NSArray *)results {
-    [super identityContextQuerySuccess:context identityResults:results];
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
+                           mapPoint:mapPoint
+                    identityResults:(NSArray *)results {
+    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:results];
     [self.mapView.sketchEditor stop];
 }
 

@@ -72,6 +72,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ 具有关断特性的管点
+
+ @return 图层IDs eg: @"1,2,3"
+ */
+- (NSString *)closeableValveLayerIDs;
+
+
+/**
  创建查询条件
 
  @return 查询条件集合

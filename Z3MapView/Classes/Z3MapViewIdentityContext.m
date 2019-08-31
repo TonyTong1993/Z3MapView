@@ -69,8 +69,8 @@
         [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:12 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
            AGSGraphic *graphic = [identifyResult.graphics firstObject];
             if (graphic) {
-                if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicSuccess:)]) {
-                    [weaksSelf.delegate identityGraphicSuccess:graphic];
+                if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicSuccess:mapPoint:)]) {
+                    [weaksSelf.delegate identityGraphicSuccess:graphic mapPoint:mapPoint];
                 }
                 
             }else {
@@ -99,8 +99,8 @@
                     [results addObject:feature];
                 }
                 if (results.count) {
-                    if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
-                        [weakSelf.delegate identityContextQuerySuccess:weakSelf identityResults:results];
+                    if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
+                        [weakSelf.delegate identityContextQuerySuccess:weakSelf mapPoint:mapPoint identityResults:results];
                         [weakSelf pause];
                     }
                 }
@@ -125,11 +125,11 @@
         
         switch (self.mode) {
             case Z3MapViewIdentityContextModeIdentity:
-                [self identifyGeometry:geometory userInfo:userInfo];
+                [self identifyGeometry:geometory mapPoint:mapPoint userInfo:userInfo];
                 break;
                 
             default:
-                [self queryFeaturesWithGeometry:geometory userInfo:userInfo];
+                [self queryFeaturesWithGeometry:geometory mapPoint:mapPoint userInfo:userInfo];
                 break;
         }
         
@@ -141,26 +141,38 @@
     _identityLayer = layer;
 }
 
-- (void)identifyGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo{
+- (void)identifyGeometry:(AGSGeometry *)geometry mapPoint:(AGSPoint *)mapPoint userInfo:(NSDictionary *)userInfo{
     NSAssert(self.identityURL.length, @"identity url must not be nil");
-    [self identityFeaturesWithGisServer:self.identityURL geometry:geometry userInfo:userInfo];
+    [self identityFeaturesWithGisServer:self.identityURL geometry:geometry mapPoint:mapPoint userInfo:userInfo];
 }
 
-- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo{
-    NSAssert(self.identityURL.length, @"identity url must not be nil");
-    [self queryFeaturesWithGisServer:self.identityURL geometry:geometry userInfo:userInfo];
+- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo {
+    [self queryFeaturesWithGeometry:geometry mapPoint:nil userInfo:userInfo];
 }
 
+- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry mapPoint:(AGSPoint *)mapPoint userInfo:(NSDictionary *)userInfo{
+    NSAssert(self.identityURL.length, @"identity url must not be nil");
+    [self queryFeaturesWithGisServer:self.identityURL geometry:geometry mapPoint:mapPoint userInfo:userInfo];
+}
+
+
+- (void)identityFeaturesWithGisServer:(NSString *)url
+                             geometry:(AGSGeometry *)geometry
+                             mapPoint:(AGSPoint *)mapPoint
+                             userInfo:(NSDictionary *)userInfo {
+    AGSGeometry *temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
+    [self identityFeaturesWithGisServer:url geometry:temp mapPoint:mapPoint tolerance:2 userInfo:userInfo];
+}
 
 - (void)identityFeaturesWithGisServer:(NSString *)url
                              geometry:(AGSGeometry *)geometry
                              userInfo:(NSDictionary *)userInfo {
-    AGSGeometry *temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
-    [self identityFeaturesWithGisServer:url geometry:temp tolerance:2 userInfo:userInfo];
+    [self identityFeaturesWithGisServer:url geometry:geometry mapPoint:nil userInfo:userInfo];
 }
 
 - (void)identityFeaturesWithGisServer:(NSString *)url
                              geometry:(AGSGeometry *)geometry
+                             mapPoint:(AGSPoint *)mapPoint
                             tolerance:(double)tolerance
                              userInfo:(NSDictionary *)userInfo {
     NSInteger wkid =  self.mapView.spatialReference.WKID;
@@ -169,67 +181,76 @@
     __weak typeof(self) weakSelf = self;
      [self showAccessoryView];
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
-        [weakSelf handleSuccessResponse:response];
+        [weakSelf handleSuccessResponse:response mapPoint:mapPoint];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleFailureResponse:response];
     }];
      [self.identityRequest  start];
 }
 
+
 - (void)queryFeaturesWithGisServer:(NSString *)url
                              geometry:(AGSGeometry *)geometry
+                             mapPoint:(AGSPoint *)mapPoint
                              userInfo:(NSDictionary *)userInfo {
     NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewQueryRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
-        [weakSelf handleSuccessResponse:response];
+        [weakSelf handleSuccessResponse:response mapPoint:mapPoint];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleFailureResponse:response];
     }];
     [self.identityRequest  start];
 }
 
+- (void)analyseInfluencedAreaWithGisServer:(NSString *)url
+                               geometry:(AGSGeometry *)geometry
+                               userInfo:(NSDictionary *)userInfo {
+    [self pipeAnalyseFeatureWithGisServer:url geometry:geometry mapPoint:nil userInfo:userInfo];
+}
+
 - (void)pipeAnalyseFeatureWithGisServer:(NSString *)url
                                geometry:(AGSGeometry *)geometry
+                               mapPoint:(AGSPoint *)mapPoint
                                userInfo:(NSDictionary *)userInfo{
     NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildPipeAnalyseParameterWithGeometry:geometry userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewPipeAnalyseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
-        [weakSelf handlePipeAnalyseSuccessResponse:response];
+        [weakSelf handlePipeAnalyseSuccessResponse:response mapPoint:mapPoint];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleFailureResponse:response];
     }];
     [self.identityRequest  start];
 }
 
-- (void)handlePipeAnalyseSuccessResponse:(Z3MapViewPipeAnalyseResponse *)response {
+- (void)handlePipeAnalyseSuccessResponse:(Z3MapViewPipeAnalyseResponse *)response mapPoint:(AGSPoint *)mapPoint {
     [self hidenAccessoryView];
-    if (response.data) {
-        if (_delegate && [_delegate respondsToSelector:@selector(identityContextPipeAnaylseSuccess:pipeAnaylseResult:)]) {
-            [_delegate identityContextPipeAnaylseSuccess:self pipeAnaylseResult:response.data];
-            [self pause];
+    if (response.errorMsg) {
+        [self showToast:response.errorMsg];
+        if (_delegate && [_delegate respondsToSelector:@selector(identityContextAnaylseInfluenceFailure:)]) {
+            [_delegate identityContextAnaylseInfluenceFailure:self];
         }
     }else {
-        if (_delegate && [_delegate respondsToSelector:@selector(identityContextPipeAnaylseFailure:)]) {
-            [_delegate identityContextPipeAnaylseFailure:self];
+        if (_delegate && [_delegate respondsToSelector:@selector(identityContextAnaylseInfluenceSuccess:pipeAnaylseResult:)]) {
+            [_delegate identityContextAnaylseInfluenceSuccess:self pipeAnaylseResult:response.data];
+            [self pause];
         }
     }
-   
 }
 
-- (void)handlePipeAnalyseFailureResponse:(Z3BaseResponse *)response {
+- (void)handlePipeAnalyseFailureResponse:(Z3BaseResponse *)response mapPoint:(AGSPoint *)mapPoint {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hidenAccessoryView];
         [self showToast:NSLocalizedString(@"query_failure_tips", @"查询失败,请稍后再试")];
     });
-    if (_delegate && [_delegate respondsToSelector:@selector(identityContextPipeAnaylseFailure:)]) {
-        [_delegate identityContextPipeAnaylseFailure:self];
+    if (_delegate && [_delegate respondsToSelector:@selector(identityContextAnaylseInfluenceFailure:)]) {
+        [_delegate identityContextAnaylseInfluenceFailure:self];
     }
 }
 
-- (void)handleSuccessResponse:(Z3BaseResponse *)response {
+- (void)handleSuccessResponse:(Z3BaseResponse *)response mapPoint:(AGSPoint *)mapPoint {
     [self hidenAccessoryView];
     if ([response.data count] == 0) {
         [self showToast:NSLocalizedString(@"query_resluts_empty", @"未查询到数据")];
@@ -238,8 +259,8 @@
         }
         return;
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQuerySuccess:identityResults:)]) {
-        [self.delegate identityContextQuerySuccess:self identityResults:response.data];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
+        [self.delegate identityContextQuerySuccess:self mapPoint:mapPoint identityResults:response.data];
     }
     [self pause];
 

@@ -69,21 +69,31 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 
 - (CGSize)intrinsicContentSize {
     CGSize size = CGSizeZero;
-    if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
-        size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
+    if (self.closeValveable) {
+        if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
+            size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
+        }else {
+            size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
+        }
     }else {
-        size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
+       size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
     }
+    
     return size;
 }
 
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result {
     _result = result;
-    if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
-        [_closeValve setHidden:NO];
+    if (self.closeValveable) {
+        if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
+            [_closeValve setHidden:NO];
+        }else {
+            [_closeValve setHidden:YES];
+        }
     }else {
-        [_closeValve setHidden:YES];
+         [_closeValve setHidden:YES];
     }
+    
 }
 
 - (void)onClickedDetailBtn:(id)sender {

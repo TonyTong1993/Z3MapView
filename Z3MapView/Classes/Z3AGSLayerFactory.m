@@ -158,6 +158,33 @@
                 NSArray *tables = gdb.geodatabaseFeatureTables;
                 for (AGSGeodatabaseFeatureTable *table in tables) {
                     AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
+                    NSInteger serviceLayerID =  table.serviceLayerID;
+                    AGSPictureMarkerSymbol *symbol = nil;
+                    switch (serviceLayerID) {
+                            case 2:
+                           symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"valve"]];
+                            break;
+                            case 3:
+                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"hydrant"]];
+                            break;
+                            case 4:
+                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"TAPVALVE"]];
+                            break;
+                            case 5:
+                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"DILIVERY_POINT"]];
+                            break;
+                            case 6:
+                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"B.I"]];
+                            break;
+                            case 7:
+                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"PUMP"]];
+                            break;
+                        default:
+                            break;
+                    }
+                    if (symbol) {
+                        layer.renderer = [[AGSSimpleRenderer alloc] initWithSymbol:symbol];
+                    }
                     [layers addObject:layer];
                 }
             }

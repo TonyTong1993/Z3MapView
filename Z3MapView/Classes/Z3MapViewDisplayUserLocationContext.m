@@ -82,7 +82,8 @@
         }];
     }else {
        AGSCLLocationDataSource *dataSource = [[AGSCLLocationDataSource alloc] init];
-        dataSource.locationManager.distanceFilter = 5.0f;
+       dataSource.locationManager.distanceFilter = kCLDistanceFilterNone;
+       dataSource.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
        [self.mapView.locationDisplay setDataSource:dataSource];
         [dataSource startWithCompletion:^(NSError * _Nullable error) {
             if (error) {

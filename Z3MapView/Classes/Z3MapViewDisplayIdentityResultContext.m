@@ -92,16 +92,17 @@
 }
 
 - (void)display {
-    [self display:YES];
+    [self displayWithMapPoint:nil showPopup:YES];
 }
 
-- (void)display:(BOOL)showPopup {
+- (void)displayWithMapPoint:(AGSPoint *)mapPoint
+                  showPopup:(BOOL)showPopup {
     if (_results.count) {
         [self buildGraphics];
         [self displayGraphics];
         //默认选中第一个
         AGSGraphic *graphic = [self.graphics firstObject];
-        [self setSelectedIdentityGraphic:graphic showPopup:showPopup];
+        [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:showPopup];
     }
 }
 
@@ -110,18 +111,17 @@
     [self.mGraphicsOverlay.graphics addObjectsFromArray:self.graphics];
 }
 
-- (void)dispalyPopview {
-#warning 限制当属性为空时,不显示popView
+- (void)dispalyPopviewWithMapPoint:(AGSPoint *)mapPoint {
     if (_showPopup && (self.selectedGraphic.attributes.allKeys.count)) {
         if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-            [self dispalyPopviewForIpad];
+            [self dispalyPopviewForIpadWithMapPoint:mapPoint];
         }else if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-            [self displayPopViewForIphone];
+            [self displayPopViewForIphoneWithMapPoint:mapPoint];
         }
     }
 }
 
-- (void)dispalyPopviewForIpad {
+- (void)dispalyPopviewForIpadWithMapPoint:(AGSPoint *)mapPoint {
     UIView<Z3CalloutViewDelegate> *callout = nil;
     if (_delegate && [_delegate respondsToSelector:@selector(calloutViewForDisplayIdentityResultInMapView)]) {
         callout =  [_delegate calloutViewForDisplayIdentityResultInMapView];
@@ -134,14 +134,14 @@
     AGSArcGISFeature *feature = self.results[index];
     [callout setIdentityResult:feature];
     [self.mapView.callout setCustomView:callout];
-    AGSPoint *tapLocation = nil;
-    if (_delegate && [_delegate respondsToSelector:@selector(tapLocationForDisplayCalloutView)]) {
-       tapLocation =  [_delegate tapLocationForDisplayCalloutView];
-    }
+    AGSPoint *tapLocation = mapPoint;
+//    if (_delegate && [_delegate respondsToSelector:@selector(tapLocationForDisplayCalloutView)]) {
+//       tapLocation =  [_delegate tapLocationForDisplayCalloutView];
+//    }
     [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:tapLocation animated:YES];
 }
 
-- (void)displayPopViewForIphone {
+- (void)displayPopViewForIphoneWithMapPoint:(AGSPoint *)mapPoint {
     if (_displayIdentityResultView == nil) {
         [self.mapView addSubview:self.displayIdentityResultView];
         [self updateContraints];
@@ -173,7 +173,7 @@
     }
    BOOL isSame = self.selectedGraphic == self.graphics[index];
     if (!isSame) {
-        [self setSelectedIdentityGraphic:self.graphics[index]];
+        [self setSelectedIdentityGraphic:self.graphics[index] mapPoint:nil];
     }
 }
 
@@ -210,43 +210,46 @@
 
 }
 
-- (void)updateIdentityResults:(NSArray *)results {
-    [self updateIdentityResults:results showPopup:YES];
+- (void)updateIdentityResults:(NSArray *)results mapPoint:(AGSPoint *)mapPoint {
+    [self updateIdentityResults:results mapPoint:mapPoint showPopup:YES];
 }
 
 - (void)updateIdentityResults:(NSArray *)results
+                     mapPoint:(AGSPoint *)mapPoint
                     showPopup:(BOOL)showPopup{
     [self dismiss];
     _results = results;
     _graphics = [NSMutableArray arrayWithCapacity:_results.count];
-    [self display:showPopup];
+    [self displayWithMapPoint:mapPoint showPopup:showPopup];
 }
 
-- (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result {
+- (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result mapPoint:(AGSPoint *)mapPoint {
     NSMutableArray *resluts = [[NSMutableArray alloc] initWithArray:result.valves];
     [resluts addObjectsFromArray:result.users];
     [resluts addObjectsFromArray:result.closeLines];
     [resluts addObjectsFromArray:result.closeNodes];
-    [self updateIdentityResults:[resluts copy]];
+    [self updateIdentityResults:[resluts copy] mapPoint:mapPoint];
     [self buildPolygonGraphicWithGeometry:result.closearea];
 }
 
 
-- (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result {
-     [self updateIdentityResults:@[result]];
+- (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result mapPoint:(AGSPoint *)mapPoint{
+     [self updateIdentityResults:@[result] mapPoint:mapPoint];
 }
 
 - (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result
+                        mapPoint:(AGSPoint *)mapPoint
                        showPopup:(BOOL)showPopup{
-    [self updateIdentityResults:@[result] showPopup:showPopup];
+    [self updateIdentityResults:@[result] mapPoint:mapPoint showPopup:showPopup];
 }
 
 
-- (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic {
-    [self setSelectedIdentityGraphic:graphic showPopup:YES];
+- (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic mapPoint:(AGSPoint *)mapPoint {
+    [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:YES];
 }
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
+                          mapPoint:(AGSPoint *)mapPoint
                          showPopup:(BOOL)showPopup{
     if (_selectedGraphic != nil) {
         [_selectedGraphic setSelected:false];
@@ -254,13 +257,8 @@
     _selectedGraphic = graphic;
     if (_selectedGraphic == nil) return;
     [graphic setSelected:YES];
-    AGSPoint *center = nil;
-    if ([graphic.geometry isKindOfClass:[AGSPoint class]]) {
-        center = (AGSPoint *)graphic.geometry;
-    }else {
-        AGSPolyline *line = (AGSPolyline *) graphic.geometry;
-        center = [[line.parts partAtIndex:0] startPoint];
-    }
+    AGSGeometry *geometry = (AGSPolyline *) graphic.geometry;
+    AGSPoint *center = [self proximityPointToGeometry:geometry tapLocation:mapPoint];
     NSUInteger index = [self.graphics indexOfObject:graphic];
     [self post:Z3MapViewIdentityContextDidChangeSelectIndexNotification message:@(index)];
     [self.mapView setViewpointCenter:center completion:^(BOOL finished) {
@@ -268,16 +266,51 @@
         if (scale > 2000) {
             [self.mapView setViewpointScale:2000 completion:^(BOOL finished) {
                 if (showPopup) {
-                    [self dispalyPopview];
+                    [self dispalyPopviewWithMapPoint:center];
                 }
                 
             }];
         }else {
             if (showPopup) {
-                [self dispalyPopview];
+                [self dispalyPopviewWithMapPoint:center];
             }
         }
     }];
+}
+
+- (AGSPoint *)proximityPointToGeometry:(AGSGeometry *)geometry tapLocation:(AGSPoint *)tapLocation {
+    if (tapLocation) {
+        AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:geometry toPoint:tapLocation];
+        return proximityResult.point;
+    }
+    
+    switch (geometry.geometryType) {
+        case AGSGeometryTypePoint:
+            return (AGSPoint *)geometry;
+            break;
+        case AGSGeometryTypePolyline:
+        {
+            AGSPolyline *line = (AGSPolyline *) geometry;
+            return [[line.parts partAtIndex:0] startPoint];
+        }
+            break;
+        case AGSGeometryTypePolygon:
+        {
+            AGSPolygon *polygon = (AGSPolygon *) geometry;
+            return [AGSGeometryEngine labelPointForPolygon:polygon];
+        }
+            break;
+        case AGSGeometryTypeEnvelope:
+        {
+            AGSEnvelope *envelope = (AGSEnvelope *) geometry;
+            return [envelope center];
+        }
+            break;
+        default:
+            NSAssert(false, @"暂不支持的类型");
+            break;
+    }
+    return nil;
 }
 
 - (void)post:(NSNotificationName)notificationName message:(id)message {
@@ -292,12 +325,12 @@
     NSIndexPath *indexPath = notification.userInfo[@"message"];
     if (self.graphics.count) {
         AGSGraphic *graphic = self.graphics[indexPath.row];
-        [self setSelectedIdentityGraphic:graphic];
+        [self setSelectedIdentityGraphic:graphic mapPoint:nil];
     }else {
         [self buildGraphics];
         [self displayGraphics];
         AGSGraphic *graphic = self.graphics[indexPath.row];
-        [self setSelectedIdentityGraphic:graphic];
+        [self setSelectedIdentityGraphic:graphic mapPoint:nil];
     }
    
 }

@@ -82,15 +82,21 @@ NS_ASSUME_NONNULL_BEGIN
  查询成功的
 
  @param context 当前查询的上下文
+ @param mapPoint 最近一次点击的位置(如果是拉框查询,为mapPoint最后一次点击的位置)
  */
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(NSArray *)results;
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
+                           mapPoint:(AGSPoint *)mapPoint
+                    identityResults:(NSArray *)results;
 
 /**
  查询成功的
  
  @param context 当前查询的上下文
+ @param mapPoint 最近一次点击的位置(如果是拉框查询,为mapPoint最后一次点击的位置)
  */
-- (void)identityContextOfflineQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(NSArray *)results;
+- (void)identityContextOfflineQuerySuccess:(Z3MapViewIdentityContext *)context
+                                  mapPoint:(AGSPoint *)mapPoint
+                           identityResults:(NSArray *)results;
 
 /**
  查询失败
@@ -101,12 +107,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 爆管分析查询成功
+ 爆管分析/工程影响分析成功的回调
 
  @param context 当前查询的上下文
  @param result 分析结果
  */
-- (void)identityContextPipeAnaylseSuccess:(Z3MapViewIdentityContext *)context
+- (void)identityContextAnaylseInfluenceSuccess:(Z3MapViewIdentityContext *)context
                         pipeAnaylseResult:(Z3MapViewPipeAnaylseResult *)result;
 
 /**
@@ -114,15 +120,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param context 当前查询的上下文
  */
-- (void)identityContextPipeAnaylseFailure:(Z3MapViewIdentityContext *)context;
+- (void)identityContextAnaylseInfluenceFailure:(Z3MapViewIdentityContext *)context;
 
 
 /**
  当查询到数据后,点击地图触发对graphic的查询
 
  @param graphic 查询结果列表中的第一个
+ @param mapPoint 地图上点击的位置
  */
-- (void)identityGraphicSuccess:(AGSGraphic *)graphic;
+- (void)identityGraphicSuccess:(AGSGraphic *)graphic
+                      mapPoint:(AGSPoint *)mapPoint;
 
 /**
  当查询到数据后,点击地图触发对graphic的查询
@@ -173,9 +181,12 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
  默认查询
 
  @param geometry 地理信息
+ @param mapPoint 点击地图上的位置
  @param userInfo 用户额外数据
  */
-- (void)identifyGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary * _Nullable)userInfo;
+- (void)identifyGeometry:(AGSGeometry *)geometry
+                mapPoint:(AGSPoint *)mapPoint
+                userInfo:(NSDictionary * _Nullable)userInfo;
 
 
 /**
@@ -184,7 +195,8 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
  @param geometry 查询范围
  @param userInfo 用户额外数据
  */
-- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry userInfo:(NSDictionary *)userInfo;
+- (void)queryFeaturesWithGeometry:(AGSGeometry *)geometry
+                         userInfo:(NSDictionary *)userInfo;
 
 /**
  开放查询操作
@@ -219,7 +231,7 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
  @param geometry 爆管点
  @param userInfo  用户额外数据
  */
-- (void)pipeAnalyseFeatureWithGisServer:(NSString *)url
+- (void)analyseInfluencedAreaWithGisServer:(NSString *)url
                                geometry:(AGSGeometry *)geometry
                                userInfo:(NSDictionary *)userInfo;
 

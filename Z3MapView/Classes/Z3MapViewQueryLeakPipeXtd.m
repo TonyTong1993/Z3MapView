@@ -18,15 +18,15 @@
 #import "Z3MobileTask.h"
 #import "Z3QueryTaskHelper.h"
 @interface Z3MapViewQueryLeakPipeXtd()
-@property (nonatomic,strong) AGSPoint *tapPoint;//点击触发的位置
-
 @property (nonatomic,strong) AGSPoint *tapLocation;//管段上距离触发点最近的点
 @property (nonatomic,strong) NSDictionary *attributes;//管段上的属性
 @end
 @implementation Z3MapViewQueryLeakPipeXtd
 
 - (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResultInMapView {
-    return [[Z3HUDPipeLeakCalloutView alloc] init];
+    Z3HUDPipeLeakCalloutView *callout = [[Z3HUDPipeLeakCalloutView alloc] init];
+    callout.closeValveable = YES;
+    return callout;
 }
 
 - (AGSPoint *)tapLocationForDisplayCalloutView {
@@ -34,15 +34,18 @@
 }
 
 - (AGSGraphic *)pointGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes {
-   return [[Z3GraphicFactory factory] buildPipeLeakValvesMarkGraphicWithPoint:geometry attributes:attributes];
+   return [[Z3GraphicFactory factory] buildPipeLeakValvesMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
 }
 
-- (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
-    self.tapPoint = mapPoint;
+- (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context
+             didTapAtScreenPoint:(CGPoint)screenPoint
+                        mapPoint:(AGSPoint *)mapPoint {
    return [super identityContext:context didTapAtScreenPoint:screenPoint mapPoint:mapPoint];
 }
 
-- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context identityResults:(nonnull NSArray *)results {
+- (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
+                           mapPoint:(nonnull AGSPoint *)mapPoint
+                    identityResults:(nonnull NSArray *)results {
     //过滤爆管点
     __block double tmpDistance = 100000000000;
     __block Z3MapViewIdentityResult *reslut = nil;
@@ -50,9 +53,9 @@
     [results enumerateObjectsUsingBlock:^(Z3MapViewIdentityResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.geometryType isEqualToString:@"esriGeometryPolyline"]) {
             AGSPolyline *line = (AGSPolyline *)[obj geometry];
-           AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:line toPoint:self.tapPoint];
+           AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:line toPoint:mapPoint];
            AGSPoint  *temPoint = proximityResult.point;
-           double distance = [AGSGeometryEngine distanceBetweenGeometry1:temPoint geometry2:self.tapPoint];
+           double distance = [AGSGeometryEngine distanceBetweenGeometry1:temPoint geometry2:mapPoint];
             if (distance < tmpDistance) {
                 tmpDistance = distance;
                 reslut = obj;
@@ -60,27 +63,27 @@
             }
         }
     }];
-    self.tapLocation = tapLocation;
+    self.tapLocation = mapPoint;
     self.attributes = reslut.attributes;
-    [super identityContextQuerySuccess:context identityResults:@[reslut]];
+    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:@[reslut]];
     [self displayPipeLeakGraphicWithGeometry:tapLocation];
-    [self post:Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNotification message:reslut];
+    [self post:Z3MapViewDidSelectDeviceNotification message:reslut];
     
 }
 
-- (void)identityContextPipeAnaylseSuccess:(Z3MapViewIdentityContext *)context
+- (void)identityContextAnaylseInfluenceSuccess:(Z3MapViewIdentityContext *)context
                         pipeAnaylseResult:(Z3MapViewPipeAnaylseResult *)result {
     //将数据显示到图层上
-    [self.displayIdentityResultContext updatePipeAnalyseResult:result];
+    [self.displayIdentityResultContext updatePipeAnalyseResult:result mapPoint:self.tapLocation];
     [self post:Z3MapViewQueryLeakPipeXtdAnaylseSuccessNotification message:result];
 }
 
-- (void)identityContextPipeAnaylseFailure:(Z3MapViewIdentityContext *)context {
-    
+- (void)identityContextAnaylseInfluenceFailure:(Z3MapViewIdentityContext *)context {
+    [self post:Z3MapViewQueryLeakPipeXtdAnaylseFailureNotification message:nil];
 }
 
 - (void)identityGraphicFailure {
-    [self.displayIdentityResultContext setSelectedIdentityGraphic:nil];
+    [self.displayIdentityResultContext setSelectedIdentityGraphic:nil mapPoint:self.tapLocation];
     [self.mapView.callout dismiss];
 }
 
@@ -95,7 +98,9 @@
     
     Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];
     NSString *identityURL = [task.baseURL stringByAppendingPathComponent:@"PipeAnalyse/accident"];
-    [self.identityContext pipeAnalyseFeatureWithGisServer:identityURL geometry:self.tapLocation userInfo:arguments];
+    [self.identityContext analyseInfluencedAreaWithGisServer:identityURL
+                                                 geometry:self.tapLocation
+                                                 userInfo:arguments];
 
 }
 
@@ -110,7 +115,7 @@
 - (void)dismiss {
     [super dismiss];
     [self dissmissPipeLeakGraphic];
-    [self post:Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification message:nil];
+    [self post:Z3MapViewDeselectDeviceNotification message:nil];
 }
 
 - (void)dissmissPipeLeakGraphic {

@@ -11,7 +11,7 @@
 #import "Z3MapViewIdentityResult.h"
 #import <ArcGIS/ArcGIS.h>
 @implementation Z3MapViewPipeAnalyseResponse
-@synthesize data = _data;
+@synthesize data = _data,errorMsg = _errorMsg;
 - (void)toModel {
     NSDictionary *JSONObject = self.responseJSONObject;
     NSDictionary *closeArea = JSONObject[@"closearea"];
@@ -19,6 +19,11 @@
     NSDictionary *usersObj = JSONObject[@"users"];
     NSDictionary *closeLinesObj = JSONObject[@"closeLines"];
     NSDictionary *closeNodesObj = JSONObject[@"closeNodes"];
+    NSString *errorMessage = JSONObject[@"errmsg"];
+    if (errorMessage.length) {
+        _errorMsg = errorMessage;
+        return;
+    }
     NSError * __autoreleasing error = nil;
     AGSPolygon *area = (AGSPolygon *)[AGSPolygon fromJSON:closeArea error:&error];
     Z3MapViewPipeAnaylseResult *result = [[Z3MapViewPipeAnaylseResult alloc] init];

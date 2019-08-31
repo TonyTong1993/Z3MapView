@@ -136,6 +136,11 @@
     return layerID;
 }
 
+- (NSString *)closeableValveLayerIDs {
+    
+    return @"all:1,3";
+}
+
 #warning 获取阀门ID ID从元数据中获取
 - (NSInteger )valveLayerID {
     return 1;

@@ -49,12 +49,20 @@ extern NSNotificationName const Z3PipeLeakAnalysisViewControllerClearNotificatio
 extern NSNotificationName const Z3HUDPipeLeakCalloutViewQuickLookDetailNotification;
 //分析爆管点成功
 extern NSNotificationName const Z3MapViewQueryLeakPipeXtdAnaylseSuccessNotification;
-//已选中爆管点
-extern NSNotificationName const Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNotification;
-//已取消选中爆管点
-extern NSNotificationName const Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification;
+extern NSNotificationName const Z3MapViewQueryLeakPipeXtdAnaylseFailureNotification;
+//已选中设备(如爆管点/具有关断特性的点)
+extern NSNotificationName const Z3MapViewDidSelectDeviceNotification;
+//已取消选中设备(如爆管点/具有关断特性的点)
+extern NSNotificationName const Z3MapViewDeselectDeviceNotification;
 //二次关阀
 extern NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification;
+
+//工程影响范围分析面数据通信
+//查询具有关阀属性的管点
+extern NSNotificationName const Z3CloseValveAnalysisViewControllerQueryValveNotification;
+//查询分析接口
+extern NSNotificationName const Z3CloseValveAnalysisViewControllerAnalyseCloseValveNotification;
+
 
 //问题反馈
 extern NSNotificationName const Z3DevicePickerViewCellTapForSelectDeviceNotification;
@@ -69,7 +77,6 @@ extern NSNotificationName const Z3IssueFeedbackViewControllerFinishMapViewNotifi
 //点击标记按钮
 extern NSNotificationName const Z3ImagePickerCellStartMarkMapViewNotification;
 
-
 //通知取消标记功能
 extern NSNotificationName const ZZCommonMapViewControllerCancelMarkMapViewNotification;
 extern NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotification;
@@ -77,8 +84,6 @@ extern NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotifi
 //设备属性相关
 extern NSNotificationName const Z3AGSCalloutViewIPadAddPhotoNotification;
 extern NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification;
-
-
 
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 

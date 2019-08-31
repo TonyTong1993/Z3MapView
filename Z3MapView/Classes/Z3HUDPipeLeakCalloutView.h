@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Z3HUDPipeLeakCalloutView : UIView<Z3CalloutViewDelegate>
-
+@property (nonatomic,assign) BOOL closeValveable;
 @end
 
 NS_ASSUME_NONNULL_END

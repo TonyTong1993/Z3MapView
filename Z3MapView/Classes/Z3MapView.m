@@ -42,12 +42,17 @@ NSNotificationName const Z3TapIdentityResultViewControllerCancelNotification = @
 NSNotificationName const Z3HUDPipeLeakCalloutViewQuickLookDetailNotification = @"zzht.pipe.analysis.quick.look.detail";
 //爆管点分析,接口返回成功
 NSNotificationName const Z3MapViewQueryLeakPipeXtdAnaylseSuccessNotification = @"zzht.pipe.analysis.success";
+NSNotificationName const Z3MapViewQueryLeakPipeXtdAnaylseFailureNotification = @"zzht.pipe.analysis.failure";
 //选中爆管点
-NSNotificationName const Z3MapViewQueryLeakPipeXtdSelectedIssueLocationNotification = @"zzht.pipe.analysis.quick.selected.pipe";
+NSNotificationName const Z3MapViewDidSelectDeviceNotification = @"zzht.pipe.analysis.quick.selected.pipe";
 //已取消选中爆管点
-NSNotificationName const Z3MapViewQueryLeakPipeXtdDeselectIssueLocationNotification = @"zzht.pipe.analysis.deselect.pipe";
+NSNotificationName const Z3MapViewDeselectDeviceNotification = @"zzht.pipe.analysis.deselect.pipe";
 //二次关阀
 NSNotificationName const Z3HUDPipeLeakCalloutViewCloseValveNotification = @"zzht.pipe.analysis.close.valve";
+//工程影响范围
+NSNotificationName const Z3CloseValveAnalysisViewControllerQueryValveNotification = @"zzht.valve.analysis.choose.valve";;
+//查询分析接口
+NSNotificationName const Z3CloseValveAnalysisViewControllerAnalyseCloseValveNotification = @"zzht.valve.analysis.close.valve";;
 
 //问题反馈
  NSNotificationName const Z3DevicePickerViewCellTapForSelectDeviceNotification = @"zzht.issue.feedback.select.device";

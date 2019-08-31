@@ -33,48 +33,58 @@ NS_ASSUME_NONNULL_BEGIN
  将Identity or Query 接口返回的数据显示到地图上
 
  @param results 查询数据结果
+ @param mapPoint 当前点击的位置
  */
-- (void)updateIdentityResults:(NSArray *)results;
+- (void)updateIdentityResults:(NSArray *)results
+                     mapPoint:(AGSPoint *)mapPoint;
 
 
 /**
  将Identity or Query 接口返回的数据显示到地图上
 
  @param results 查询数据结果
+ @param mapPoint 当前点击的位置
  @param showPopup 是否显示popup
  */
 - (void)updateIdentityResults:(NSArray *)results
+                     mapPoint:(AGSPoint *)mapPoint
                     showPopup:(BOOL)showPopup;
 
 /**
  将爆管分析结果绘制到地图上
 
  @param result 分析结果
+ @param mapPoint 当前点击的位置
  */
-- (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result;
+- (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result
+                       mapPoint:(AGSPoint * _Nullable)mapPoint;
 
 /**
  将设备选中结果绘制到地图上
- 
  @param result 设备选中结果
+ @param mapPoint 点击的位置
  */
-- (void)updateDevicePickerResult:(Z3MapViewIdentityResult *)result;
+- (void)updateDevicePickerResult:(Z3MapViewIdentityResult *)result mapPoint:(AGSPoint * _Nullable)mapPoint;
 
 /**
  将设备选中结果绘制到地图上
 
  @param result 设备选中结果
+ @param mapPoint 点击的位置
  @param showPopup 是否显示popup
  */
 - (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result
+                        mapPoint:(AGSPoint *)mapPoint
                        showPopup:(BOOL)showPopup;
 
 /**
  设置选中的Graphic
 
  @param graphic 要素
+ @param mapPoint 当前点击的位置
  */
-- (void)setSelectedIdentityGraphic:(AGSGraphic * _Nullable)graphic;
+- (void)setSelectedIdentityGraphic:(AGSGraphic * _Nullable)graphic
+                          mapPoint:(AGSPoint * _Nullable)mapPoint;
 
 /**
  控制是否显示popup view
