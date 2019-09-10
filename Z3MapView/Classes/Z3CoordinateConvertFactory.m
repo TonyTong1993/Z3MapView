@@ -104,8 +104,8 @@
     if ([Z3MobileConfig shareConfig].coorTransToken) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/trans";
         NSDictionary *params = @{
-                                 @"x":@(latitude),
-                                 @"y":@(longitude),
+                                 @"x":@(longitude),
+                                 @"y":@(latitude),
                                  @"h":@(0),
                                  @"configId":[Z3MobileConfig shareConfig].coorTransToken,
                                  };
@@ -115,7 +115,7 @@
                 NSDictionary *data = response.responseJSONObject[@"data"];
                 double x = [data[@"x"] doubleValue];
                 double y = [data[@"y"] doubleValue];
-                AGSPoint *point = [self pointWithX:x y:y wkid:[Z3MobileConfig shareConfig].wkid];
+                AGSPoint *point = [self pointWithX:y y:x wkid:[Z3MobileConfig shareConfig].wkid];
                 complication(point);
             }else {
 //                [MBProgressHUD showError:@"坐标转换失败,请稍后再试!"];
@@ -134,8 +134,8 @@
     if ([Z3MobileConfig shareConfig].coorTransToken && point) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/transReverse";
         NSDictionary *params = @{
-                                 @"x":@(point.x),
-                                 @"y":@(point.y),
+                                 @"x":@(point.y),
+                                 @"y":@(point.x),
                                  @"h":@(0),
                                  @"configId":[Z3MobileConfig shareConfig].coorTransToken,
                                  };

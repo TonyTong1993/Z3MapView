@@ -46,13 +46,12 @@ static NSString *context = @"Z3MapViewDisplayContext";
     Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
     NSArray *layers = [factory loadMapLayers];
     if (!layers.count) {
-        [factory loadOfflineMapLayersFromGeoDatabase:^(NSArray * _Nonnull layers) {
-            [map.operationalLayers addObjectsFromArray:layers];
-            for (AGSFeatureLayer *layer in layers) {
-                [layer addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
-            }
-            
-        }];
+        NSArray *geodatabases = [factory offlineGeodatabaseFileNames];
+        for (NSString *fileName in geodatabases) {
+            [factory loadOfflineGeoDatabaseWithFileName:fileName complicationHandler:^(NSArray * _Nonnull layers, NSArray * _Nonnull errors) {
+                 [map.operationalLayers addObjectsFromArray:layers];
+            }];
+        }
     }else {
         [map.operationalLayers addObjectsFromArray:layers];
         for (AGSLayer *layer in layers) {

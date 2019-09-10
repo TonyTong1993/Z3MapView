@@ -6,10 +6,10 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 
-#import "Z3MapViewIdentityParameterBuilder.h"
+#import "Z3MapViewParameterBuilder.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3GISMetaBuilder.h"
-@implementation Z3MapViewIdentityParameterBuilder
+@implementation Z3MapViewParameterBuilder
 + (instancetype)builder {
     return [[super alloc] init];
 }
@@ -121,4 +121,48 @@
     mparams[@"returnGeometry"] = @"true";
     return [mparams copy];
 }
+
+/**
+ 查询管网设备统计的接口
+ 
+ @param netName 管网名
+ @param layerIds 图层IDs
+ @param where 条件
+ @return 参数
+ */
+- (NSDictionary *)buildQueryStatisticNetParameterWithNetName:(NSString *)netName
+                                                    layerIds:(NSString *)layerIds
+                                                       where:(NSString *)where {
+    NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
+    mparams[@"layerIds"] = layerIds;
+    mparams[@"where"] = where;
+    mparams[@"netName"] = netName;
+     return [mparams copy];
+}
+
+/*
+ access_token=eyJ1c2VyTmFtZSI6ImFkbWluIiwidGltZSI6IjIwMTktMDktMDkgMTg6MDc6MDYifQ==&f=json&where=1=1&groupByFieldsForStatistics=口径&outFields=口径,长度&outStatistics=[{"statisticType":"SUM","onStatisticField":"长度","outStatisticFieldName":"长度"}]&geometry=&returnGeometry=false&timeout=60000
+ */
+
+/**
+ 查询管网管线统计的接口
+ 
+ @param groupByFieldsForStatistics 口径
+ @param outFields 口径,长度
+ @param outStatistics [{"statisticType":"SUM","onStatisticField":"长度","outStatisticFieldName":"长度"}]
+ @return 参数
+ */
+- (NSDictionary *)buildQueryStatisticPipeParameterWithGroupByFieldsForStatistics:(NSString *)groupByFieldsForStatistics
+                                                                       outFields:(NSString *)outFields
+                                                                   outStatistics:(NSString *)outStatistics {
+    NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
+    mparams[@"groupByFieldsForStatistics"] = groupByFieldsForStatistics;
+    mparams[@"outFields"] = outFields;
+    mparams[@"outStatistics"] = outStatistics;
+    mparams[@"geometry"] = @"";
+    mparams[@"returnGeometry"] = @"false";
+    mparams[@"timeout"] = @(60000);
+    return [mparams copy];
+}
+
 @end

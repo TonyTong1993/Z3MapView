@@ -12,6 +12,7 @@
 #import <ArcGIS/ArcGIS.h>
 #import <YYKit/YYKit.h>
 #import "MBProgressHUD+Z3.h"
+#import "Z3URLConfig.h"
 @implementation Z3AGSLayerFactory
 + (instancetype)factory {
     return [[super alloc] init];
@@ -32,11 +33,19 @@
 }
 
 - (AGSLayer *)loadMapLayer:(Z3MapLayer *)mapLayer {
+    NSString *rootURLPath  = [Z3URLConfig configration].rootURLPath;
+    NSString *proxyURL = mapLayer.url;
+    NSString *urlStr  = nil;
+    if ([proxyURL hasPrefix:@"http"]) {
+        urlStr = mapLayer.url;
+    }else {
+       urlStr = [NSString stringWithFormat:@"%@/%@",rootURLPath,proxyURL];
+    }
+    NSURL *url = [NSURL URLWithString:urlStr];
     if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgislocaltiledlayer"]) {
         
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgistiledmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
-        NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
         layer.minScale = [mapLayer.dispMinScale doubleValue];
         layer.maxScale = [mapLayer.dispMaxScale doubleValue];
@@ -47,7 +56,6 @@
         
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisdynamicmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
-        NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
         layer.minScale = 520000; //[mapLayer.dispMinScale doubleValue];
         layer.maxScale = [mapLayer.dispMaxScale doubleValue];
@@ -55,7 +63,6 @@
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"agcgisvectortiledlayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
-        NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
 //        layer.minScale = [mapLayer.dispMinScale doubleValue];
 //        layer.maxScale = 250;//[mapLayer.dispMaxScale doubleValue];
@@ -67,7 +74,6 @@
             //        [[AGSServiceImageTiledLayer alloc] initWithTileInfo:<#(nonnull AGSTileInfo *)#> fullExtent:<#(nonnull AGSEnvelope *)#>]
     
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"ecitytiledmapservicelayer"]) {
-        NSURL *url = [NSURL URLWithString:mapLayer.url];
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
         [layer setLayerID:mapLayer.ID];
         return layer;
@@ -147,6 +153,7 @@
     NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgss.geodatabase"];
     NSURL *gdbURL = [NSURL URLWithString:geodatabasePath];
+    NSString *localDBPath = [documents stringByAppendingString:@"package"];
     BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:geodatabasePath];
     NSMutableArray *layers = [[NSMutableArray alloc] init];
     if (isExist) {
@@ -191,6 +198,20 @@
             complicationHandler([layers copy]);
         }];
     }
+}
+
+- (NSArray *)loadFeatureLayerFormGeoDatabase:(AGSGeodatabase *)gdb {
+    NSArray *tables = gdb.geodatabaseFeatureTables;
+    NSMutableArray *layers = [NSMutableArray array];
+    for (AGSGeodatabaseFeatureTable *table in tables) {
+        AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
+        NSString *name =  layer.name;
+        DLog(@"name = %@",name);
+        BOOL visible =  layer.visible;
+        NSString *layerID = layer.layerID;
+        [layers addObject:layer];
+    }
+    return [layers copy];
 }
 
 - (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer {
@@ -246,5 +267,42 @@
     }];
     
 }
+
+- (NSArray *)offlineGeodatabaseFileNames {
+    NSArray *fileNames = @[
+                            @"PIPE01.geodatabase",
+                           ];
+    
+    return fileNames;
+}
+
+/*
+ @"PIPE00.geodatabase",
+ @"PIPE01.geodatabase",
+ @"PIPE02.geodatabase",
+ @"PIPE03.geodatabase",
+ @"PIPE04.geodatabase",
+ @"B.I..geodatabase",
+ @"BLANKING_FLANGE.geodatabase",
+ @"COUPLING.geodatabase",
+ @"CROSS.geodatabase",
+ @"DILIVERY_POINT.geodatabase",
+ @"COUPLING.geodatabase",
+ @"EXPANSION.geodatabase",
+ @"HYDRANT.geodatabase",
+ @"METER.geodatabase",
+ @"NSTRUCTURE.geodatabase",
+ @"PUMP.geodatabase",
+ @"REDUCER.geodatabase",
+ @"SAMPLE.geodatabase",
+ @"SERCON00.geodatabase",
+ @"SERCON01.geodatabase",
+ @"TAP.geodatabase",
+ @"TAPVALVE.geodatabase",
+ @"TEE.geodatabase",
+ @"TOPO_POINT.geodatabase",
+ @"TRANSITION.geodatabase",
+ @"VALVE00.geodatabase"
+ */
 
 @end

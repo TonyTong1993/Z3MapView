@@ -93,6 +93,39 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSInteger )gisErrorReportLayerID;
 
+
+/**
+ net字段数据不能为空的所有管网元数据信息
+
+ @return 管网元数据信息
+ */
+- (NSArray *)metaInfosWithNetNotEmpty;
+
+
+/**
+ 查询所有管线
+
+ @param code 管网编号
+ @return featureLayers
+ */
+- (NSArray *)pipeLinesWithCode:(NSString *)code;
+
+/**
+ 查询所有设备点信息
+
+ @param code 管网编号
+ @return featureLayers
+ */
+- (NSArray *)devicesWithCode:(NSString *)code;
+
+
+/**
+ 获取设备所有图层IDs
+
+ @return IDs
+ */
+- (NSString *)deviceLayerIds;
+
 @end
 
 NS_ASSUME_NONNULL_END

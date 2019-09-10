@@ -15,7 +15,7 @@
 #import "Z3MapViewPipeAnalyseRequest.h"
 #import "Z3MapViewPipeAnalyseResponse.h"
 #import <MBProgressHUD/MBProgressHUD.h>
-#import "Z3MapViewIdentityParameterBuilder.h"
+#import "Z3MapViewParameterBuilder.h"
 #import "Z3MapViewPrivate.h"
 #import "Z3MapView.h"
 #import "Z3MobileConfig.h"
@@ -177,7 +177,7 @@
                              userInfo:(NSDictionary *)userInfo {
     NSInteger wkid =  self.mapView.spatialReference.WKID;
     AGSEnvelope *extent = self.mapView.visibleArea.extent;
-    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance excludePipeLine:self.excludePipeLine userInfo:userInfo];
+    NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance excludePipeLine:self.excludePipeLine userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
      [self showAccessoryView];
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
@@ -193,7 +193,7 @@
                              geometry:(AGSGeometry *)geometry
                              mapPoint:(AGSPoint *)mapPoint
                              userInfo:(NSDictionary *)userInfo {
-    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
+    NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewQueryRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
@@ -214,7 +214,7 @@
                                geometry:(AGSGeometry *)geometry
                                mapPoint:(AGSPoint *)mapPoint
                                userInfo:(NSDictionary *)userInfo{
-    NSDictionary *params = [[Z3MapViewIdentityParameterBuilder builder] buildPipeAnalyseParameterWithGeometry:geometry userInfo:userInfo];
+    NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildPipeAnalyseParameterWithGeometry:geometry userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewPipeAnalyseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {

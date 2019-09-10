@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class AGSGeometry;
-@interface Z3MapViewIdentityParameterBuilder : NSObject
+@interface Z3MapViewParameterBuilder : NSObject
 + (instancetype)builder;
 
 /**
@@ -43,6 +43,37 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *)buildPipeAnalyseParameterWithGeometry:(AGSGeometry *)geometry
                                                userInfo:(NSDictionary *)userInfo;
+
+
+/**
+ 查询管网设备统计的接口
+
+ @param netName 管网名
+ @param layerIds 图层IDs
+ @param where 条件
+ @return 参数
+ */
+- (NSDictionary *)buildQueryStatisticNetParameterWithNetName:(NSString *)netName
+                                               layerIds:(NSString *)layerIds
+                                                  where:(NSString *)where;
+
+/*
+access_token=eyJ1c2VyTmFtZSI6ImFkbWluIiwidGltZSI6IjIwMTktMDktMDkgMTg6MDc6MDYifQ==&f=json&where=1=1&groupByFieldsForStatistics=口径&outFields=口径,长度&outStatistics=[{"statisticType":"SUM","onStatisticField":"长度","outStatisticFieldName":"长度"}]&geometry=&returnGeometry=false&timeout=60000
+ */
+
+/**
+ 查询管网管线统计的接口
+
+ @param groupByFieldsForStatistics 口径
+ @param outFields 口径,长度
+ @param outStatistics [{"statisticType":"SUM","onStatisticField":"长度","outStatisticFieldName":"长度"}]
+ @return 参数
+ */
+- (NSDictionary *)buildQueryStatisticPipeParameterWithGroupByFieldsForStatistics:(NSString *)groupByFieldsForStatistics
+                                                                       outFields:(NSString *)outFields
+                                                                   outStatistics:(NSString *)outStatistics;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

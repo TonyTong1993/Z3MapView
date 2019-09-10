@@ -20,6 +20,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)filterSubLayesForOnLineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer
                                                       ids:(NSArray *)ids
                                                   visible:(BOOL)visible;
+
+
+- (void)loadOfflineGeoDatabaseWithFileName:(NSString *)fileName
+                       complicationHandler:(void (^)(NSArray *layers,NSArray *errors))complicationHandler;
+
+
+/**
+ 离线geodatabase 文件名
+
+ @return 文件名集合
+ */
+- (NSArray *)offlineGeodatabaseFileNames;
 @end
 
 NS_ASSUME_NONNULL_END

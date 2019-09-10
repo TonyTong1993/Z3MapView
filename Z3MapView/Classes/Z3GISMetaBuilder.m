@@ -13,6 +13,7 @@
 #import "Z3FeatureLayerProperty.h"
 #import "Z3FeatureQueryCondition.h"
 #import "NSString+Chinese.h"
+#import "Z3StatisticsConfigurationFacotry.h"
 @implementation Z3GISMetaBuilder
 + (instancetype)builder {
     return [[super alloc] init];
@@ -96,7 +97,6 @@
     return [conditons sortedArrayUsingDescriptors:@[sort]];
 }
 
-
 - (NSString *)allGISMetaLayerIDs {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableString *mstr = [[NSMutableString alloc] initWithString:@"all:"];
@@ -123,17 +123,18 @@
 }
 
 - (NSString *)pipeLayerID {
-    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
-    __block NSString *layerID = @"";
-    for (Z3GISMeta *meta in metas) {
-        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-#warning 获取管段的图层ID因项目而定
-            if ([obj.dname isEqualToString:@"PIPE"]) {
-                layerID = [NSString stringWithFormat:@"%ld,",obj.layerid];
-            }
-        }];
-    }
-    return layerID;
+//    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+//    __block NSString *layerID = @"";
+//    for (Z3GISMeta *meta in metas) {
+//        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//#warning 获取管段的图层ID因项目而定
+//            if ([obj.dname isEqualToString:@"PIPE"]) {
+//                layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
+//                *stop = YES;
+//            }
+//        }];
+//    }
+    return @"0";
 }
 
 - (NSString *)closeableValveLayerIDs {
@@ -176,5 +177,55 @@
     
     return layerId;
 }
+
+- (NSArray *)metaInfosWithNetNotEmpty {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:metas.count];
+    [metas enumerateObjectsUsingBlock:^(Z3GISMeta *meta, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([meta.net count]) {
+            [results addObject:meta];
+            *stop = YES;
+        }
+    }];
+    return results;
+}
+
+- (NSArray *)pipeLinesWithCode:(NSString *)code {
+    NSMutableArray *results = [[NSMutableArray alloc] init];
+    [[self metaInfosWithNetNotEmpty] enumerateObjectsUsingBlock:^(Z3GISMeta *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.code isEqualToString:code]) {
+            [obj.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *featureLayer, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (featureLayer.geotype == 0) {
+                    [results addObject:featureLayer];
+                }
+            }];
+            *stop = YES;
+        }
+    }];
+    return results;
+}
+
+- (NSArray *)devicesWithCode:(NSString *)code {
+    NSMutableArray *results = [[NSMutableArray alloc] init];
+    [[self metaInfosWithNetNotEmpty] enumerateObjectsUsingBlock:^(Z3GISMeta *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.code isEqualToString:code]) {
+            [obj.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *featureLayer, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (featureLayer.geotype == 1) {
+                    [results addObject:featureLayer];
+                }
+            }];
+            *stop = YES;
+        }
+    }];
+    return results;
+}
+
+- (NSString *)deviceLayerIds {
+    NSString *jsName = [Z3StatisticsConfigurationFacotry factory].jsName;
+    NSArray *results = [self devicesWithCode:jsName];
+    NSArray *layerIds = [results valueForKey:@"layerid"];
+    return   [layerIds componentsJoinedByString:@","];
+}
+
 
 @end
