@@ -22,8 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
                                                   visible:(BOOL)visible;
 
 
+
+/**
+ 加载离线数据
+
+ @param fileName 离线geodatabase 文件名
+ @param complicationHandler 完成回调
+ */
 - (void)loadOfflineGeoDatabaseWithFileName:(NSString *)fileName
-                       complicationHandler:(void (^)(NSArray *layers,NSArray *errors))complicationHandler;
+                       complicationHandler:(void (^)(NSArray * _Nullable layers,  NSError * _Nullable error))complicationHandler;
 
 
 /**

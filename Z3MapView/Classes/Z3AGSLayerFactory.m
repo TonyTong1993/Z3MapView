@@ -200,6 +200,34 @@
     }
 }
 
+- (void)loadOfflineGeoDatabaseWithFileName:(NSString *)fileName complicationHandler:(void (^)(NSArray * layers,  NSError* error))complicationHandler {
+    NSString *documentDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *packageDirectory = [documentDirectory stringByAppendingPathComponent:@"package"];
+    NSString *targetDirectory = [packageDirectory stringByAppendingPathComponent:fileName];
+    BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:targetDirectory];
+    if (isExist) {
+        NSURL *gdbURL = [NSURL URLWithString:targetDirectory];
+        AGSGeodatabase *gdb =  [[AGSGeodatabase alloc] initWithFileURL:gdbURL];
+        [gdb loadWithCompletion:^(NSError * _Nullable error) {
+            if (error) {
+                complicationHandler(nil,error);
+                return;
+            }
+           NSArray *layers = [self loadFeatureLayerFormGeoDatabase:gdb];
+            complicationHandler(layers,nil);
+        }];
+    }else {
+        NSErrorDomain domain = @"zzht.load.layer.failure";
+        NSInteger code = 404;
+        NSDictionary *userInfo = @{
+                                   NSLocalizedDescriptionKey:@"Not Found",
+                                   };
+        NSError *error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
+         complicationHandler(nil,error);
+    }
+    
+}
+
 - (NSArray *)loadFeatureLayerFormGeoDatabase:(AGSGeodatabase *)gdb {
     NSArray *tables = gdb.geodatabaseFeatureTables;
     NSMutableArray *layers = [NSMutableArray array];
@@ -270,39 +298,37 @@
 
 - (NSArray *)offlineGeodatabaseFileNames {
     NSArray *fileNames = @[
-                            @"PIPE01.geodatabase",
+                           @"PIPE00.geodatabase",
+                           @"PIPE01.geodatabase",
+                           @"PIPE02.geodatabase",
+                           @"PIPE03.geodatabase",
+                           @"PIPE04.geodatabase",
+                           @"B.I..geodatabase",
+                           @"BLANKING_FLANGE.geodatabase",
+                           @"COUPLING.geodatabase",
+                           @"CROSS.geodatabase",
+                           @"DILIVERY_POINT.geodatabase",
+                           @"COUPLING.geodatabase",
+                           @"EXPANSION.geodatabase",
+                           @"HYDRANT.geodatabase",
+                           @"METER.geodatabase",
+                           @"NSTRUCTURE.geodatabase",
+                           @"PUMP.geodatabase",
+                           @"REDUCER.geodatabase",
+                           @"SAMPLE.geodatabase",
+                           @"SERCON00.geodatabase",
+                           @"SERCON01.geodatabase",
+                           @"TAP.geodatabase",
+                           @"TAPVALVE.geodatabase",
+                           @"TEE.geodatabase",
+                           @"TOPO_POINT.geodatabase",
+                           @"TRANSITION.geodatabase",
+                           @"VALVE00.geodatabase"
                            ];
     
     return fileNames;
 }
 
-/*
- @"PIPE00.geodatabase",
- @"PIPE01.geodatabase",
- @"PIPE02.geodatabase",
- @"PIPE03.geodatabase",
- @"PIPE04.geodatabase",
- @"B.I..geodatabase",
- @"BLANKING_FLANGE.geodatabase",
- @"COUPLING.geodatabase",
- @"CROSS.geodatabase",
- @"DILIVERY_POINT.geodatabase",
- @"COUPLING.geodatabase",
- @"EXPANSION.geodatabase",
- @"HYDRANT.geodatabase",
- @"METER.geodatabase",
- @"NSTRUCTURE.geodatabase",
- @"PUMP.geodatabase",
- @"REDUCER.geodatabase",
- @"SAMPLE.geodatabase",
- @"SERCON00.geodatabase",
- @"SERCON01.geodatabase",
- @"TAP.geodatabase",
- @"TAPVALVE.geodatabase",
- @"TEE.geodatabase",
- @"TOPO_POINT.geodatabase",
- @"TRANSITION.geodatabase",
- @"VALVE00.geodatabase"
- */
+
 
 @end

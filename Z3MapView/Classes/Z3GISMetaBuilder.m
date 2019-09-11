@@ -134,7 +134,7 @@
 //            }
 //        }];
 //    }
-    return @"0";
+    return @"40";
 }
 
 - (NSString *)closeableValveLayerIDs {
