@@ -15,9 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSString *esritype;
 @property (nonatomic,copy) NSString *name;
 @property (nonatomic,copy) NSString *dname;
+
+/**
+ 1====string 文本
+ 2====date  日期
+ 3====下拉
+ */
+@property (nonatomic,assign) NSInteger disptype;
 @property (nonatomic,copy) NSString *defval;
 @property (nonatomic,copy) NSString *displayValue;
 @property (nonatomic,assign) NSInteger findex;
 @end
-
 NS_ASSUME_NONNULL_END

@@ -62,37 +62,47 @@
     return deviceInfo;
 }
 
-- (NSArray *)buildFeatureQueryConditions {
+- (NSArray *)buildPipeNetQueryConditions {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
-    NSMutableArray *conditons = [NSMutableArray array];
-    [metas enumerateObjectsUsingBlock:^(Z3GISMeta *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSArray *features = obj.net;
-        [features enumerateObjectsUsingBlock:^(Z3FeatureLayer *feature, NSUInteger idx, BOOL * _Nonnull stop) {
-            Z3FeatureQueryCondition *condition = [[Z3FeatureQueryCondition alloc] init];
-            condition.name = feature.dname;
-            condition.displayName = feature.dname;
-            condition.findex = idx;
-            condition.featureId = feature.layerid;
-            condition.featureNum = feature.dno;
-            NSArray *sunConditions = [self buildSubConditionsWithFields:feature.fields];
-            condition.properties = sunConditions;
-            [conditons addObject:condition];
-        }];
-    }];
-    return conditons;
+    NSMutableArray *sections = [NSMutableArray array];
+    for (Z3GISMeta *meta in metas) {
+        NSArray *features = meta.net;
+        if (features.count) {
+            Z3PipeNetQueryCondition *pipeNetCondition = [[Z3PipeNetQueryCondition alloc] init];
+            pipeNetCondition.code = meta.code;
+            pipeNetCondition.alias = meta.layername;
+            NSMutableArray *featureConditions = [NSMutableArray array];
+            for (Z3FeatureLayer *feature in features) {
+                Z3FeatureQueryCondition *condition = [[Z3FeatureQueryCondition alloc] init];
+                condition.name = feature.dname;
+                condition.alias = feature.dname;
+                condition.layerid = feature.layerid;
+                condition.featureNum = feature.dno;
+                NSArray *properties = [self buildFeaturePropertyConditionsWithFields:feature.fields];
+                condition.properties = properties;
+                [featureConditions addObject:condition];
+            }
+            pipeNetCondition.featureConditions = [featureConditions copy];
+            [sections addObject:pipeNetCondition];
+        }
+    }
+    
+    return [sections copy];
 }
 
-- (NSArray *)buildSubConditionsWithFields:(NSArray *)fields {
-     NSMutableArray *conditons = [NSMutableArray array];
-    [fields enumerateObjectsUsingBlock:^(Z3FeatureLayerProperty *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+- (NSArray *)buildFeaturePropertyConditionsWithFields:(NSArray *)fields {
+    NSMutableArray *conditons = [NSMutableArray array];
+    for (Z3FeatureLayerProperty *obj in fields) {
         if ([obj.alias isChinese]) {
-            Z3FeatureQueryCondition *condition = [[Z3FeatureQueryCondition alloc] init];
+            Z3FeaturePropertyCondition *condition = [[Z3FeaturePropertyCondition alloc] init];
             condition.name = obj.name;
-            condition.displayName = obj.alias;
+            condition.alias = obj.alias;
             condition.findex = obj.findex;
+            condition.disptype = obj.disptype;
+            //            condition.selectOptions;
             [conditons addObject:condition];
         }
-    }];
+    }
     NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"findex" ascending:YES];
     return [conditons sortedArrayUsingDescriptors:@[sort]];
 }
@@ -123,28 +133,70 @@
 }
 
 - (NSString *)pipeLayerID {
-//    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
-//    __block NSString *layerID = @"";
-//    for (Z3GISMeta *meta in metas) {
-//        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//#warning 获取管段的图层ID因项目而定
-//            if ([obj.dname isEqualToString:@"PIPE"]) {
-//                layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
-//                *stop = YES;
-//            }
-//        }];
-//    }
-    return @"40";
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSString *layerID = @"";
+    for (Z3GISMeta *meta in metas) {
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.geotype == 0) {
+                layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
+                *stop = YES;
+            }
+        }];
+    }
+    return layerID;
+}
+
+- (NSArray *)pipeLayerIDsWithJS:(NSString *)js {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSMutableArray *layers =[[NSMutableArray alloc] init];
+    for (Z3GISMeta *meta in metas) {
+        if ([meta.layername isEqualToString:js]) {
+            [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.geotype == 0) {
+                    NSDictionary *info = @{
+                                           @"layerID":@(obj.layerid),
+                                           @"name":obj.dname ?: @"",
+                                           @"alias":obj.dname ?: @""
+                                           };
+                    [layers addObject:info];
+                }
+            }];
+            
+            break;
+        }
+    }
+    return layers;
 }
 
 - (NSString *)closeableValveLayerIDs {
-    
-    return @"all:1,3";
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSMutableArray *valveLayerIDs = [[NSMutableArray alloc] init];
+    for (Z3GISMeta *meta in metas) {
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.bsprop == 1) {
+               NSString*layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
+                [valveLayerIDs addObject:layerID];
+            }
+        }];
+    }
+    NSString *ids = [valveLayerIDs componentsJoinedByString:@","];
+    NSString *result = [NSString stringWithFormat:@"all:%@",ids];
+    return result;
 }
 
-#warning 获取阀门ID ID从元数据中获取
-- (NSInteger )valveLayerID {
-    return 1;
+- (NSArray *)valveLayerIDs {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSString *layerID = @"";
+    NSMutableArray *results = [[NSMutableArray alloc] init];
+    for (Z3GISMeta *meta in metas) {
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.bsprop == 1) {
+                layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
+                [results addObject:layerID];
+            }
+        }];
+    }
+    return results;
 }
 
 - (NSInteger )gisErrorReportLayerID {

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) NSInteger layerid;
 @property (nonatomic,assign) NSInteger geotype;
 @property (nonatomic,assign) NSInteger dno;
+@property (nonatomic,assign) NSInteger bsprop;
 @property (nonatomic,copy) NSArray *fields;
 @end
 

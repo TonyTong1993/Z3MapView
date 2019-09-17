@@ -70,7 +70,8 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 - (CGSize)intrinsicContentSize {
     CGSize size = CGSizeZero;
     if (self.closeValveable) {
-        if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
+        NSString *layerId = [NSString stringWithFormat:@"%ld",_result.layerId];
+        if ([[Z3GISMetaBuilder builder].valveLayerIDs containsObject:layerId]) {
             size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
         }else {
             size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
@@ -85,7 +86,8 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result {
     _result = result;
     if (self.closeValveable) {
-        if (_result.layerId == [Z3GISMetaBuilder builder].valveLayerID) {
+        NSString *layerId = [NSString stringWithFormat:@"%ld",_result.layerId];
+        if ([[Z3GISMetaBuilder builder].valveLayerIDs containsObject:layerId]) {
             [_closeValve setHidden:NO];
         }else {
             [_closeValve setHidden:YES];

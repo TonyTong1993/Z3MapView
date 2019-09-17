@@ -20,7 +20,8 @@
     NSDictionary *closeLinesObj = JSONObject[@"closeLines"];
     NSDictionary *closeNodesObj = JSONObject[@"closeNodes"];
     NSString *errorMessage = JSONObject[@"errmsg"];
-    if (errorMessage.length) {
+    BOOL success = [JSONObject[@"success"] boolValue];
+    if (!success) {
         _errorMsg = errorMessage;
         return;
     }

@@ -7,17 +7,44 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "Z3SelectionOption.h"
 NS_ASSUME_NONNULL_BEGIN
+@class Z3FeatureQueryCondition;
+//过滤管网的条件
+@interface Z3PipeNetQueryCondition : NSObject<Z3SelectionOption>
+/**
+ 管网编号
+ */
+@property (nonatomic,copy) NSString *code;
 
-@interface Z3FeatureQueryCondition : NSObject
-@property (nonatomic,copy) NSString *name;
-@property (nonatomic,assign) NSInteger featureId;
+/**
+ 当前管网,可查询的设备要素
+ */
+@property (nonatomic,copy) NSArray *featureConditions;
+@end
+
+//过滤设备要素的条件
+@interface Z3FeatureQueryCondition : NSObject<Z3SelectionOption>
+@property (nonatomic,assign) NSInteger layerid;
 @property (nonatomic,assign) NSInteger featureNum;
+@property (nonatomic,copy) NSArray *properties;
+@property (nonatomic,copy) NSArray *relations;
+@end
+
+@interface Z3FeaturePropertyCondition : NSObject<Z3SelectionOption>
+/**
+ 1====string 文本
+ 2====date  日期
+ 3====下拉
+ */
+@property (nonatomic,assign) NSInteger disptype;
 @property (nonatomic,assign) NSInteger findex;
 @property (nonatomic,copy) NSString *displayName;
-@property (nonatomic,copy) NSArray *properties;
-@property (nonatomic,copy) NSArray *conditions;
+
+/**
+ 可选值
+ */
+@property (nonatomic,copy) NSArray *selectOptions;
 @end
 
 NS_ASSUME_NONNULL_END

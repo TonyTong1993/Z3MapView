@@ -63,12 +63,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)pipeLayerID;
 
+
+/**
+ 获取指定js的管网中的管线设备
+
+ @param js 从DataJson/fieldAliases.txt中获取
+ @return 管线图层集合
+ */
+- (NSArray *)pipeLayerIDsWithJS:(NSString *)js;
+
 /**
  管网图层ID
  
  @return 阀门图层
  */
-- (NSInteger )valveLayerID;
+- (NSArray *)valveLayerIDs;
 
 
 /**
@@ -82,9 +91,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  创建查询条件
 
- @return 查询条件集合
+ @return 查询条件集合 sections [管网0,管网1]
  */
-- (NSArray *)buildFeatureQueryConditions;
+- (NSArray *)buildPipeNetQueryConditions;
 
 /**
  GIS错误上报的图层ID
