@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSArray *relations;
 @end
 
+@interface Z3FeaturePropertyRelation : NSObject<Z3SelectionOption>
+@end
+
 @interface Z3FeaturePropertyCondition : NSObject<Z3SelectionOption>
 /**
  1====string 文本
@@ -45,6 +48,10 @@ NS_ASSUME_NONNULL_BEGIN
  可选值
  */
 @property (nonatomic,copy) NSArray *selectOptions;
+@end
+
+@interface Z3StatisitcsPropertyCondition : NSObject<Z3SelectionOption>
+
 @end
 
 NS_ASSUME_NONNULL_END

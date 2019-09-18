@@ -92,7 +92,7 @@
     NSString *objectId = self.attributes[@"gid"];
     NSDictionary *arguments = @{
                                 @"layerId":layerID,
-                                @"objectId":objectId,
+                                @"objectId":objectId ?:@"",
                                 @"valveNods":valveNods?:@""
                                 };
     

@@ -16,33 +16,30 @@
 
 @end
 
+@implementation Z3FeaturePropertyRelation
+@synthesize alias;
+@synthesize name;
+@end
+
 @implementation Z3FeatureQueryCondition
 - (NSArray *)relations {
     if (!_relations) {
         NSMutableArray *temps = [NSMutableArray array];
-        Z3FeatureQueryCondition *condition = [[Z3FeatureQueryCondition alloc] init];
+        Z3FeaturePropertyRelation *condition = [[Z3FeaturePropertyRelation alloc] init];
         condition.alias = @"模糊";
         condition.name = @"like";
         [temps addObject:condition];
         
-        condition = [[Z3FeatureQueryCondition alloc] init];
+        condition = [[Z3FeaturePropertyRelation alloc] init];
         condition.alias = @"等于";
         condition.name = @"=";
         [temps addObject:condition];
         
-        condition = [[Z3FeatureQueryCondition alloc] init];
+        condition = [[Z3FeaturePropertyRelation alloc] init];
         condition.alias = @"不等于";
         condition.name = @"!=";
         [temps addObject:condition];
         _relations = [temps copy];
-        //    condition = [[Z3FeatureQueryCondition alloc] init];
-        //    condition.displayName = @"为空";
-        //    condition.name = @"<";
-        //    [temps addObject:condition];
-        //
-        //    condition = [[Z3FeatureQueryCondition alloc] init];
-        //    condition.displayName = @"不为空";
-        //    [temps addObject:condition];
     }
     return _relations;
 }
@@ -58,5 +55,14 @@
 @synthesize alias;
 
 @synthesize name;
+
+@end
+
+@implementation Z3StatisitcsPropertyCondition
+
+@synthesize alias;
+
+@synthesize name;
+
 
 @end

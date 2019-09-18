@@ -9,11 +9,12 @@
 #import "Z3MapViewCommonQueryXtd.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+typedef void(^MakeRectComplication)(NSDictionary *geometry,NSError *error);
 @interface Z3MapViewRectQueryXtd : Z3MapViewCommonQueryXtd
 
 - (void)setArguments:(NSDictionary *)arguments;
 - (void)registerQueryComplcation:(void (^)(NSArray * _Nullable results,NSError * _Nullable error))complcation;
+- (void)registerMakeRectComplcation:(MakeRectComplication)complcation;
 @end
 
 NS_ASSUME_NONNULL_END

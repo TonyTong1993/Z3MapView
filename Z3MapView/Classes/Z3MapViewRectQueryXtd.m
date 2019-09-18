@@ -15,6 +15,7 @@
 @interface Z3MapViewRectQueryXtd ()
 @property (nonatomic,strong) NSMutableArray *mpoints;
 @property (nonatomic,copy) ComplicationHander handler;
+@property (nonatomic,copy) MakeRectComplication complication;
 @end
 @implementation Z3MapViewRectQueryXtd
 
@@ -64,6 +65,10 @@
 
 - (void)registerQueryComplcation:(void (^)(NSArray * results, NSError * error))complcation {
     self.handler = complcation;
+}
+
+- (void)registerMakeRectComplcation:(MakeRectComplication)complcation {
+    self.complication = complcation;
 }
 
 - (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
