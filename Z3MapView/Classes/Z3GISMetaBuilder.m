@@ -99,7 +99,8 @@
             condition.alias = obj.alias;
             condition.findex = obj.findex;
             condition.disptype = obj.disptype;
-            //            condition.selectOptions;
+            condition.esritype = obj.esritype;
+            condition.prop = obj.prop;
             [conditons addObject:condition];
         }
     }

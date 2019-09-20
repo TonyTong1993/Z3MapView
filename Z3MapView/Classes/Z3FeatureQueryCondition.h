@@ -41,8 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
  3====下拉
  */
 @property (nonatomic,assign) NSInteger disptype;
+@property (nonatomic,copy) NSString *esritype;
+@property (nonatomic,copy) NSString *prop;
+
 @property (nonatomic,assign) NSInteger findex;
 @property (nonatomic,copy) NSString *displayName;
+
+@property (nonatomic,copy) NSString *statisticType;
 
 /**
  可选值

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)queryWithGeometry:(AGSGeometry *)geometry
                     arguments:(NSDictionary *)arguments
-                 complcation:(void (^)(NSArray * _Nullable results,NSError * _Nullable error))complcation;
+                 complcation:(void (^)(NSArray * _Nullable results,NSDictionary *geometry,NSError * _Nullable error))complcation;
 
 - (void)setIdentityMode:(Z3MapViewIdentityContextMode)mode;
 - (void)setIdentityUserInfo:(NSDictionary *)userInfo;

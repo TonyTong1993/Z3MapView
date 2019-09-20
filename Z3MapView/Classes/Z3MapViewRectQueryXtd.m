@@ -23,6 +23,7 @@
     self = [super initWithTargetViewController:targetViewController mapView:mapView];
     if (self) {
         _mpoints = [NSMutableArray arrayWithCapacity:2];
+        _active = YES;
     }
     return self;
 }
@@ -63,7 +64,7 @@
     [self.identityContext setIdentityURL:identityURL];
 }
 
-- (void)registerQueryComplcation:(void (^)(NSArray * results, NSError * error))complcation {
+- (void)registerQueryComplcation:(void (^)(NSArray * results,NSDictionary *geometry, NSError * error))complcation {
     self.handler = complcation;
 }
 
@@ -78,6 +79,14 @@
         AGSEnvelope *envelop = [geometry extent];
         [self displayPointGraphicWithGeometry:mapPoint];
         [self displayEnvelopGraphicWithGeometry:envelop];
+        if (!envelop.isEmpty && self.complication) {
+            NSError * __autoreleasing error = nil;
+            NSDictionary *json = [envelop toJSON:&error];
+            self.complication(json, error);
+        }
+        if (!self.active) {
+            return nil;
+        }
         return envelop;
     }else if (self.mpoints.count == 0) {
         [self.mpoints addObject:mapPoint];
@@ -91,9 +100,6 @@
                     identityResults:(nonnull NSArray *)results{
     [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:results];
     [self dissmissGraphicsForQuery];
-    if (self.handler) {
-        self.handler(results, nil);
-    }
 }
 
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context {
@@ -102,7 +108,7 @@
     NSInteger errorCode = 444;
     NSError *error = [NSError errorWithDomain:domain code:errorCode userInfo:nil];
     if (self.handler) {
-        self.handler(nil, error);
+        self.handler(nil,nil,error);
     }
 }
 

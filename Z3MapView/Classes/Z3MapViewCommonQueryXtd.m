@@ -95,7 +95,7 @@
     }
    
     if (self.handler) {
-        self.handler(results, nil);
+        self.handler(results,context.queryGeometry,nil);
     }
     
     [self.displayIdentityResultContext updateIdentityResults:results mapPoint:mapPoint];
@@ -107,7 +107,7 @@
         NSErrorDomain domain = @"mapView.identity.failure";
         NSInteger errorCode = 444;
         NSError *error = [NSError errorWithDomain:domain code:errorCode userInfo:nil];
-        self.handler(nil, error);
+        self.handler(nil,context.queryGeometry,error);
     }
 }
 
@@ -119,7 +119,7 @@
     [self clear];
 }
 
-- (void)queryWithGeometry:(AGSGeometry *)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable, NSError * _Nullable))complcation {
+- (void)queryWithGeometry:(AGSGeometry *)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable,NSDictionary *geometry,NSError * _Nullable))complcation {
     self.handler =  complcation;
     Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];
     NSNumber *layerId = arguments[@"layers"];

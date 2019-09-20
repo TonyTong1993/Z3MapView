@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSString *esritype;
 @property (nonatomic,copy) NSString *name;
 @property (nonatomic,copy) NSString *dname;
+@property (nonatomic,copy) NSString *prop;
 
 /**
  1====string 文本

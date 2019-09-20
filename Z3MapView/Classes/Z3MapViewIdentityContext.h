@@ -154,6 +154,11 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak) id<Z3MapViewIdentityContextDelegate> delegate;
 
+/**
+ 查询的几何数据模型
+ */
+@property (nonatomic,readonly,copy) NSDictionary *queryGeometry;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView;

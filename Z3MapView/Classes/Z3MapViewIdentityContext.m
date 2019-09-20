@@ -179,6 +179,7 @@
     AGSEnvelope *extent = self.mapView.visibleArea.extent;
     NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance excludePipeLine:self.excludePipeLine userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
+     _queryGeometry = [geometry toJSON:nil];
      [self showAccessoryView];
     self.identityRequest = [[Z3MapViewIdentityRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleSuccessResponse:response mapPoint:mapPoint];
@@ -193,6 +194,7 @@
                              geometry:(AGSGeometry *)geometry
                              mapPoint:(AGSPoint *)mapPoint
                              userInfo:(NSDictionary *)userInfo {
+     _queryGeometry = [geometry toJSON:nil];
     NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
@@ -215,6 +217,7 @@
                                mapPoint:(AGSPoint *)mapPoint
                                userInfo:(NSDictionary *)userInfo{
     NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildPipeAnalyseParameterWithGeometry:geometry userInfo:userInfo];
+     _queryGeometry = [geometry toJSON:nil];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewPipeAnalyseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
