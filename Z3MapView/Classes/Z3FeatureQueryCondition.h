@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) NSInteger layerid;
 @property (nonatomic,assign) NSInteger featureNum;
 @property (nonatomic,copy) NSArray *properties;
-@property (nonatomic,copy) NSArray *relations;
 @end
 
 @interface Z3FeaturePropertyRelation : NSObject<Z3SelectionOption>
@@ -41,7 +40,13 @@ NS_ASSUME_NONNULL_BEGIN
  3====下拉
  */
 @property (nonatomic,assign) NSInteger disptype;
+
+
+/**
+ esritype 类型的种类 esriFieldTypeString,
+ */
 @property (nonatomic,copy) NSString *esritype;
+
 @property (nonatomic,copy) NSString *prop;
 
 @property (nonatomic,assign) NSInteger findex;
@@ -55,8 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSArray *selectOptions;
 @end
 
-@interface Z3StatisitcsPropertyCondition : NSObject<Z3SelectionOption>
+@interface Z3CategoryPropertyRelation : NSObject<Z3SelectionOption>
 
 @end
 
+@interface Z3StatisticsPropertyRelation : NSObject<Z3SelectionOption>
+
+@end
 NS_ASSUME_NONNULL_END

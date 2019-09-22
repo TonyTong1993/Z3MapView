@@ -20,4 +20,15 @@
     }
     _data = [mMetas copy];
 }
+
+/*
+ unrecognized selector sent to instance
+ 
+ 5   AMP                                 0x0000000100d57228 -[Z3GISMetaResponse toModel] + 128
+ 6   AMP                                 0x0000000100d9c2f8 -[Z3HttpManager handleRequestResult:responseObject:error:] + 1956
+ 7   AMP                                 0x0000000100d9aa38 __36-[Z3HttpManager sendGETHttpRequest:]_block_invoke + 128
+ 8   AMP                                 0x0000000100db6b34 __116-[AFHTTPSessionManager dataTaskWithHTTPMethod:URLString:parameters:uploadProgress:downloadProgress:success:failure:]_block_invoke.124 + 212
+ 9   AMP                                 0x0000000100dd8bec __72-[AFURLSessionManagerTaskDelegate URLSession:task:didCompleteWithError:]_block_invoke_2.117 + 224
+
+ */
 @end

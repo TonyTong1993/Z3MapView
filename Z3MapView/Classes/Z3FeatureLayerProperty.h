@@ -18,6 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSString *prop;
 
 /**
+ 下拉可选值
+ */
+@property (nonatomic,copy) NSString *values;
+
+
+/**
  1====string 文本
  2====date  日期
  3====下拉

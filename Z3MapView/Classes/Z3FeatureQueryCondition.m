@@ -22,27 +22,6 @@
 @end
 
 @implementation Z3FeatureQueryCondition
-- (NSArray *)relations {
-    if (!_relations) {
-        NSMutableArray *temps = [NSMutableArray array];
-        Z3FeaturePropertyRelation *condition = [[Z3FeaturePropertyRelation alloc] init];
-        condition.alias = @"模糊";
-        condition.name = @"like";
-        [temps addObject:condition];
-        
-        condition = [[Z3FeaturePropertyRelation alloc] init];
-        condition.alias = @"等于";
-        condition.name = @"=";
-        [temps addObject:condition];
-        
-        condition = [[Z3FeaturePropertyRelation alloc] init];
-        condition.alias = @"不等于";
-        condition.name = @"!=";
-        [temps addObject:condition];
-        _relations = [temps copy];
-    }
-    return _relations;
-}
 
 @synthesize alias;
 @synthesize name;
@@ -58,7 +37,16 @@
 
 @end
 
-@implementation Z3StatisitcsPropertyCondition
+@implementation Z3CategoryPropertyRelation
+
+@synthesize alias;
+
+@synthesize name;
+
+
+@end
+
+@implementation Z3StatisticsPropertyRelation
 
 @synthesize alias;
 
