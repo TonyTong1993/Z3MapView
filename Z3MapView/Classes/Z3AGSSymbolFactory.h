@@ -47,6 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
 //爆管分析-爆管点处的symbol
 - (AGSSymbol *)buildPipeLeakNormalSymbol;
 - (AGSSymbol *)buildPipeLeakSelectedSymbol;
+
+/**
+ 创建🚩AGSSymbol,目前在澳门工程影响范围,点选阀门后使用到这个AGSSymbol
+
+ @return AGSSymbol
+ */
+- (AGSSymbol *)buildFlagSymbol;
 //爆管分析-爆管点关联的阀门symbol
 - (AGSSymbol *)buildPipeLeakValvesSymbol;
 

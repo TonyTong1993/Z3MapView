@@ -19,6 +19,7 @@
 @end
 @implementation Z3MapViewCommonQueryXtd
 @synthesize identityContext = _identityContext,queryGraphicsOverlay = _queryGraphicsOverlay;
+@synthesize displayIdentityResultContext = _displayIdentityResultContext;
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView {
     self = [super initWithTargetViewController:targetViewController mapView:mapView];
     if (self) {
@@ -87,19 +88,13 @@
             [self.mapView setNeedsUpdateConstraints];
         }
     }
-    
-    if (self.displayIdentityResultContext == nil) {
-        self.displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:self.mapView];
-        self.displayIdentityResultContext.delegate = self;
-        [self.displayIdentityResultContext setShowPopup:YES];
-    }
    
     if (self.handler) {
         self.handler(results,context.queryGeometry,nil);
     }
     
     [self.displayIdentityResultContext updateIdentityResults:results mapPoint:mapPoint];
-    
+    [context pause];
 }
 
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context {
@@ -133,6 +128,7 @@
     
 }
 
+
 - (AGSGraphicsOverlay *)queryGraphicsOverlay {
     if (_queryGraphicsOverlay == nil) {
         for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
@@ -146,4 +142,12 @@
     return _queryGraphicsOverlay;
 }
 
+- (Z3MapViewDisplayIdentityResultContext *)displayIdentityResultContext {
+    if (!_displayIdentityResultContext) {
+        _displayIdentityResultContext = [[Z3MapViewDisplayIdentityResultContext alloc] initWithAGSMapView:self.mapView];
+        _displayIdentityResultContext.delegate = self;
+        [_displayIdentityResultContext setShowPopup:YES];
+    }
+    return _displayIdentityResultContext;
+}
 @end

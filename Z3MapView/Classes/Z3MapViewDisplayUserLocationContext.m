@@ -7,6 +7,7 @@
 //
 
 #import "Z3MapViewDisplayUserLocationContext.h"
+#import "Z3CovertedLocationDataSource.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
 #import "Z3AGSSymbolFactory.h"
@@ -34,19 +35,14 @@
 
 - (void)showUserLocation {
     [self setLocationDataSource];
-    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeOff;
-    [self.mapView.locationDisplay.dataSource startWithCompletion:^(NSError * _Nullable error) {
-        if (error) {
-            [MBProgressHUD showError:[error localizedDescription]];
-        }
-    }];
-    self.mapView.locationDisplay.showLocation = NO;
-    [[self trackGraphicsOverlay].graphics addObject:self.locationGraphic];
+    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeNavigation;
+    self.mapView.locationDisplay.showLocation = YES;
+//    [[self trackGraphicsOverlay].graphics addObject:self.locationGraphic];
 }
 
-- (void)updateLocation:(AGSPoint *)point {
-    [self.locationGraphic setGeometry:point];
-}
+//- (void)updateLocation:(AGSPoint *)point {
+//    [self.locationGraphic setGeometry:point];
+//}
 
 //TODO: 国际化
 - (void)showFailureAlert:(NSString *)status {
@@ -70,6 +66,7 @@
 }
 
 - (void)setLocationDataSource {
+    
     if ([Z3SettingsManager sharedInstance].locationSimulate) {
         AGSPolyline *polyline = [[Z3SimutedLocationFactory factory] buildSimulatedPolyline];
         AGSSimulatedLocationDataSource *dataSource = [[AGSSimulatedLocationDataSource alloc] init];
@@ -81,15 +78,19 @@
             }
         }];
     }else {
-       AGSCLLocationDataSource *dataSource = [[AGSCLLocationDataSource alloc] init];
-       dataSource.locationManager.distanceFilter = kCLDistanceFilterNone;
-       dataSource.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
-       [self.mapView.locationDisplay setDataSource:dataSource];
-        [dataSource startWithCompletion:^(NSError * _Nullable error) {
+        AGSLocationDisplay *locationDisplay = self.mapView.locationDisplay;
+        Z3CovertedLocationDataSource *dataSource = [[Z3CovertedLocationDataSource alloc] init];
+        [locationDisplay setDataSource:dataSource];
+        [locationDisplay startWithCompletion:^(NSError * _Nullable error) {
             if (error) {
                 [MBProgressHUD showError:[error localizedDescription]];
             }
         }];
+        Z3AGSSymbolFactory *factory = [Z3AGSSymbolFactory factory];
+        locationDisplay.defaultSymbol = [factory buildDefaultSymbol];
+        locationDisplay.acquiringSymbol = [factory buildDefaultSymbol];
+        locationDisplay.courseSymbol = [factory buildCourseSymbol];
+        locationDisplay.headingSymbol = [factory buildHeadingSymbol];
     }
 }
 

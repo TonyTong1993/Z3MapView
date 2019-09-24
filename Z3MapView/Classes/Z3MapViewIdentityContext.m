@@ -265,8 +265,6 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
         [self.delegate identityContextQuerySuccess:self mapPoint:mapPoint identityResults:response.data];
     }
-    [self pause];
-
 }
 
 - (void)handleFailureResponse:(Z3BaseResponse *)response {

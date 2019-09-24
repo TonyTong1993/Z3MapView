@@ -230,15 +230,15 @@ typedef NS_ENUM(NSUInteger,Z3MapViewIdentityContextMode) {
 
 
 /**
- 开放爆管分析操作
+ 开放设备分析操作
 
- @param url 爆管分析的URL
- @param geometry 爆管点
+ @param url 设备分析的URL
+ @param geometry 设备相关的几何信息
  @param userInfo  用户额外数据
  */
 - (void)analyseInfluencedAreaWithGisServer:(NSString *)url
-                               geometry:(AGSGeometry *)geometry
-                               userInfo:(NSDictionary *)userInfo;
+                               geometry:(AGSGeometry * _Nullable)geometry
+                               userInfo:(NSDictionary * _Nullable)userInfo;
 
 
 /**

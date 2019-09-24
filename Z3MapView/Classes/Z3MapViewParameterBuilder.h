@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)buildQueryParameterWithGeometry:(AGSGeometry *)geometry
                                          userInfo:(NSDictionary *)userInfo;
 
-- (NSDictionary *)buildPipeAnalyseParameterWithGeometry:(AGSGeometry *)geometry
+- (NSDictionary *)buildPipeAnalyseParameterWithGeometry:(AGSGeometry * _Nullable)geometry
                                                userInfo:(NSDictionary *)userInfo;
 
 

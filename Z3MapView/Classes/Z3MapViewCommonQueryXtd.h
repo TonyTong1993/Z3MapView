@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Z3MapViewCommonQueryXtd : Z3MapViewCommonXtd<Z3MapViewIdentityContextDelegate,Z3MapViewDisplayIdentityResultContextDelegate>
 @property (nonatomic,strong,readonly) Z3MapViewIdentityContext *identityContext;
 @property (nonatomic,strong,readonly) AGSGraphicsOverlay *queryGraphicsOverlay;
-@property (nonatomic,strong) Z3MapViewDisplayIdentityResultContext *displayIdentityResultContext;
+@property (nonatomic,readonly,strong) Z3MapViewDisplayIdentityResultContext *displayIdentityResultContext;
 
 /**
  查询地理信息数据

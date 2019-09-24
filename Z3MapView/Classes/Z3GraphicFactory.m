@@ -86,6 +86,13 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildCloseValvesMarkGraphicWithPoint:(AGSPoint *)point
+                                             attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildFlagSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 - (AGSGraphic *)buildPOIGraphicWithPoint:(AGSPoint *)point
                                     text:(NSString *)text
                               attributes:(NSDictionary * _Nullable)attributes{

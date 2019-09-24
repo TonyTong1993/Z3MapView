@@ -100,7 +100,6 @@
 
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context {
     [self dissmissGraphicsForQuery];
-    
 }
 
 /*

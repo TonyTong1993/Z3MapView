@@ -53,6 +53,22 @@
     return symbol;
 }
 
+- (AGSSymbol *)buildDefaultSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"marker_gps_no_sensor"]];
+    return symbol;
+}
+
+- (AGSSymbol *)buildCourseSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_gps_compass"]];
+    return symbol;
+}
+
+- (AGSSymbol *)buildHeadingSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_gps_locked"]];
+    return symbol;
+}
+
+
 - (AGSSymbol *)buildSelectedVertexSymbol {
         //inner color 75FB4C 117 251 76 outer color F2A93C 242 169 60
     return [self buildSelectedPonitSymbol];
@@ -77,10 +93,6 @@
 }
 
 
-- (AGSSymbol *)buildDefaultSymbol {
-    return [self buildNormalPonitSymbol];
-}
-
 - (AGSSymbol *)buildLocationSymbol {
     //inner color EA3323 234 52 35 outer color F2A93C 242 169 6
    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_event_manager_location"]];
@@ -101,6 +113,12 @@
     AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipeleak_valves"]];
     return symbol;
 }
+
+- (AGSSymbol *)buildFlagSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_flag"]];
+    return symbol;
+}
+
 
 - (AGSSymbol *)buildPOISymbolWithText:(NSString *)text {
     AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"bg_mark_btn_normal"]];

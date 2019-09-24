@@ -12,7 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Z3GISMeta : NSObject<YYModel>
 @property (nonatomic,copy) NSString *code;
-@property (nonatomic,assign) NSInteger *type;
+
+/**
+ type:4->管网
+ */
+@property (nonatomic,assign) NSInteger type;
 @property (nonatomic,copy) NSString *remark;
 @property (nonatomic,copy) NSString *layername;
 @property (nonatomic,copy) NSString *descripe;

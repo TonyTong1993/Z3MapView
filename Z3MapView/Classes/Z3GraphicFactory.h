@@ -114,6 +114,17 @@ NS_ASSUME_NONNULL_BEGIN
                                   outLineWidth:(CGFloat)outLineWidth
                                      fillColor:(UIColor *)fillColor
                                   attributes:(NSDictionary * _Nullable)attributes;
+
+
+/**
+ 工程影响范围-选中的阀门的AGSGraphic
+
+ @param point 阀门点
+ @param attributes 阀门属性
+ @return AGSGraphic
+ */
+- (AGSGraphic *)buildCloseValvesMarkGraphicWithPoint:(AGSPoint *)point
+                                          attributes:(NSDictionary * _Nullable)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

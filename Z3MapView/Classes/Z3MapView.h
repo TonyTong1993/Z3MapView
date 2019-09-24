@@ -87,4 +87,21 @@ extern NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification;
 
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 
+@class Z3BookMark;
+typedef void(^ChangeSelectedBookMarkListener)(Z3BookMark *bookMark,NSUInteger index);
+typedef void(^AddBookMarkSuccess)(Z3BookMark *bookMark);
+@protocol Z3MapViewBookMarkDelegate <NSObject>
+- (void)showBookMarks:(NSArray *)bookMarks;
+- (void)didSelectBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
+- (void)deSelectBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
+- (void)editBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
+- (void)deleteBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
+/**
+ 反向回调
 
+ @param listener 在地图上修改选中的书签的监听器
+ */
+- (void)addListener:(ChangeSelectedBookMarkListener)listener;
+- (void)addBookMarkWithSuccess:(AddBookMarkSuccess)success;
+
+@end

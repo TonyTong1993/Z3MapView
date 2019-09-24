@@ -135,6 +135,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)deviceLayerIds;
 
+
+/**
+ 获取书签的图层ID
+
+ @return ID
+ */
+- (NSString *)bookMarkLayerId;
 @end
 
 NS_ASSUME_NONNULL_END

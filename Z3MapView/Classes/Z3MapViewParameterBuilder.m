@@ -110,15 +110,18 @@
 }
 
 - (NSDictionary *)buildPipeAnalyseParameterWithGeometry:(AGSPoint *)geometry
-                                         userInfo:(NSDictionary *)userInfo{
-  
-    NSString *geometryStr = [NSString stringWithFormat:@"%lf,%lf",geometry.x,geometry.y];
+                                               userInfo:(NSDictionary *)userInfo{
     NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
+    if (geometry) {
+        NSString *geometryStr = [NSString stringWithFormat:@"%lf,%lf",geometry.x,geometry.y];
+        mparams[@"geometry"] = geometryStr;
+    }
     if (userInfo) {
         [mparams addEntriesFromDictionary:userInfo];
     }
-    mparams[@"geometry"] = geometryStr;
     mparams[@"returnGeometry"] = @"true";
+    mparams[@"returnNodes"] = @"true";
+    mparams[@"returnAllAtt"] = @"true";
     return [mparams copy];
 }
 

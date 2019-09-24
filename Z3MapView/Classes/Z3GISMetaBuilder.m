@@ -137,6 +137,15 @@
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     __block NSString *layerID = @"";
     for (Z3GISMeta *meta in metas) {
+        if (meta.type != 4) {
+            continue;
+        }
+        
+        //澳门管网的code
+        if (![meta.code isEqualToString:@"MWGS"]) {
+            continue;
+        }
+        
         [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.geotype == 0) {
                 layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
@@ -173,6 +182,15 @@
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableArray *valveLayerIDs = [[NSMutableArray alloc] init];
     for (Z3GISMeta *meta in metas) {
+        if (meta.type != 4) {
+            continue;
+        }
+        
+        //澳门管网的code
+        if (![meta.code isEqualToString:@"MWGS"]) {
+            continue;
+        }
+        
         [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.bsprop == 1) {
                NSString*layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
@@ -280,5 +298,17 @@
     return   [layerIds componentsJoinedByString:@","];
 }
 
+- (NSString *)bookMarkLayerId {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSString *layerId = nil;
+    for (Z3GISMeta *meta in metas) {
+        if ([meta.code isEqualToString:@"MARKER"]) {
+            layerId = meta.layerid;
+            break;
+        }
+        
+    }
+    return layerId;
+}
 
 @end
