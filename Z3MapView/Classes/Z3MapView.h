@@ -90,11 +90,14 @@ extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 @class Z3BookMark;
 typedef void(^ChangeSelectedBookMarkListener)(Z3BookMark *bookMark,NSUInteger index);
 typedef void(^AddBookMarkSuccess)(Z3BookMark *bookMark);
+typedef void(^EditBookMarkSuccess)(NSUInteger index);
 @protocol Z3MapViewBookMarkDelegate <NSObject>
 - (void)showBookMarks:(NSArray *)bookMarks;
 - (void)didSelectBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
 - (void)deSelectBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
-- (void)editBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
+- (void)editBookMark:(Z3BookMark *)bookMark
+             atIndex:(NSUInteger)index
+        complication:(EditBookMarkSuccess)complication;
 - (void)deleteBookMark:(Z3BookMark *)bookMark atIndex:(NSUInteger)index;
 /**
  反向回调

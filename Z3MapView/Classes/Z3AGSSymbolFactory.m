@@ -165,4 +165,15 @@
     AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:fillColor outline:outline];
     return symbol;
 }
+
+- (AGSSymbol *)buildBookMarkSymbolWithText:(NSString *)text {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_flag_book_mark"]];
+    symbol.width = 36;
+    symbol.height = 36;
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor colorWithHex:@"#0b6d2c"] size:15 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = -36;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
 @end

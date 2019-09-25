@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Z3MapViewDisplayIdentityResultContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak,readonly) AGSGraphic *selectedGraphic;
+@property (nonatomic,readonly,strong) NSMutableArray *graphics;
 @property (nonatomic,weak) id<Z3MapViewDisplayIdentityResultContextDelegate> delegate;
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -86,6 +87,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setSelectedIdentityGraphic:(AGSGraphic * _Nullable)graphic
                           mapPoint:(AGSPoint * _Nullable)mapPoint;
 
+
+/**
+ 设置选中的Graphic
+
+ @param index 要素所在的集合位置
+ @param showPopup 是否显示showPopupView
+ */
+- (void)setSelectedGraphicAtIndex:(NSUInteger)index
+                        showPopup:(BOOL)showPopup;
+
 /**
  控制是否显示popup view
 
@@ -98,6 +109,14 @@ NS_ASSUME_NONNULL_BEGIN
  移除图层中的所有要素,并隐藏callout
  */
 - (void)dismiss;
+@end
+
+@interface Z3MapViewDisplayIdentityResultContext (Z3BookMark)
+- (void)showBookMarks:(NSArray *)bookMarks;
+- (void)addBookMark:(AGSGraphic *)bookMark;
+- (void)updateBookMark:(AGSGraphic *)bookMark
+               atIndex:(NSUInteger)index;
+- (void)deleteBookMarkAtIndex:(NSUInteger)index;
 @end
 
 NS_ASSUME_NONNULL_END

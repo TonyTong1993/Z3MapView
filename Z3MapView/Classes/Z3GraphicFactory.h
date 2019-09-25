@@ -125,6 +125,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (AGSGraphic *)buildCloseValvesMarkGraphicWithPoint:(AGSPoint *)point
                                           attributes:(NSDictionary * _Nullable)attributes;
+
+
+/**
+ 创建书签类型的AGSGraphic
+
+ @param point 书签的位置
+ @param text 绘制在地图上的文本
+ @param attributes 书签的属性
+ @return AGSGraphic
+ */
+- (AGSGraphic *)buildBookMarkGraphicWithPoint:(AGSPoint *)point
+                                         text:(NSString * _Nullable)text
+                                   attributes:(NSDictionary * _Nullable)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

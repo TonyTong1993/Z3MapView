@@ -40,7 +40,7 @@
 }
 
 - (void)setOnComplicationListener:(OnComplicationBlock)complication {
-    _listener = complication;
+    _complication = complication;
 }
 
 //修改导航栏样式
@@ -54,8 +54,8 @@
 }
 
 - (void)dismiss {
-    if (self.listener) {
-        self.listener();
+    if (self.complication) {
+        self.complication();
     }
 }
 

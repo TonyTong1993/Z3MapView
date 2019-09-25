@@ -117,6 +117,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSSymbol *)buildFillSymbolWithOutLineColor:(UIColor *)color
                                   outLineWidth:(CGFloat)outLineWidth
                                      fillColor:(UIColor *)fillColor;
+
+
+/**
+ 构建书签的AGSSymbol
+
+ @param text 显示的文本
+ @return Symbol
+ */
+- (AGSSymbol *)buildBookMarkSymbolWithText:(NSString *)text;
 @end
 
 NS_ASSUME_NONNULL_END

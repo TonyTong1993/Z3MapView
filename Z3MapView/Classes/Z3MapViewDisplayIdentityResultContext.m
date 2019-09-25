@@ -18,7 +18,6 @@
 #import <ArcGIS/ArcGIS.h>
 @interface Z3MapViewDisplayIdentityResultContext()<Z3DisplayIdentityResultViewDelegate>
 @property (nonatomic,copy) NSArray *results;
-@property (nonatomic,strong) NSMutableArray *graphics;
 @property (nonatomic,strong) AGSGraphicsOverlay *mGraphicsOverlay;
 @property (nonatomic,strong) Z3DisplayIdentityResultView *displayIdentityResultView;
 @property (nonatomic,strong) NSMutableArray *animationConstraintsForPresent;
@@ -46,6 +45,7 @@
 }
 
 - (void)buildGraphics {
+    NSMutableArray *graphics = [[NSMutableArray alloc] init];
     for (AGSArcGISFeature *result in self.results) {
         AGSGeometry *geometry = result.geometry;
         NSDictionary *attributes = result.attributes;
@@ -57,26 +57,26 @@
                 graphic  = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
             }
             graphic.zIndex = 1;
-            [self.graphics addObject:graphic];
+            [graphics addObject:graphic];
         }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
             if (_delegate && [_delegate respondsToSelector:@selector(polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:attributes:)]) {
                 graphic =  [_delegate polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:geometry attributes:attributes];
             }else {
                 graphic  = [[Z3GraphicFactory factory] buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:attributes];
                 graphic.zIndex = 0;
-                [self.graphics addObject:graphic];
+                [graphics addObject:graphic];
             }
            
         }
     }
+    
+    [self.graphics addObjectsFromArray:graphics];
 }
 
 - (void)buildPolygonGraphicWithGeometry:(AGSPolygon *)geometry {
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimplePolygonGraphicWithPolygon:geometry attributes:nil];
-     graphic.zIndex = -1;
-     [self.graphics addObject:graphic];
-     self.mGraphicsOverlay = [self identityGraphicsOverlay];
-    [self.mGraphicsOverlay.graphics addObject:graphic];
+    graphic.zIndex = -1;
+    [self.graphics addObject:graphic];
 }
 
 - (AGSGraphicsOverlay *)identityGraphicsOverlay {
@@ -99,16 +99,10 @@
                   showPopup:(BOOL)showPopup {
     if (_results.count) {
         [self buildGraphics];
-        [self displayGraphics];
         //默认选中第一个
         AGSGraphic *graphic = [self.graphics firstObject];
         [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:showPopup];
     }
-}
-
-- (void)displayGraphics {
-    self.mGraphicsOverlay = [self identityGraphicsOverlay];
-    [self.mGraphicsOverlay.graphics addObjectsFromArray:self.graphics];
 }
 
 - (void)dispalyPopviewWithMapPoint:(AGSPoint *)mapPoint {
@@ -135,9 +129,6 @@
     [callout setIdentityResult:feature];
     [self.mapView.callout setCustomView:callout];
     AGSPoint *tapLocation = mapPoint;
-//    if (_delegate && [_delegate respondsToSelector:@selector(tapLocationForDisplayCalloutView)]) {
-//       tapLocation =  [_delegate tapLocationForDisplayCalloutView];
-//    }
     [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:tapLocation animated:YES];
 }
 
@@ -180,7 +171,7 @@
 - (void)dismiss {
     if (self.mGraphicsOverlay) {
         [self.mGraphicsOverlay.graphics removeAllObjects];
-        [self.graphics removeAllObjects];
+        _graphics = nil;
         [self post:Z3MapViewIdentityContextDeselectIndexNotification message:nil];
     }
     
@@ -246,6 +237,12 @@
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic mapPoint:(AGSPoint *)mapPoint {
     [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:YES];
+}
+
+- (void)setSelectedGraphicAtIndex:(NSUInteger)index
+                        showPopup:(BOOL)showPopup {
+    AGSGraphic *graphic = self.graphics[index];
+    [self setSelectedIdentityGraphic:graphic mapPoint:nil showPopup:showPopup];
 }
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
@@ -328,7 +325,6 @@
         [self setSelectedIdentityGraphic:graphic mapPoint:nil];
     }else {
         [self buildGraphics];
-        [self displayGraphics];
         AGSGraphic *graphic = self.graphics[indexPath.row];
         [self setSelectedIdentityGraphic:graphic mapPoint:nil];
     }
@@ -343,6 +339,32 @@
     }
 
     return _displayIdentityResultView;
+}
+
+@end
+
+@implementation Z3MapViewDisplayIdentityResultContext (Z3BookMark)
+
+- (void)showBookMarks:(NSArray *)bookMarks {
+    [self.graphics addObjectsFromArray:bookMarks];
+}
+
+- (void)addBookMark:(AGSGraphic *)bookMark {
+    [self.graphics insertObject:bookMark atIndex:0];
+}
+
+- (void)updateBookMark:(AGSGraphic *)bookMark
+               atIndex:(NSUInteger)index {
+    [self.graphics replaceObjectAtIndex:index withObject:bookMark];
+}
+
+- (void)deleteBookMarkAtIndex:(NSUInteger)index {
+    [self.graphics removeObjectAtIndex:index];
+}
+
+- (NSMutableArray *)graphics {
+    self.mGraphicsOverlay = [self identityGraphicsOverlay];
+    return  self.mGraphicsOverlay.graphics;
 }
 
 @end

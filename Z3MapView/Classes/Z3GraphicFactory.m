@@ -144,4 +144,10 @@
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:geometry symbol:symbol attributes:attributes];
     return graphic;
 }
+
+- (AGSGraphic *)buildBookMarkGraphicWithPoint:(AGSPoint *)point text:(NSString *)text attributes:(NSDictionary *)attributes {
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildBookMarkSymbolWithText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
 @end
