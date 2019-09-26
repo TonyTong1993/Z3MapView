@@ -269,10 +269,14 @@
 - (void)filterSubLayesForOnLineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer
                                                       ids:(NSArray *)ids
                                                   visible:(BOOL)visible{
+    if (layer == nil) {
+        return;
+    }
     NSArray *mapImageSublayers =  layer.mapImageSublayers;
     NSArray *sources = [Z3MobileConfig shareConfig].mapConfig.sources;
     NSMutableArray *lines = [sources firstObject];
     NSMutableArray *points = [sources lastObject];
+    //TODO:FIX crash 100 图层加载失败,此处无法获取到数据
     [ids enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSInteger layerId = [obj integerValue];
         for (AGSArcGISMapImageSublayer *layer in mapImageSublayers) {

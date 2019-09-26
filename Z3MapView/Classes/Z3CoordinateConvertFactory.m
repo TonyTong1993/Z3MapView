@@ -100,10 +100,9 @@
 - (Z3BaseRequest *)requestConvertWGS48Latitude:(double)latitude
                                      longitued:(double)longitude
                                   complication:(void(^)(AGSPoint *point))complication {
-//   22.20139 113.5525
-    latitude =  22.20139;
-    longitude = 113.5525;
-    
+////   22.20139 113.5525
+//    latitude =  22.20139;
+//    longitude = 113.5525;
     if ([Z3MobileConfig shareConfig].coorTransToken) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/trans";
         NSDictionary *params = @{
