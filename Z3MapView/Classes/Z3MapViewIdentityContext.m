@@ -256,7 +256,7 @@
 - (void)handleSuccessResponse:(Z3BaseResponse *)response mapPoint:(AGSPoint *)mapPoint {
     [self hidenAccessoryView];
     if ([response.data count] == 0) {
-        [self showToast:NSLocalizedString(@"query_resluts_empty", @"未查询到数据")];
+        [self showToast:NSLocalizedString(@"query_results_empty", @"未查询到数据")];
         if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQueryFailure:)]) {
             [self.delegate identityContextQueryFailure:self];
         }

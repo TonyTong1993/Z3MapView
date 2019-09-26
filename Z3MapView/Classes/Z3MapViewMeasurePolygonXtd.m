@@ -18,8 +18,8 @@
     double area = [AGSGeometryEngine geodeticAreaOfGeometry:geometry areaUnit:[AGSAreaUnit squareKilometers] curveType:AGSGeodeticCurveTypeShapePreserving];
     if (area > 0.0f) {
         AGSPoint *mapPoint =  [[[geometry parts] array] lastObject].endPoint;
-        self.mapView.callout.title = @"区域面积";
-        self.mapView.callout.detail = [NSString stringWithFormat:@"%.4f平方千米",area];
+        self.mapView.callout.title = LocalizedString(@"str_map_area");
+        self.mapView.callout.detail = [NSString stringWithFormat:@"%.4f%@",area,LocalizedString(@"str_unit_square_kilometer")];
         [self.mapView.callout setAccessoryButtonHidden:YES];
         [self.mapView.callout showCalloutAt:mapPoint screenOffset:CGPointZero rotateOffsetWithMap:NO animated:YES];
     }

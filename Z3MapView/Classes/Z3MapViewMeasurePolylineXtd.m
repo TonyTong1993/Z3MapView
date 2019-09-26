@@ -21,8 +21,8 @@
     if (distance > 0.0f) {
         AGSPart *part = [[[line parts] array] lastObject];
         AGSPoint *mapPoint = part.endPoint;
-        self.mapView.callout.title = @"当前位置坐标";
-        self.mapView.callout.detail = [NSString stringWithFormat:@"%.2f千米",distance];
+        self.mapView.callout.title = LocalizedString(@"str_measure_length_title");
+        self.mapView.callout.detail = [NSString stringWithFormat:@"%.2f%@",distance,LocalizedString(@"unit_kilometer")];
         [self.mapView.callout setAccessoryButtonHidden:YES];
         [self.mapView.callout showCalloutAt:mapPoint screenOffset:CGPointZero rotateOffsetWithMap:NO animated:YES];
     }
