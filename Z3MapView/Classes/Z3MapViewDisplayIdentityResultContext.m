@@ -276,19 +276,19 @@
 }
 
 - (AGSPoint *)proximityPointToGeometry:(AGSGeometry *)geometry tapLocation:(AGSPoint *)tapLocation {
-    if (tapLocation) {
-        AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:geometry toPoint:tapLocation];
-        return proximityResult.point;
-    }
-    
     switch (geometry.geometryType) {
         case AGSGeometryTypePoint:
             return (AGSPoint *)geometry;
             break;
         case AGSGeometryTypePolyline:
         {
-            AGSPolyline *line = (AGSPolyline *) geometry;
-            return [[line.parts partAtIndex:0] startPoint];
+            if (tapLocation) {
+                AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:geometry toPoint:tapLocation];
+                return proximityResult.point;
+            }else {
+                AGSPolyline *line = (AGSPolyline *) geometry;
+                return [[line.parts partAtIndex:0] startPoint];
+            }
         }
             break;
         case AGSGeometryTypePolygon:

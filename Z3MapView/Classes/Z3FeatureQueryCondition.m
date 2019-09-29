@@ -54,3 +54,12 @@
 
 
 @end
+
+@implementation Z3FeaturePropertyOption
+
+@synthesize alias;
+
+@synthesize name;
+
+
+@end

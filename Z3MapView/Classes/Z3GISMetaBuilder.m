@@ -101,6 +101,17 @@
             condition.disptype = obj.disptype;
             condition.esritype = obj.esritype;
             condition.prop = obj.prop;
+            if (obj.disptype == 3) {
+                NSMutableArray *options = [[NSMutableArray alloc] initWithCapacity:obj.values.count];
+                for (NSString *value in obj.values) {
+                    Z3FeaturePropertyOption *option = [[Z3FeaturePropertyOption alloc] init];
+                    option.name = value;
+                    option.alias = value;
+                    [options addObject:option];
+                }
+                condition.selectOptions = options;
+            }
+            
             [conditons addObject:condition];
         }
     }

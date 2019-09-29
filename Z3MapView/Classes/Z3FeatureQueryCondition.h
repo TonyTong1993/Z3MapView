@@ -67,4 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Z3StatisticsPropertyRelation : NSObject<Z3SelectionOption>
 
 @end
+
+@interface Z3FeaturePropertyOption : NSObject<Z3SelectionOption>
+
+@end
 NS_ASSUME_NONNULL_END

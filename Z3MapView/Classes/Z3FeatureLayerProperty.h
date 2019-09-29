@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  下拉可选值
  */
-@property (nonatomic,copy) NSString *values;
+@property (nonatomic,copy) NSArray *values;
 
 
 /**
