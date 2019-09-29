@@ -84,35 +84,43 @@
         return;
     };
 //离线
-     __weak typeof(self) weakSelf = self;
     if ([Z3MobileConfig shareConfig].offlineLogin) {
-        [geoView identifyLayersAtScreenPoint:screenPoint tolerance:22 returnPopupsOnly:NO completion:^(NSArray<AGSIdentifyLayerResult *> * _Nullable identifyResults, NSError * _Nullable error) {
-            if (error) {
-                DLog(@"error = %@",error);
-                return;
-            }
-            NSMutableArray *results = [[NSMutableArray alloc] init];
-            AGSIdentifyLayerResult *layerResult = [identifyResults firstObject];
-            if (layerResult) {
-                NSArray *geoElements = layerResult.geoElements;
-                for (AGSArcGISFeature *feature in geoElements) {
-                    [results addObject:feature];
-                }
-                if (results.count) {
-                    if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
-                        [weakSelf.delegate identityContextQuerySuccess:weakSelf mapPoint:mapPoint identityResults:results];
-                        [weakSelf pause];
-                    }
-                }
-                
-            }
-        }];
-        return;
+        [self identifyLayersAtScreenPoint:screenPoint mapPoint:mapPoint];
+    }else {
+        [self identityFeaturesWithScreenPoint:screenPoint mapPoint:mapPoint];
     }
-//在线
+    
+}
+
+- (void)identifyLayersAtScreenPoint:(CGPoint)screenPoint
+                           mapPoint:(AGSPoint *)mapPoint{
+    __weak typeof(self) weakSelf = self;
+    [self.mapView identifyLayersAtScreenPoint:screenPoint tolerance:22 returnPopupsOnly:NO completion:^(NSArray<AGSIdentifyLayerResult *> * _Nullable identifyResults, NSError * _Nullable error) {
+        if (error) {
+            DLog(@"error = %@",error);
+            return;
+        }
+        NSMutableArray *results = [[NSMutableArray alloc] init];
+        for (AGSIdentifyLayerResult *layerResult in identifyResults) {
+            NSArray *geoElements = layerResult.geoElements;
+            for (AGSArcGISFeature *feature in geoElements) {
+                [results addObject:feature];
+            }
+        }
+        if (results.count) {
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
+                [weakSelf.delegate identityContextQuerySuccess:weakSelf mapPoint:mapPoint identityResults:results];
+                [weakSelf pause];
+            }
+        }
+    }];
+}
+
+- (void)identityFeaturesWithScreenPoint:(CGPoint)screenPoint
+                               mapPoint:(AGSPoint *)mapPoint {
     AGSGeometry *geometory = nil;
     if (self.delegate && [self.delegate respondsToSelector:@selector(identityContext:didTapAtScreenPoint:mapPoint:)]) {
-       geometory = [self.delegate identityContext:self didTapAtScreenPoint:screenPoint mapPoint:mapPoint];
+        geometory = [self.delegate identityContext:self didTapAtScreenPoint:screenPoint mapPoint:mapPoint];
     }else if (self.delegate && [self.delegate respondsToSelector:@selector(identityContext:didTapAtScreenPoint:mapPoint:userInfo:)]) {
         geometory = [self.delegate identityContext:self didTapAtScreenPoint:screenPoint mapPoint:mapPoint userInfo:nil];
     }
@@ -132,7 +140,6 @@
                 [self queryFeaturesWithGeometry:geometory mapPoint:mapPoint userInfo:userInfo];
                 break;
         }
-        
     }
 }
 

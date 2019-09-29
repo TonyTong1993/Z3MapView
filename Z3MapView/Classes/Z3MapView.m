@@ -70,5 +70,5 @@ NSNotificationName const ZZCommonMapViewControllerFinishMarkMapViewNotification 
 NSNotificationName const Z3AGSCalloutViewIPadAddPhotoNotification = @"zzht.device.add.attachment";
 NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification = @"zzht.device.browser.attachment";
 #warning 因项目而变化
-NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"MWGS";
+NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"GWDT MWS SL";
 

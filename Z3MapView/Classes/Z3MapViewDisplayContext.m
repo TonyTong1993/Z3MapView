@@ -18,6 +18,7 @@
 #import <Masonry/Masonry.h>
 #import "Z3GraphicFactory.h"
 #import "Z3MapViewPrivate.h"
+#import "Z3MobileConfig.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
 @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
@@ -44,8 +45,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     AGSMap *map = self.mapView.map;
     NSAssert(map, @"map must not be null,please set map before to loadAGSLayers");
     Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
-    NSArray *layers = [factory loadMapLayers];
-    if (!layers.count) {
+    if ([Z3MobileConfig shareConfig].offlineLogin) {
         NSArray *geodatabases = [factory offlineGeodatabaseFileNames];
         for (NSString *fileName in geodatabases) {
             [factory loadOfflineGeoDatabaseWithFileName:fileName complicationHandler:^(NSArray *layers, NSError * error) {
@@ -57,6 +57,8 @@ static NSString *context = @"Z3MapViewDisplayContext";
             }];
         }
     }else {
+        
+        NSArray *layers = [factory loadMapLayers];
         [map.operationalLayers addObjectsFromArray:layers];
         for (AGSLayer *layer in layers) {
             [layer addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
@@ -66,9 +68,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
                 }
             }];
         }
-        
     }
-    
     [self notifyMapViewLoadStatus];
 }
 
