@@ -10,6 +10,10 @@
 #import "Z3FeatureAttributesDisplayView.h"
 #import "Z3MobileConfig.h"
 #import "Z3MapView.h"
+#import "Z3Theme.h"
+#import "UIColor+Z3.h"
+#import "Masonry.h"
+
 @interface Z3AGSCalloutViewIPad()
 @property (nonatomic,strong) Z3FeatureAttributesDisplayView *displayView;
 @property (nonatomic,strong) UIButton *takePhotoBtn;

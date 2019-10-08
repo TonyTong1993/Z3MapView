@@ -97,7 +97,7 @@
     __weak typeof(self) weakSelf = self;
     [self.mapView identifyLayersAtScreenPoint:screenPoint tolerance:22 returnPopupsOnly:NO completion:^(NSArray<AGSIdentifyLayerResult *> * _Nullable identifyResults, NSError * _Nullable error) {
         if (error) {
-            DLog(@"error = %@",error);
+            NSAssert(false, [error localizedDescription]);
             return;
         }
         NSMutableArray *results = [[NSMutableArray alloc] init];

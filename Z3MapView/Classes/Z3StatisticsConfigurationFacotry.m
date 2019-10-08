@@ -9,7 +9,9 @@
 #import "Z3StatisticsConfigurationFacotry.h"
 #import "Z3OneStatistics.h"
 #import "Z3StatisticsField.h"
-
+#import "YYCache.h"
+#import "UIApplication+YYAdd.h"
+#import "NSDictionary+YYAdd.h"
 @implementation Z3StatisticsConfigurationFacotry
  static NSString *cachePath = @"zzht.com.data.json";
  static NSString *fileName = @"fieldAliases";

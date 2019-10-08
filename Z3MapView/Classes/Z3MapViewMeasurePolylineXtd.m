@@ -8,7 +8,7 @@
 #import "Z3MapViewMeasurePolylineXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
-
+#import "StringUtil.h"
 @implementation Z3MapViewMeasurePolylineXtd
 
 - (AGSSketchCreationMode)creationMode {

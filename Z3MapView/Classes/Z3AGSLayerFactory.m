@@ -233,10 +233,6 @@
     NSMutableArray *layers = [NSMutableArray array];
     for (AGSGeodatabaseFeatureTable *table in tables) {
         AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
-        NSString *name =  layer.name;
-        DLog(@"name = %@",name);
-        BOOL visible =  layer.visible;
-        NSString *layerID = layer.layerID;
         [layers addObject:layer];
     }
     return [layers copy];

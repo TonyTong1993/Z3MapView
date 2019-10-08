@@ -49,11 +49,8 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSArray *geodatabases = [factory offlineGeodatabaseFileNames];
         for (NSString *fileName in geodatabases) {
             [factory loadOfflineGeoDatabaseWithFileName:fileName complicationHandler:^(NSArray *layers, NSError * error) {
-                if (error) {
-                    DLog(@"error = %@",[error localizedDescription]);
-                }else {
-                    [map.operationalLayers addObjectsFromArray:layers];
-                }
+                if (error) return;
+                [map.operationalLayers addObjectsFromArray:layers];
             }];
         }
     }else {

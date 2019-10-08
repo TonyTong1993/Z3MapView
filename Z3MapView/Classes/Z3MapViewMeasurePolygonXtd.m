@@ -8,6 +8,7 @@
 #import "Z3MapViewMeasurePolygonXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
+#import "StringUtil.h"
 @implementation Z3MapViewMeasurePolygonXtd
 - (AGSSketchCreationMode)creationMode {
     return AGSSketchCreationModePolygon;
