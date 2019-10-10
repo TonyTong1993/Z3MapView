@@ -204,7 +204,6 @@ static NSString *context = @"Z3MapViewDisplayContext";
     if (self.mapView.mapScale > 2000) {
          [self zoomToPoint:location withScale:2000];
     }
-   
 }
 
 //- (void)showTaplocationAnotationView:(AGSPoint *)location {
