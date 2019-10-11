@@ -40,9 +40,9 @@
 //    [[self trackGraphicsOverlay].graphics addObject:self.locationGraphic];
 }
 
-//- (void)updateLocation:(AGSPoint *)point {
-//    [self.locationGraphic setGeometry:point];
-//}
+- (void)updateLocation:(AGSPoint *)point {
+    [self.locationGraphic setGeometry:point];
+}
 
 //TODO: 国际化
 - (void)showFailureAlert:(NSString *)status {
