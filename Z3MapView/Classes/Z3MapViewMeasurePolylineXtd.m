@@ -17,12 +17,16 @@
 
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {
     AGSPolyline *line = (AGSPolyline *)self.mapView.sketchEditor.geometry;
-    double distance = [AGSGeometryEngine geodeticLengthOfGeometry:line lengthUnit:[AGSLinearUnit kilometers] curveType:AGSGeodeticCurveTypeShapePreserving];
+    double distance = [AGSGeometryEngine geodeticLengthOfGeometry:line lengthUnit:[AGSLinearUnit meters] curveType:AGSGeodeticCurveTypeShapePreserving];
     if (distance > 0.0f) {
         AGSPart *part = [[[line parts] array] lastObject];
         AGSPoint *mapPoint = part.endPoint;
         self.mapView.callout.title = LocalizedString(@"str_measure_length_title");
-        self.mapView.callout.detail = [NSString stringWithFormat:@"%.2f%@",distance,LocalizedString(@"unit_kilometer")];
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:distance]];
+        self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_unit_meter")];
+        
         [self.mapView.callout setAccessoryButtonHidden:YES];
         [self.mapView.callout showCalloutAt:mapPoint screenOffset:CGPointZero rotateOffsetWithMap:NO animated:YES];
     }

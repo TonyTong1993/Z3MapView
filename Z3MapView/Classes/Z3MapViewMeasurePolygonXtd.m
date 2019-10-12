@@ -16,11 +16,14 @@
 
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {
     AGSPolygon *geometry = (AGSPolygon *)self.mapView.sketchEditor.geometry;
-    double area = [AGSGeometryEngine geodeticAreaOfGeometry:geometry areaUnit:[AGSAreaUnit squareKilometers] curveType:AGSGeodeticCurveTypeShapePreserving];
+    double area = [AGSGeometryEngine geodeticAreaOfGeometry:geometry areaUnit:[AGSAreaUnit squareMeters] curveType:AGSGeodeticCurveTypeShapePreserving];
     if (area > 0.0f) {
         AGSPoint *mapPoint =  [[[geometry parts] array] lastObject].endPoint;
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:area]];
         self.mapView.callout.title = LocalizedString(@"str_map_area");
-        self.mapView.callout.detail = [NSString stringWithFormat:@"%.4f%@",area,LocalizedString(@"str_unit_square_kilometer")];
+        self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_square_meter")];
         [self.mapView.callout setAccessoryButtonHidden:YES];
         [self.mapView.callout showCalloutAt:mapPoint screenOffset:CGPointZero rotateOffsetWithMap:NO animated:YES];
     }

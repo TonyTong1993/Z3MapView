@@ -40,7 +40,7 @@ static  CGFloat CalloutViewHeight = 335.0f;
         [self addSubview:_displayView];
         if (![Z3MobileConfig shareConfig].offlineLogin) {
             _takePhotoBtn = [[UIButton alloc] init];
-            [_takePhotoBtn setTitle:NSLocalizedString(@"Take Photo", @"拍照") forState:UIControlStateNormal];
+            [_takePhotoBtn setTitle:NSLocalizedString(@"add Photo", @"添加附件") forState:UIControlStateNormal];
             [_takePhotoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             _takePhotoBtn.titleLabel.font = [UIFont fontWithName:[Z3Theme themeFontFamilyName] size:15];
             _takePhotoBtn.layer.cornerRadius = 5.0f;

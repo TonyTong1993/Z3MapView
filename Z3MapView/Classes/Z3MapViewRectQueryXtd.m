@@ -99,7 +99,7 @@
                            mapPoint:mapPoint
                     identityResults:(nonnull NSArray *)results{
     [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:results];
-    [self dissmissGraphicsForQuery];
+
 }
 
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context {
@@ -110,6 +110,10 @@
     if (self.handler) {
         self.handler(nil,nil,error);
     }
+}
+
+- (void)identityGraphicFailure {
+    [self.mapView.callout dismiss];
 }
 
 @end
