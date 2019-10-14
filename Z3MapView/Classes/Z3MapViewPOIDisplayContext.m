@@ -11,9 +11,8 @@
 #import "Z3MapViewPrivate.h"
 #import "Z3MapPOI.h"
 #import "Z3GraphicFactory.h"
-@interface Z3MapViewPOIDisplayContext ()
+@interface Z3MapViewPOIDisplayContext ()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSGraphicsOverlay *displayPOIGraphicsOverlay;
-@property (nonatomic,strong) NSArray *pois;
 @property (nonatomic,strong) AGSGraphic *current;
 @end
 @implementation Z3MapViewPOIDisplayContext
@@ -21,6 +20,7 @@
     self = [super init];
     if (self) {
         _mapView = mapView;
+        _mapView.touchDelegate = self;
     }
     return self;
 }
@@ -44,19 +44,50 @@
 }
 
 - (void)setSelectPOIAtIndexPath:(NSIndexPath *)indexPath {
-    AGSGraphic *graphic = self.displayPOIGraphicsOverlay.graphics[indexPath.row];
+    [self setSelectPOIAtIndex:indexPath.row];
+}
+
+- (void)setSelectPOIAtIndex:(NSUInteger)index {
+    AGSGraphic *graphic = self.displayPOIGraphicsOverlay.graphics[index];
     if (_current != graphic) {
         [graphic setSelected:YES];
         [_current setSelected:NO];
         _current = graphic;
+          __weak typeof(self) weakSelf = self;
         [self.mapView setViewpointCenter:(AGSPoint *)_current.geometry completion:^(BOOL finished) {
-            
+             [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
         }];
     }
 }
 
 - (void)dismissPOIs {
+    [self.mapView.callout dismiss];
+    self.mapView.callout.customView = nil;
     [self.displayPOIGraphicsOverlay.graphics removeAllObjects];
+}
+
+- (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
+    [geoView identifyGraphicsOverlay:self.displayPOIGraphicsOverlay screenPoint:screenPoint tolerance:12 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
+        AGSGraphic *graphic = [identifyResult.graphics firstObject];
+        if (graphic) {
+            [self showPoiPopupView:graphic tapLocation:mapPoint];
+        }else {
+            [geoView.callout dismiss];
+            [self.current setSelected:NO];
+            self.current = nil;
+        }
+    }];
+}
+
+- (void)showPoiPopupView:(AGSGraphic *)graphic tapLocation:(AGSPoint *)tapLocation{
+    if ( _current != graphic) {
+        _current = graphic;
+        __weak typeof(self) weakSelf = self;
+        [self.mapView setViewpointCenter:tapLocation completion:^(BOOL finished) {
+            [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:tapLocation animated:YES];
+        }];
+    }
+    
 }
 
 - (AGSGraphicsOverlay *)displayPOIGraphicsOverlay {
