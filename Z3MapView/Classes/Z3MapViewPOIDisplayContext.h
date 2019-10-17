@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class AGSMapView;
+@class AGSMapView,Z3MapPOI;
 @interface Z3MapViewPOIDisplayContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,copy,readonly) NSArray *pois;
@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
  POI相关
  */
 - (void)showPOIs:(NSArray *)POIs;
+
+- (void)showPOI:(Z3MapPOI *)POI;
 
 /**
  选中POI

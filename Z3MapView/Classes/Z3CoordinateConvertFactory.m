@@ -100,9 +100,6 @@
 - (Z3BaseRequest *)requestConvertWGS48Latitude:(double)latitude
                                      longitued:(double)longitude
                                   complication:(void(^)(AGSPoint *point))complication {
-////   22.20139 113.5525
-//    latitude =  22.20139;
-//    longitude = 113.5525;
     if ([Z3MobileConfig shareConfig].coorTransToken) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/trans";
         NSDictionary *params = @{
@@ -120,14 +117,16 @@
                 NSDictionary *data = response.responseJSONObject[@"data"];
                 double x = [data[@"x"] doubleValue];
                 double y = [data[@"y"] doubleValue];
-                //TODO: 澳门的x->data[@"x"],y->data[@"y"];苏州水利的x->data[@"y"],y->data[@"x"]
-                AGSPoint *point = [self pointWithX:x y:y wkid:[Z3MobileConfig shareConfig].wkid];
+                BOOL reverse = [Z3MobileConfig shareConfig].coorTransReverse;
+                double agsX = reverse ? y : x;
+                double agsY = reverse ? x : y;
+                AGSPoint *point = [self pointWithX:agsX y:agsY wkid:[Z3MobileConfig shareConfig].wkid];
                 complication(point);
             }else {
-//                [MBProgressHUD showError:@"坐标转换失败,请稍后再试!"];
+                
             }
         } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
-//            [MBProgressHUD showError:@"坐标转换失败,请稍后再试!"];
+
         }];
         [request start];
         return request;

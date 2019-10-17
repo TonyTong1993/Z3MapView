@@ -11,6 +11,7 @@
 #import "Z3MapViewPrivate.h"
 #import "Z3MapPOI.h"
 #import "Z3GraphicFactory.h"
+#import "Z3POICalloutView.h"
 @interface Z3MapViewPOIDisplayContext ()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSGraphicsOverlay *displayPOIGraphicsOverlay;
 @property (nonatomic,strong) AGSGraphic *current;
@@ -21,6 +22,7 @@
     if (self) {
         _mapView = mapView;
         _mapView.touchDelegate = self;
+        [_mapView.callout setCustomView:[Z3POICalloutView calloutView]];
     }
     return self;
 }
@@ -30,6 +32,13 @@
     _pois = POIs;
     [self buildGraphics];
 }
+
+- (void)showPOI:(Z3MapPOI *)POI {
+    NSArray *pois = @[POI];
+    [self showPOIs:pois];
+    [self setSelectPOIAtIndex:0];
+}
+
 
 - (void)buildGraphics {
     NSMutableArray *graphics = [[NSMutableArray alloc] init];
@@ -53,6 +62,8 @@
         [graphic setSelected:YES];
         [_current setSelected:NO];
         _current = graphic;
+        Z3POICalloutView *calloutView = (Z3POICalloutView *)[self.mapView.callout customView];
+//        [calloutView setMarkAttributes:graphic.attributes];
           __weak typeof(self) weakSelf = self;
         [self.mapView setViewpointCenter:(AGSPoint *)_current.geometry completion:^(BOOL finished) {
              [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
@@ -62,7 +73,6 @@
 
 - (void)dismissPOIs {
     [self.mapView.callout dismiss];
-    self.mapView.callout.customView = nil;
     [self.displayPOIGraphicsOverlay.graphics removeAllObjects];
 }
 
@@ -88,6 +98,10 @@
         }];
     }
     
+}
+
+- (void)dealloc {
+    [self.mapView.callout setCustomView:nil];
 }
 
 - (AGSGraphicsOverlay *)displayPOIGraphicsOverlay {

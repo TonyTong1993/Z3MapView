@@ -23,6 +23,17 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildSimpleMarkGraphicWithPoint:(AGSPoint *)point
+                                          color:(UIColor *)color
+                                     attributes:(NSDictionary *)attributes {
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPonitSymbolWithColor:color];
+    AGSSymbol *selectedSymbol = [[Z3AGSSymbolFactory factory] buildSelectedPonitSymbol];
+    Z3FlashGraphic *graphic = [[Z3FlashGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    [graphic setSelectedSymbol:selectedSymbol];
+    [graphic setNormalSymbol:normalSymbol];
+    return graphic;
+}
+
 - (AGSGraphic *)buildLocationMarkGraphicWithPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes {
     AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildLocationSymbol];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
@@ -38,6 +49,15 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildSimpleLineGraphicWithLine:(AGSPolyline *)polyline color:(UIColor *)color attributes:(NSDictionary *)attributes {
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPolyLineSymbolWithColor:color];
+    AGSSymbol *selectedSymbol = [[Z3AGSSymbolFactory factory] buildSelectedPolyLineSymbol];
+    Z3FlashGraphic *graphic = [[Z3FlashGraphic alloc] initWithGeometry:polyline symbol:normalSymbol attributes:attributes];
+    [graphic setSelectedSymbol:selectedSymbol];
+    [graphic setNormalSymbol:normalSymbol];
+    return graphic;
+}
+
 - (AGSGraphic *)buildSimpleEnvelopGraphicWithEnvelop:(AGSEnvelope *)envelop attributes:(NSDictionary *)attributes {
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildNormalEnvelopSymbol];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:envelop symbol:normalSymbol attributes:attributes];
@@ -46,6 +66,12 @@
 
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon attributes:(NSDictionary *)attributes {
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildNormalEnvelopSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon color:(UIColor *)color attributes:(NSDictionary *)attributes {
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildEnvelopSymbolWithColor:color];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:normalSymbol attributes:attributes];
     return graphic;
 }
@@ -69,6 +95,21 @@
     NSAssert(nil, @"please check geometry type");
     return nil;
 }
+
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry
+                                                 color:(UIColor *)color
+                                            attributes:(NSDictionary *)attributes{
+    if ([geometry isKindOfClass:[AGSPoint class]]) {
+        return [self buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry color:color attributes:attributes];
+    }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
+         return [self buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry color:color attributes:attributes];
+    }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
+         return [self buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)geometry color:color attributes:attributes];
+    }
+    NSAssert(nil, @"please check geometry type");
+    return nil;
+}
+
 
 - (AGSGraphic *)buildPipeLeakMarkGraphicWithPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes {
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakNormalSymbol];

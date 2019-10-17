@@ -44,7 +44,7 @@ static NSUInteger code = 400;
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey:@"heading is not available"};
         error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
         
-        return;
+//        return;
     }
     
     switch ([CLLocationManager authorizationStatus]) {

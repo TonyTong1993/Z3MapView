@@ -17,7 +17,6 @@
 #import "MBProgressHUD+Z3.h"
 @interface Z3MapViewDisplayUserLocationContext()
 @property (nonatomic,assign) BOOL showTrack;
-@property (nonatomic,strong) AGSGraphic *locationGraphic;
 @end
 @implementation Z3MapViewDisplayUserLocationContext
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
@@ -37,14 +36,9 @@
     [self setLocationDataSource];
     self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeNavigation;
     self.mapView.locationDisplay.showLocation = YES;
-//    [[self trackGraphicsOverlay].graphics addObject:self.locationGraphic];
 }
 
-- (void)updateLocation:(AGSPoint *)point {
-    [self.locationGraphic setGeometry:point];
-}
 
-//TODO: 国际化
 - (void)showFailureAlert:(NSString *)status {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:status preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -66,7 +60,6 @@
 }
 
 - (void)setLocationDataSource {
-    
     if ([Z3SettingsManager sharedInstance].locationSimulate) {
         AGSPolyline *polyline = [[Z3SimutedLocationFactory factory] buildSimulatedPolyline];
         AGSSimulatedLocationDataSource *dataSource = [[AGSSimulatedLocationDataSource alloc] init];
@@ -94,13 +87,6 @@
     }
 }
 
-- (AGSGraphic *)locationGraphic {
-    if (!_locationGraphic) {
-       _locationGraphic = [[Z3GraphicFactory factory] buildLocationMarkGraphicWithPoint:nil attributes:nil];
-    }
-    
-    return _locationGraphic;
-}
 
 - (AGSGraphicsOverlay *)trackGraphicsOverlay {
     AGSGraphicsOverlay *result = nil;

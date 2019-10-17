@@ -62,6 +62,19 @@
     return deviceInfo;
 }
 
+- (NSString *)targetLayerIDWithLayerName:(NSString *)layerName {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSString *layerID = nil;
+    [metas enumerateObjectsUsingBlock:^(Z3GISMeta *meta, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([[meta.layername uppercaseString] isEqualToString:[layerName uppercaseString]]) {
+            layerID = meta.layerid;
+            *stop = YES;
+        }
+    }];
+   
+    return layerID;
+}
+
 - (NSArray *)buildPipeNetQueryConditions {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableArray *sections = [NSMutableArray array];

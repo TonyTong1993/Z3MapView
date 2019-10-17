@@ -14,11 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)factory;
 
 - (AGSSymbol *)buildNormalPonitSymbol;
+- (AGSSymbol *)buildPonitSymbolWithColor:(UIColor *)color;
 - (AGSSymbol *)buildSelectedPonitSymbol;
 - (AGSSymbol *)buildSelectedPolyLineSymbol;
 - (AGSSymbol *)buildNormalPolyLineSymbol;
+- (AGSSymbol *)buildPolyLineSymbolWithColor:(UIColor *)color;
 - (AGSSymbol *)buildNormalPolygonSymbol;
 - (AGSSymbol *)buildNormalEnvelopSymbol;
+- (AGSSymbol *)buildEnvelopSymbolWithColor:(UIColor *)color;
 
     //创建SketchEditor模式下，select vet点x样式
 - (AGSSymbol *)buildSelectedVertexSymbol;
