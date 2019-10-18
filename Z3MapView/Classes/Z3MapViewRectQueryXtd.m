@@ -15,7 +15,7 @@
 @interface Z3MapViewRectQueryXtd ()
 @property (nonatomic,strong) NSMutableArray *mpoints;
 @property (nonatomic,copy) ComplicationHander handler;
-@property (nonatomic,copy) MakeRectComplication complication;
+@property (nonatomic,copy) MakeRectComplication makeRectComplication;
 @end
 @implementation Z3MapViewRectQueryXtd
 
@@ -45,6 +45,12 @@
     [self dissmissGraphicsForQuery];
 }
 
+- (void)clear {
+    [super clear];
+    [self dissmissGraphicsForQuery];
+    [self.identityContext resume];
+}
+
 - (void)dissmissGraphicsForQuery {
     if (self.queryGraphicsOverlay) {
         [self.queryGraphicsOverlay.graphics removeAllObjects];
@@ -69,7 +75,7 @@
 }
 
 - (void)registerMakeRectComplcation:(MakeRectComplication)complcation {
-    self.complication = complcation;
+    self.makeRectComplication = complcation;
 }
 
 - (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
@@ -79,10 +85,10 @@
         AGSEnvelope *envelop = [geometry extent];
         [self displayPointGraphicWithGeometry:mapPoint];
         [self displayEnvelopGraphicWithGeometry:envelop];
-        if (!envelop.isEmpty && self.complication) {
+        if (!envelop.isEmpty && self.makeRectComplication) {
             NSError * __autoreleasing error = nil;
             NSDictionary *json = [envelop toJSON:&error];
-            self.complication(json, error);
+            self.makeRectComplication(json, error);
         }
         if (!self.active) {
             return nil;

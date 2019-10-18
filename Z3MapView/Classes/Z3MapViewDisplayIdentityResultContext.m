@@ -36,7 +36,6 @@
 }
 
 - (void)dealloc {
-    [self dismiss];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotification object:nil];
 }
 
@@ -141,7 +140,7 @@
             [self.mapView removeConstraints:self.animationConstraintsForDismiss];
         }
         _animationConstraintsForPresent = [NSMutableArray array];
-        [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(160)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
+        [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(146)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
         [self.mapView addConstraints:_animationConstraintsForPresent];
 
     }else {
@@ -177,6 +176,7 @@
     
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
         if (_displayIdentityResultView) {
+            [self.mapView.callout dismiss];
             [self dismissPopupView];
         }
     }
@@ -194,8 +194,10 @@
         [self.animationConstraintsForDismiss addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[displayIdentityResultView(160)]-(margin)-|" options:0 metrics:@{@"margin":@(-160)} views:views]];
         [self.mapView addConstraints:self.animationConstraintsForDismiss];
     } completion:^(BOOL finished) {
-        [self.displayIdentityResultView removeFromSuperview];
-        self.displayIdentityResultView = nil;
+        if (self.displayIdentityResultView) {
+            [self.displayIdentityResultView removeFromSuperview];
+            self.displayIdentityResultView = nil;
+        }
     }];
     [self.mapView layoutIfNeeded];
 

@@ -49,10 +49,12 @@
 - (void)dismiss {
     [super dismiss];
     [_identityContext dissmiss];
+    [_displayIdentityResultContext dismiss];
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)) {
         [[self.mapView subviews] setValue:@(NO) forKey:NSStringFromSelector(@selector(hidden))];
         [self.targetViewController.tabBarController.tabBar setHidden:NO];
     }
+    [self.mapView.callout dismiss];
     [self.mapView.callout setCustomView:nil];
 }
 

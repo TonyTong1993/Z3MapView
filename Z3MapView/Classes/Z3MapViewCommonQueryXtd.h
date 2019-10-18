@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setIdentityUserInfo:(NSDictionary *)userInfo;
 //结束查询操作
 - (void)dismiss;
+
+    /// 点击右侧的清理按钮
+- (void)clear;
 @end
 
 NS_ASSUME_NONNULL_END
