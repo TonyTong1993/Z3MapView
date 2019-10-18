@@ -103,7 +103,7 @@
         NSMutableArray *results = [[NSMutableArray alloc] init];
         for (AGSIdentifyLayerResult *layerResult in identifyResults) {
             NSArray *geoElements = layerResult.geoElements;
-            for (AGSArcGISFeature *feature in geoElements) {
+                                                                                                                                for (AGSArcGISFeature *feature in geoElements) {
                 [results addObject:feature];
             }
         }

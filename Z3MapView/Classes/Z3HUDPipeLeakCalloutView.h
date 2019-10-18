@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Z3CalloutViewDelegate.h"
 NS_ASSUME_NONNULL_BEGIN
-
+@protocol Z3HUDPipeLeakCalloutViewDelegate <NSObject>
+- (void)calloutView:(UIView *)sender closeValve:(NSString *)valveId;
+@end
 @interface Z3HUDPipeLeakCalloutView : UIView<Z3CalloutViewDelegate>
 @property (nonatomic,assign) BOOL closeValveable;
+@property (nonatomic,weak) id<Z3HUDPipeLeakCalloutViewDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

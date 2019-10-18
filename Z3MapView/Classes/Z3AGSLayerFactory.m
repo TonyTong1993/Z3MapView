@@ -328,13 +328,27 @@
     
     return fileNames;
 }
-
-- (void)loadOfflineShaps:(NSString *)filePath {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:filePath];
-    AGSShapefileFeatureTable *table = [[AGSShapefileFeatureTable alloc] initWithFileURL:url];
     
-    
-    
+- (NSArray *)loadLayersByLocalShapefiles {
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *shapesPath = [documentsDirectory stringByAppendingPathComponent:@"shapes"];
+    NSError * __autoreleasing error = nil;
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:shapesPath error:&error];
+    if (error) {
+        NSAssert(false, [error localizedDescription]);
+    }
+    NSString *regex = @".*shp$";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    NSArray *targets = [contents filteredArrayUsingPredicate:predicate];
+    NSMutableArray *layers = [NSMutableArray array];
+    for (NSString *fileName in targets) {
+        NSString *shapePath = [shapesPath stringByAppendingPathComponent:fileName];
+        NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:shapePath];
+        AGSShapefileFeatureTable *table = [[AGSShapefileFeatureTable alloc] initWithFileURL:fileURL];
+        AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
+        [layers addObject:layer];
+    }
+    return layers;
 }
 
 @end

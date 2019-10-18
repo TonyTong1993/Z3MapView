@@ -95,7 +95,7 @@
     }
     [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:sortResults];
     [self dissmissGraphicsForQuery];
-    [self post:Z3MapViewTapQueryXtdIdentitySuccessNotification message:results];
+    [self post:Z3MapViewTapQueryXtdIdentitySuccessNotification message:sortResults];
 }
 
 - (void)identityContextQueryFailure:(Z3MapViewIdentityContext *)context {

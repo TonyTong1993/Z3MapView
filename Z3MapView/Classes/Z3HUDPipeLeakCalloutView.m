@@ -104,6 +104,9 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 
 - (void)onClickedValveBtn:(id)sender {
     NSString *gid = self.result.attributes[@"gid"];
+    if (_delegate && [_delegate respondsToSelector:@selector(calloutView:closeValve:)]) {
+        [_delegate calloutView:self closeValve:gid];
+    }
     [self post:Z3HUDPipeLeakCalloutViewCloseValveNotification message:gid];
 }
 

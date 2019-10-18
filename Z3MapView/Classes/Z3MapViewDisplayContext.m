@@ -21,17 +21,17 @@
 #import "Z3MobileConfig.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
-@property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
-
-/**
- 显示当前地图中心点的文本
- */
-@property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
-
-@property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
-@end
+    @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
+    
+    /**
+     显示当前地图中心点的文本
+     */
+    @property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
+    
+    @property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
+    @end
 @implementation Z3MapViewDisplayContext
-
+    
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
     self = [super init];
     if (self) {
@@ -40,21 +40,14 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
     return self;
 }
-
+    
 - (void)loadAGSLayers {
     AGSMap *map = self.mapView.map;
     NSAssert(map, @"map must not be null,please set map before to loadAGSLayers");
     Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
     if ([Z3MobileConfig shareConfig].offlineLogin) {
-        NSArray *geodatabases = [factory offlineGeodatabaseFileNames];
-        for (NSString *fileName in geodatabases) {
-            [factory loadOfflineGeoDatabaseWithFileName:fileName complicationHandler:^(NSArray *layers, NSError * error) {
-                if (error) return;
-                [map.operationalLayers addObjectsFromArray:layers];
-            }];
-        }
+        [self loadLayersByShapefiles:map];
     }else {
-        
         NSArray *layers = [factory loadMapLayers];
         [map.operationalLayers addObjectsFromArray:layers];
         for (AGSLayer *layer in layers) {
@@ -68,15 +61,32 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
     [self notifyMapViewLoadStatus];
 }
-
+    
+- (void)loadLayersByGeodatabases:(AGSMap *)map {
+    Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
+    NSArray *geodatabases = [factory offlineGeodatabaseFileNames];
+    for (NSString *fileName in geodatabases) {
+        [factory loadOfflineGeoDatabaseWithFileName:fileName complicationHandler:^(NSArray *layers, NSError * error) {
+            if (error) return;
+            [map.operationalLayers addObjectsFromArray:layers];
+        }];
+    }
+}
+    
+- (void)loadLayersByShapefiles:(AGSMap *)map {
+    Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
+    NSArray *layers = [factory loadLayersByLocalShapefiles];
+    [map.operationalLayers addObjectsFromArray:layers];
+}
+    
 - (void)notifyMapViewLoadStatus {
     AGSMap *map = self.mapView.map;
     [map addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
     [self.mapView addObserver:self forKeyPath:@"drawStatus" options:NSKeyValueObservingOptionNew context:&context];
     [self.mapView addObserver:self forKeyPath:@"visibleArea" options:NSKeyValueObservingOptionNew context:&context];
 }
-
-
+    
+    
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"loadStatus"] && object == self.mapView.map) {
         NSNumber *value = change[NSKeyValueChangeNewKey];
@@ -84,16 +94,16 @@ static NSString *context = @"Z3MapViewDisplayContext";
         dispatch_async(dispatch_get_main_queue(), ^{
             switch (status) {
                 case AGSLoadStatusLoaded:
-                    [self setAccessoryViewEndLoadMapLayers];
-                    break;
+                [self setAccessoryViewEndLoadMapLayers];
+                break;
                 case AGSLoadStatusFailedToLoad:
-                    [self setAccessoryViewEndLoadMapLayers];
-                    break;
+                [self setAccessoryViewEndLoadMapLayers];
+                break;
                 case AGSLoadStatusLoading:
-                    [self setAccessoryViewStartLoadMapLayers];
-                    break;
+                [self setAccessoryViewStartLoadMapLayers];
+                break;
                 default:
-                    break;
+                break;
             }
             if (self.loadStatusListener) {
                 self.loadStatusListener(status);
@@ -126,14 +136,14 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSNumber *value = change[NSKeyValueChangeNewKey];
         AGSLoadStatus status =  [value intValue];
         if (status == AGSDrawStatusCompleted) {
-//           NSArray *layers = self.mapView.map.operationalLayers;
-//            for (AGSFeatureLayer *layer in layers) {
-//
-//            }
+            //           NSArray *layers = self.mapView.map.operationalLayers;
+            //            for (AGSFeatureLayer *layer in layers) {
+            //
+            //            }
         }
     }
 }
-
+    
 - (void)dealloc {
     AGSMap *map = self.mapView.map;
     [map removeObserver:self forKeyPath:@"loadStatus"];
@@ -143,17 +153,17 @@ static NSString *context = @"Z3MapViewDisplayContext";
         [layer removeObserver:self forKeyPath:@"loadStatus"];
     }
 }
-
+    
 - (void)setMapViewLoadStatusListener:(MapViewLoadStatusListener)listener {
     _loadStatusListener = listener;
 }
-
+    
 - (void)setAccessoryViewStartLoadMapLayers {
     UIView *view = [self.mapView superview];
     NSAssert(view, @"mapView don`t have superview");
     [MBProgressHUD showHUDAddedTo:view animated:YES];
 }
-
+    
 - (void)setAccessoryViewEndLoadMapLayers {
     UIView *view = [self.mapView superview];
     NSAssert(view, @"mapView don`t have superview");
@@ -161,33 +171,33 @@ static NSString *context = @"Z3MapViewDisplayContext";
     
 }
 #pragma mark - control Viewpoint
-
+    
 - (void)zoomIn {
     double scale = _mapView.mapScale*0.5;
     [_mapView setViewpointScale:scale completion:nil];
 }
-
+    
 - (void)zoomOut {
     double scale = _mapView.mapScale*2;
     [_mapView setViewpointScale:scale completion:nil];
 }
-
+    
 - (void)zoomToEnvelope:(AGSEnvelope *)envelop {
     if (envelop) {
         AGSViewpoint *viewpoint = [[AGSViewpoint alloc] initWithTargetExtent:envelop];
         [self.mapView setViewpoint:viewpoint];
     }
 }
-
+    
 - (void)zoomToPoint:(AGSPoint *)point withScale:(double)scale {
     NSAssert(!point.isEmpty, @"point must not be empty");
     AGSViewpoint *viewpoint = [[AGSViewpoint alloc] initWithCenter:point scale:scale];
     __weak typeof(self) weakSelf = self;
     [self.mapView setViewpoint:viewpoint completion:^(BOOL finished) {
-         NSLog(@"mapScale = %lf",weakSelf.mapView.mapScale);
+        NSLog(@"mapScale = %lf",weakSelf.mapView.mapScale);
     }];
 }
-
+    
 - (void)zoomToInitialEnvelop {
     AGSMap *map = self.mapView.map;
     AGSViewpoint *viewpoint = map.initialViewpoint;
@@ -197,26 +207,26 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSAssert(false, @"you must set map#initialViewpoint");
     }
 }
-
+    
 - (void)showAddress:(NSString *)address location:(AGSPoint *)location {
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildAddressGraphicWithPoint:location attributes:nil];
     [self.addressGraphicsOverlay.graphics addObject:graphic];
     if (self.mapView.mapScale > 2000) {
-         [self zoomToPoint:location withScale:2000];
+        [self zoomToPoint:location withScale:2000];
     }
 }
-
-//- (void)showTaplocationAnotationView:(AGSPoint *)location {
-//    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildAddressGraphicWithPoint:location attributes:nil];
-//    [self.tapGraphicsOverlay.graphics addObject:graphic];
-//    if (self.mapView.mapScale > 2000) {
-//        [self zoomToPoint:location withScale:2000];
-//    }
-//
-//}
-
+    
+    //- (void)showTaplocationAnotationView:(AGSPoint *)location {
+    //    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildAddressGraphicWithPoint:location attributes:nil];
+    //    [self.tapGraphicsOverlay.graphics addObject:graphic];
+    //    if (self.mapView.mapScale > 2000) {
+    //        [self zoomToPoint:location withScale:2000];
+    //    }
+    //
+    //}
+    
 - (void)removeAddressAnotationView {
-     [self.addressGraphicsOverlay.graphics removeAllObjects];
+    [self.addressGraphicsOverlay.graphics removeAllObjects];
 }
 #pragma mark - Control PopupView
 - (void)showCenterPropertyView {
@@ -233,7 +243,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
     [self updateCenterPropertyView];
 }
-
+    
 - (void)updateCenterPropertyView {
     if (_centerPropertyView) {
         CGPoint centerP = self.mapView.center;
@@ -242,7 +252,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
         
     }
 }
-
+    
 - (void)showLayerFilterPopUpViewWithDataSource:(NSArray *)dataSource delegate:(id<Z3MapViewOperationDelegate>)delegate{
     UIWindow *window = [UIApplication sharedApplication].delegate.window;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
@@ -256,7 +266,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
     hud.bezelView.backgroundColor = [UIColor clearColor];
 }
-
+    
 - (void)showMapOpertionViewWithDataSource:(NSArray *)dataSource delegate:(id<Z3MapViewOperationDelegate>)delegate{
     Z3MapViewOperationBuilder *builder = [Z3MapViewOperationBuilder builder];
     NSMutableArray *operations = [builder buildOperations];
@@ -286,7 +296,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     UIView *targetView = [targetViewController.navigationController view];
     [targetView addSubview:maskView];
     [targetView addSubview:operationView];
-        //设置动画的初始状态
+    //设置动画的初始状态
     operationView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
     [UIView beginAnimations:nil context:UIGraphicsGetCurrentContext()];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseIn]; //InOut 表示进入和出去时都启动动画
@@ -294,8 +304,8 @@ static NSString *context = @"Z3MapViewDisplayContext";
     operationView.transform = CGAffineTransformIdentity;//先让要显示的view最小直至消失
     [UIView commitAnimations]; //启动动画
 }
-
-
+    
+    
 - (AGSGraphicsOverlay *)addressGraphicsOverlay {
     if (_addressGraphicsOverlay == nil) {
         for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
@@ -308,9 +318,9 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
     return _addressGraphicsOverlay;
 }
-
-
-@end
+    
+    
+    @end
 
 
 

@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSArray *closeLines;
 
 /**
- 关阀
+ 影响的管点
  */
 @property (nonatomic,copy) NSArray *closeNodes;
 

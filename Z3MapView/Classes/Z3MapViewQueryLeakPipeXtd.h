@@ -14,16 +14,21 @@
 #import "Z3MapViewTapQueryXtd.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class Z3MapViewIdentityResult,AGSPolygon;
+typedef void(^QueryPipeComplication)(Z3MapViewIdentityResult *result);
 @interface Z3MapViewQueryLeakPipeXtd : Z3MapViewTapQueryXtd
 
-
+- (void)registerQueryPipeComplication:(QueryPipeComplication)complication;
 /**
  关阀搜索
 
  @param valveNods 二次关阀的阀门GID
  */
 - (void)searchRelativeValves:(NSString * _Nullable)valveNods;
+    
+- (void)switchDisplayFeatues:(NSArray *)features closeArea:(AGSPolygon *)closeArea;
+    
+- (void)clearAnalyseResults;
 @end
 
 NS_ASSUME_NONNULL_END

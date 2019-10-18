@@ -20,9 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)filterSubLayesForOnLineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer
                                                       ids:(NSArray *)ids
                                                   visible:(BOOL)visible;
-
-
-
 /**
  加载离线数据
 
@@ -39,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
  @return 文件名集合
  */
 - (NSArray *)offlineGeodatabaseFileNames;
+    
+- (NSArray *)loadLayersByLocalShapefiles;
 @end
 
 NS_ASSUME_NONNULL_END

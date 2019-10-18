@@ -17,16 +17,22 @@
 #import "Z3MobileConfig.h"
 #import "Z3MobileTask.h"
 #import "Z3QueryTaskHelper.h"
-@interface Z3MapViewQueryLeakPipeXtd()
+@interface Z3MapViewQueryLeakPipeXtd()<Z3HUDPipeLeakCalloutViewDelegate>
 @property (nonatomic,strong) AGSPoint *tapLocation;//管段上距离触发点最近的点
-@property (nonatomic,strong) NSDictionary *attributes;//管段上的属性
+@property (nonatomic,strong) Z3MapViewIdentityResult *result;//管段
+@property (nonatomic,copy) QueryPipeComplication queryPipeComplication;
 @end
 @implementation Z3MapViewQueryLeakPipeXtd
 
 - (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResultInMapView {
     Z3HUDPipeLeakCalloutView *callout = [[Z3HUDPipeLeakCalloutView alloc] init];
     callout.closeValveable = YES;
+    callout.delegate = self;
     return callout;
+}
+
+- (void)registerQueryPipeComplication:(QueryPipeComplication)complication {
+    self.queryPipeComplication = complication;
 }
 
 - (AGSPoint *)tapLocationForDisplayCalloutView {
@@ -64,9 +70,12 @@
         }
     }];
     self.tapLocation = mapPoint;
-    self.attributes = reslut.attributes;
+    self.result = reslut;
     [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:@[reslut]];
     [self displayPipeLeakGraphicWithGeometry:tapLocation];
+    if (self.queryPipeComplication) {
+        self.queryPipeComplication(reslut);
+    }
     [self post:Z3MapViewDidSelectDeviceNotification message:reslut];
     
 }
@@ -86,10 +95,14 @@
     [self.displayIdentityResultContext setSelectedIdentityGraphic:nil mapPoint:self.tapLocation];
     [self.mapView.callout dismiss];
 }
+    
+- (void)calloutView:(UIView *)sender closeValve:(NSString *)valveId {
+    [self searchRelativeValves:valveId];
+}
 
 - (void)searchRelativeValves:(NSString *)valveNods {
-    NSString *layerID = [[Z3GISMetaBuilder builder] pipeLayerID];
-    NSString *objectId = self.attributes[@"gid"];
+    NSString *layerID = [NSString stringWithFormat:@"%ld",self.result.layerId];
+    NSString *objectId = self.result.attributes[@"gid"];
     NSDictionary *arguments = @{
                                 @"layerId":layerID,
                                 @"objectId":objectId ?:@"",
@@ -103,6 +116,10 @@
                                                  userInfo:arguments];
 
 }
+    
+- (void)switchDisplayFeatues:(NSArray *)features closeArea:(nonnull AGSPolygon *)closeArea{
+    [self.displayIdentityResultContext updatePipeAnalyseResults:features closeArea:closeArea mapPoint:self.tapLocation];
+}
 
 - (void)displayPipeLeakGraphicWithGeometry:(AGSPoint *)geometry {
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPipeLeakMarkGraphicWithPoint:geometry attributes:nil];
@@ -110,6 +127,10 @@
     [self.queryGraphicsOverlay.graphics addObject:graphic];
     [graphic setSelected:YES];
     
+}
+    
+- (void)clearAnalyseResults {
+    [self dismiss];
 }
 
 - (void)dismiss {

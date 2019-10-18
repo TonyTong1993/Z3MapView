@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@class AGSMapView;
+@class AGSMapView,AGSPolygon;
 @interface Z3MapViewDisplayIdentityResultContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,weak,readonly) AGSGraphic *selectedGraphic;
@@ -59,6 +59,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result
                        mapPoint:(AGSPoint * _Nullable)mapPoint;
+    
+/**
+ 更新爆管分析结果绘制到地图上
+
+ @param results 当前选择的结果
+ @param closeArea 影响范围
+ @param mapPoint 点选的位置
+ */
+- (void)updatePipeAnalyseResults:(NSArray *)results
+                       closeArea:(AGSPolygon *)closeArea
+                        mapPoint:(AGSPoint *)mapPoint;
 
 /**
  将设备选中结果绘制到地图上

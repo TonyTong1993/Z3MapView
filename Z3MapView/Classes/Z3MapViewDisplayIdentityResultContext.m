@@ -36,6 +36,9 @@
 }
 
 - (void)dealloc {
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        [self dismiss];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotification object:nil];
 }
 
@@ -218,11 +221,16 @@
 
 - (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result mapPoint:(AGSPoint *)mapPoint {
     NSMutableArray *resluts = [[NSMutableArray alloc] initWithArray:result.valves];
-    [resluts addObjectsFromArray:result.users];
-    [resluts addObjectsFromArray:result.closeLines];
-    [resluts addObjectsFromArray:result.closeNodes];
     [self updateIdentityResults:[resluts copy] mapPoint:mapPoint];
     [self buildPolygonGraphicWithGeometry:result.closearea];
+}
+
+- (void)updatePipeAnalyseResults:(NSArray *)results
+                       closeArea:(AGSPolygon *)closeArea
+                        mapPoint:(AGSPoint *)mapPoint {
+    
+    [self updateIdentityResults:results mapPoint:mapPoint];
+    [self buildPolygonGraphicWithGeometry:closeArea];
 }
 
 
