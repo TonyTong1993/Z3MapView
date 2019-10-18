@@ -329,6 +329,12 @@
     return fileNames;
 }
 
-
+- (void)loadOfflineShaps:(NSString *)filePath {
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:filePath];
+    AGSShapefileFeatureTable *table = [[AGSShapefileFeatureTable alloc] initWithFileURL:url];
+    
+    
+    
+}
 
 @end

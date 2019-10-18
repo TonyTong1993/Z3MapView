@@ -62,11 +62,11 @@
         [graphic setSelected:YES];
         [_current setSelected:NO];
         _current = graphic;
-        Z3POICalloutView *calloutView = (Z3POICalloutView *)[self.mapView.callout customView];
-//        [calloutView setMarkAttributes:graphic.attributes];
-          __weak typeof(self) weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         [self.mapView setViewpointCenter:(AGSPoint *)_current.geometry completion:^(BOOL finished) {
-             [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+            if (self.isShowPopup) {
+                [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+            }
         }];
     }
 }
@@ -91,10 +91,14 @@
 
 - (void)showPoiPopupView:(AGSGraphic *)graphic tapLocation:(AGSPoint *)tapLocation{
     if ( _current != graphic) {
+        graphic.selected = YES;
+        _current.selected = NO;
         _current = graphic;
         __weak typeof(self) weakSelf = self;
-        [self.mapView setViewpointCenter:tapLocation completion:^(BOOL finished) {
-            [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:tapLocation animated:YES];
+        [self.mapView setViewpointCenter:(AGSPoint *)_current.geometry completion:^(BOOL finished) {
+            if (weakSelf.isShowPopup) {
+                [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+            }
         }];
     }
     

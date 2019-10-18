@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Z3MapViewPOIDisplayContext : NSObject
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,copy,readonly) NSArray *pois;
+@property (nonatomic,assign,getter=isShowPopup) BOOL showPopup;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
