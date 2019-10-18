@@ -138,9 +138,12 @@
                                   complication:(void(^)(CLLocation *location))complication {
     if ([Z3MobileConfig shareConfig].coorTransToken && point) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/transReverse";
+        BOOL reverse = [Z3MobileConfig shareConfig].coorTransReverse;
+        double agsX = reverse ? point.y : point.x;
+        double agsY = reverse ? point.x : point.y;
         NSDictionary *params = @{
-                                 @"x":@(point.y),
-                                 @"y":@(point.x),
+                                 @"x":@(agsX),
+                                 @"y":@(agsY),
                                  @"h":@(0),
                                  @"configId":[Z3MobileConfig shareConfig].coorTransToken,
                                  };
@@ -153,10 +156,10 @@
                CLLocation *location = [[CLLocation alloc] initWithLatitude:y longitude:x];
                 complication(location);
             }else {
-//                [MBProgressHUD showError:@"坐标反转失败,请稍后再试!"];
+
             }
         } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
-//            [MBProgressHUD showError:@"坐标反转失败,请稍后再试!"];
+
         }];
         [request start];
         return request;

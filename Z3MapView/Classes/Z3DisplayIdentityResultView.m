@@ -9,7 +9,7 @@
 #import "Z3DisplayIdentityResultView.h"
 #import "Z3DisplayIdentityResultViewCell.h"
 @interface Z3DisplayIdentityResultView()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
-@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) UICollectionView *collectionView;
 @property (nonatomic,copy) NSArray *dataSource;
 @end
 @implementation Z3DisplayIdentityResultView
@@ -54,7 +54,7 @@ static NSString *Z3DisplayIdentityResultViewCell_reuseIdentifier = @"Z3DisplayId
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     self.collectionView.pagingEnabled = YES;
-    [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([Z3DisplayIdentityResultViewCell class]) bundle:nil] forCellWithReuseIdentifier:Z3DisplayIdentityResultViewCell_reuseIdentifier];
+    [self.collectionView registerClass:[Z3DisplayIdentityResultViewCell class] forCellWithReuseIdentifier:Z3DisplayIdentityResultViewCell_reuseIdentifier];
     self.backgroundColor = [UIColor clearColor];
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
