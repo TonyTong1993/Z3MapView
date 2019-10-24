@@ -102,6 +102,8 @@
                                   complication:(void(^)(AGSPoint *point))complication {
     if ([Z3MobileConfig shareConfig].coorTransToken) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/trans";
+//        longitude = 120.472861642;
+//        latitude = 31.330032377;
         NSDictionary *params = @{
                                  @"x":@(longitude),
                                  @"y":@(latitude),
