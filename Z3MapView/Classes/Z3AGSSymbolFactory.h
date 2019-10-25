@@ -98,6 +98,11 @@ NS_ASSUME_NONNULL_BEGIN
                             fontFamily:(NSString *)fontFamily
                               fontSize:(CGFloat)fontSize;
 
+- (AGSSymbol *)buildTextSymbolWithText:(NSString *)text
+                             textColor:(UIColor *)textColor
+                            fontFamily:(NSString *)fontFamily
+                              fontSize:(CGFloat)fontSize
+                                offset:(CGPoint)offset;
 
 /**
   线symbol

@@ -163,8 +163,19 @@
                              textColor:(UIColor *)textColor
                             fontFamily:(NSString *)fontFamily
                               fontSize:(CGFloat)fontSize {
+  
+    return [self buildTextSymbolWithText:text textColor:textColor fontFamily:fontFamily fontSize:fontSize offset:CGPointZero];
+}
+
+- (AGSSymbol *)buildTextSymbolWithText:(NSString *)text
+                             textColor:(UIColor *)textColor
+                            fontFamily:(NSString *)fontFamily
+                              fontSize:(CGFloat)fontSize
+                                offset:(CGPoint)offset{
     AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:textColor size:fontSize horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentMiddle];
     textSymbol.fontFamily = fontFamily;
+    textSymbol.offsetX = offset.x;
+    textSymbol.offsetY = offset.y;
     return textSymbol;
 }
 

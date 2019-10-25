@@ -150,6 +150,8 @@
     return graphic;
 }
 
+
+
 - (AGSGraphic *)buildAddressGraphicWithPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes {
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildAddressSymbol];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
@@ -165,6 +167,18 @@
     AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildTextSymbolWithText:text textColor:textColor fontFamily:fontFamily fontSize:fontSize];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
      return graphic;
+}
+
+- (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
+                                     text:(NSString *)text
+                                textColor:(UIColor *)textColor
+                               fontFamily:(NSString *)fontFamily
+                                 fontSize:(CGFloat)fontSize
+                                   offset:(CGPoint)offset
+                               attributes:(NSDictionary *)attributes{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildTextSymbolWithText:text textColor:textColor fontFamily:fontFamily fontSize:fontSize offset:offset];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
 }
 
 - (AGSGraphic *)buildLineGraphicWithPolyline:(AGSPolyline *)line

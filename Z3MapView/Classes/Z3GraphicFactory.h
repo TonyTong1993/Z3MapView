@@ -115,7 +115,13 @@ NS_ASSUME_NONNULL_BEGIN
                                  fontSize:(CGFloat)fontSize
                                attributes:(NSDictionary * _Nullable)attributes;
 
-
+- (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
+                                     text:(NSString *)text
+                                textColor:(UIColor *)textColor
+                               fontFamily:(NSString *)fontFamily
+                                 fontSize:(CGFloat)fontSize
+                                   offset:(CGPoint)offset
+                               attributes:(NSDictionary *)attributes;
 /**
  构建线graphic
  
