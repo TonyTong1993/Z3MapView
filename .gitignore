@@ -35,3 +35,11 @@ Carthage/Build
 # `pod install` in .travis.yml
 #
 # Pods/
+Z3MapView/Classes/Z3GISMeta.h
+Z3MapView/Classes/Z3GISMeta.m
+Z3MapView/Classes/Z3GISMetaRequest.h
+Z3MapView/Classes/Z3GISMetaRequest.m
+Z3MapView/Classes/Z3GISMetaResponse.h
+Z3MapView/Classes/Z3GISMetaResponse.m
+Z3MapView/Classes/Z3MapViewIdentityParameterBuilder.h
+Z3MapView/Classes/Z3MapViewIdentityParameterBuilder.m
