@@ -20,6 +20,10 @@ typedef void(^OnComplicationBlock)(void);
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+/**
+ 移除所有的graphics
+ */
+- (void)removeAllGraphics;
 - (void)setOnComplicationListener:(OnComplicationBlock)conmplication;
 - (void)post:(NSNotificationName)notificationName message:(id _Nullable)message;
 @end

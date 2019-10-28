@@ -23,11 +23,20 @@
 @property (nonatomic,copy) QueryPipeComplication queryPipeComplication;
 @end
 @implementation Z3MapViewQueryLeakPipeXtd
-
-- (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResultInMapView {
+static  CGFloat PipeLeakCalloutViewWidth = 100.0f;
+static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
+- (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResult:(Z3MapViewIdentityResult *)result {
     Z3HUDPipeLeakCalloutView *callout = [[Z3HUDPipeLeakCalloutView alloc] init];
     callout.closeValveable = YES;
     callout.delegate = self;
+    CGSize size = CGSizeZero;
+    NSString *layerId = [NSString stringWithFormat:@"%ld",result.layerId];
+    if ([[Z3GISMetaBuilder builder].valveLayerIDs containsObject:layerId]) {
+        size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
+    }else {
+        size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
+    }
+    callout.size = size;
     return callout;
 }
 

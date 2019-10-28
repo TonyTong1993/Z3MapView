@@ -82,5 +82,9 @@
     }
 }
 
+- (void)removeAllGraphics {
+    
+}
+
 @end
 

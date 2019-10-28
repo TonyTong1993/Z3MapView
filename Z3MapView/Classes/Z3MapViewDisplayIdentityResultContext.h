@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)pointGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
 - (AGSGraphic *)polylineGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
 - (AGSGraphic *)polygonGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes;
-- (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResultInMapView;
+- (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResult:(Z3MapViewIdentityResult *)result;
 - (AGSPoint *)tapLocationForDisplayCalloutView;
 @end
 

@@ -55,6 +55,10 @@
     [graphic setSelected:YES];
 }
 
+- (UIView<Z3CalloutViewDelegate> *)calloutViewForDisplayIdentityResult:(Z3MapViewIdentityResult *)result {
+    return nil;
+}
+
 - (void)dismiss {
     [super dismiss];
     [self dissmissGraphicsForQuery];

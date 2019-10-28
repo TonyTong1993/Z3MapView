@@ -119,19 +119,22 @@
 
 - (void)dispalyPopviewForIpadWithMapPoint:(AGSPoint *)mapPoint {
     UIView<Z3CalloutViewDelegate> *callout = nil;
-    if (_delegate && [_delegate respondsToSelector:@selector(calloutViewForDisplayIdentityResultInMapView)]) {
-        callout =  [_delegate calloutViewForDisplayIdentityResultInMapView];
-         self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionBottom;
-    }else {
-        callout = [Z3AGSCalloutViewIPad calloutView];
-        self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionLeft;
-    }
     NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
     AGSArcGISFeature *feature = self.results[index];
-    [callout setIdentityResult:feature];
-    [self.mapView.callout setCustomView:callout];
-    AGSPoint *tapLocation = mapPoint;
-    [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:tapLocation animated:YES];
+    if (_delegate && [_delegate respondsToSelector:@selector(calloutViewForDisplayIdentityResult:)]) {
+        callout =  [_delegate calloutViewForDisplayIdentityResult:(Z3MapViewIdentityResult *)feature];
+        self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionBottom;
+    }else {
+        callout = [Z3AGSCalloutViewIPad calloutView];
+        callout.size = CGSizeMake(240.0f, 335.0f);
+        self.mapView.callout.leaderPositionFlags = AGSCalloutLeaderPositionLeft;
+    }
+    if (callout) {
+        [callout setIdentityResult:feature];
+        [self.mapView.callout setCustomView:callout];
+        AGSPoint *tapLocation = mapPoint;
+        [self.mapView.callout showCalloutForGraphic:self.selectedGraphic tapLocation:tapLocation animated:YES];
+    }
 }
 
 - (void)displayPopViewForIphoneWithMapPoint:(AGSPoint *)mapPoint {

@@ -63,6 +63,10 @@
     [self.displayIdentityResultContext dismiss];
 }
 
+- (void)removeAllGraphics {
+    [self clear];
+}
+
 - (void)setIdentityUserInfo:(NSDictionary *)userInfo {
     self.userInfo = userInfo;
 }
