@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)factory;
 - (NSArray *)loadMapLayers;
 - (AGSBasemap *)localBaseMap;
+- (AGSBasemap *)onlineBaseMap;
 - (AGSLayer *)localBaseMapLayer;
 - (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler;
 - (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer;

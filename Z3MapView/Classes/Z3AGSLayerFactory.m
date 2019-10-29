@@ -20,7 +20,7 @@
 
 - (NSArray *)loadMapLayers {
     Z3MapConfig *config =  [Z3MobileConfig shareConfig].mapConfig;
-    NSArray *sources = config.sources;
+    NSArray *sources = [config mapLayers];
     NSMutableArray *layers = [NSMutableArray arrayWithCapacity:sources.count];
     for (Z3MapLayer *mapLayer in sources) {
         AGSLayer *layer = [self loadMapLayer:mapLayer];
@@ -33,6 +33,10 @@
 }
 
 - (AGSLayer *)loadMapLayer:(Z3MapLayer *)mapLayer {
+    if (mapLayer == nil) {
+        NSAssert(false, @"mapLayer is nil");
+        return nil;
+    }
     NSString *rootURLPath  = [Z3URLConfig configration].rootURLPath;
     NSString *proxyURL = mapLayer.url;
     NSString *urlStr  = nil;
@@ -94,8 +98,9 @@
 }
 
 - (AGSBasemap *)onlineBaseMap {
-    AGSArcGISTiledLayer *baseMapLayer = (AGSArcGISTiledLayer *)[self localBaseMapLayer];
-    return [[AGSBasemap alloc] initWithBaseLayer:baseMapLayer];
+    Z3MapConfig *config =  [Z3MobileConfig shareConfig].mapConfig;
+    Z3MapLayer *mapLayer = [config visiableBasemap];
+    return [[AGSBasemap alloc] initWithBaseLayer:[self loadMapLayer:mapLayer]];
 }
 
 - (AGSLayer *)localBaseMapLayer {
