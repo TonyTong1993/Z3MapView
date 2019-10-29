@@ -100,7 +100,8 @@
 - (AGSBasemap *)onlineBaseMap {
     Z3MapConfig *config =  [Z3MobileConfig shareConfig].mapConfig;
     Z3MapLayer *mapLayer = [config visiableBasemap];
-    return [[AGSBasemap alloc] initWithBaseLayer:[self loadMapLayer:mapLayer]];
+    AGSBasemap *basemap = [[AGSBasemap alloc] initWithBaseLayer:[self loadMapLayer:mapLayer]];
+    return basemap;
 }
 
 - (AGSLayer *)localBaseMapLayer {
@@ -263,7 +264,7 @@
         }
     }
     
-    [Z3MobileConfig shareConfig].mapConfig.sources = @[lines,points];
+    [Z3MobileConfig shareConfig].mapConfig.layers = @[lines,points];
     
 }
 

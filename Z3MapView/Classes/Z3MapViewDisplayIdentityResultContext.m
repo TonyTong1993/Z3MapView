@@ -338,10 +338,14 @@
         [self setSelectedIdentityGraphic:graphic mapPoint:nil];
     }else {
         [self buildGraphics];
-        AGSGraphic *graphic = self.graphics[indexPath.row];
-        [self setSelectedIdentityGraphic:graphic mapPoint:nil];
+        NSAssert(self.graphics, @"graphics is nil");
+        if (self.graphics.count > indexPath.row) {
+            AGSGraphic *graphic = self.graphics[indexPath.row];
+            [self setSelectedIdentityGraphic:graphic mapPoint:nil];
+        }
+        
     }
-   
+    
 }
 
 - (Z3DisplayIdentityResultView *)displayIdentityResultView {
