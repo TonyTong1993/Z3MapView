@@ -24,12 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)showUserTrack:(BOOL)show;
 
-/**
- 更新用户位置
-
- @param point 当前位置
- */
-- (void)updateLocation:(AGSPoint *)point;
 @end
 
 NS_ASSUME_NONNULL_END

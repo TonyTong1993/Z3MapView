@@ -104,6 +104,14 @@
     return basemap;
 }
 
+- (AGSBasemap *)onlineBaseMapWithMapLayer:(Z3MapLayer *)mapLayer {
+    AGSBasemap *basemap = [[AGSBasemap alloc] initWithBaseLayer:[self loadMapLayer:mapLayer]];
+    if (basemap == nil) {
+        return [AGSBasemap imageryBasemap];
+    }
+    return basemap;
+}
+
 - (AGSLayer *)localBaseMapLayer {
     NSString *documentsPath = [UIApplication sharedApplication].documentsPath;
     NSString *tpkFilePath = [documentsPath stringByAppendingPathComponent:@"mwdt.tpk"];

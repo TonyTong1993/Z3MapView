@@ -117,7 +117,7 @@
 }
 
 - (void)identityGraphicFailure {
-    [self clear];
+    [self.mapView.callout dismiss];
 }
 
 - (void)queryWithGeometry:(AGSGeometry *)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable,NSDictionary *geometry,NSError * _Nullable))complcation {

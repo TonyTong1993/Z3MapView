@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class AGSBasemap,AGSLayer,AGSArcGISMapImageLayer;
+@class AGSBasemap,AGSLayer,AGSArcGISMapImageLayer,Z3MapLayer;
 @interface Z3AGSLayerFactory : NSObject
 + (instancetype)factory;
 - (NSArray *)loadMapLayers;
 - (AGSBasemap *)localBaseMap;
 - (AGSBasemap *)onlineBaseMap;
+- (AGSBasemap *)onlineBaseMapWithMapLayer:(Z3MapLayer *)mapLayer;
 - (AGSLayer *)localBaseMapLayer;
 - (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler;
 - (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer;

@@ -107,4 +107,6 @@ typedef void(^EditBookMarkSuccess)(NSUInteger index);
 - (void)addListener:(ChangeSelectedBookMarkListener)listener;
 - (void)addBookMarkWithSuccess:(AddBookMarkSuccess)success;
 
+
+
 @end
