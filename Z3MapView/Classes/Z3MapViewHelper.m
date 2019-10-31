@@ -69,7 +69,7 @@
     if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {
         NSMutableDictionary*baiduMapDic = [NSMutableDictionary dictionary];
         baiduMapDic[@"title"] =@"百度地图";
-        NSString*urlString = [[NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f|name=终点&mode=driving&coord_type=gcj02",destination.latitude,destination.longitude] stringByTrimmingCharactersInSet:[NSCharacterSet URLHostAllowedCharacterSet]];
+        NSString*urlString = [[NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f|name=终点&mode=driving&coord_type=gcj02",destination.latitude,destination.longitude] stringByTrimmingCharactersInSet:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         
         baiduMapDic[@"url"] = urlString;
         
@@ -83,10 +83,8 @@
         
         NSMutableDictionary*gaodeMapDic = [NSMutableDictionary dictionary];
         gaodeMapDic[@"title"] =@"高德地图";
-        NSString*urlString = [[NSString stringWithFormat:@"iosamap://navi?sourceApplication=%@&backScheme=%@&lat=%f&lon=%f&dev=0&style=2",@"导航功能",@"nav123456",destination.latitude,destination.longitude] stringByTrimmingCharactersInSet:[NSCharacterSet URLHostAllowedCharacterSet]];
-        
+        NSString*urlString = [[NSString stringWithFormat:@"iosamap://navi?sourceApplication=%@&backScheme=%@&lat=%f&lon=%f&dev=0&style=2",@"导航功能",@"我的位置",destination.latitude,destination.longitude] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         gaodeMapDic[@"url"] = urlString;
-        
         [apps addObject:gaodeMapDic];
         
     }

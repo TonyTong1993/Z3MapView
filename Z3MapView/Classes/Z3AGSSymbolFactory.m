@@ -57,15 +57,15 @@
 }
 
 - (AGSSymbol *)buildNormalEnvelopSymbol {
-    UIColor *lightGrayColor = [UIColor lightGrayColor];
+    UIColor *lightGrayColor = [UIColor clearColor];
     AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor blackColor] width:1];
-    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleDiagonalCross color:lightGrayColor outline:outline];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleNull color:lightGrayColor outline:outline];
     return symbol;
 }
 
 - (AGSSymbol *)buildEnvelopSymbolWithColor:(UIColor *)color {
     AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:color width:1];
-    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleDiagonalCross color:color outline:outline];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:color outline:outline];
     return symbol;
 }
 

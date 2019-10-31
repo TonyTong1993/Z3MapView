@@ -12,6 +12,9 @@
 #import "Z3MapView.h"
 #import <Masonry/Masonry.h>
 #import "Z3Theme.h"
+#import "Z3MobileConfig.h"
+#import "Z3CoordinateConvertFactory.h"
+#import "MBProgressHUD.h"
 @interface Z3DisplayIdentityResultViewCell ()
 @property (nonatomic,strong) Z3MapViewIdentityResult *identityResult;
 @property (strong, nonatomic)  UILabel *materialFlagLabel;
@@ -190,8 +193,18 @@
 }
 
 - (void)onNaviagtonClicked:(id)sender {
-   CLLocation *location = [self.identityResult destination];
-  [[Z3MapViewHelper helper] openMapWithDestination:location addressDictionary:@{}];
+    if ([Z3MobileConfig shareConfig].coorTransToken) {
+        [self.identityResult geometry];
+        AGSPoint *point = [[Z3CoordinateConvertFactory factory] labelPointForGeometry:[self.identityResult geometry]];
+        [MBProgressHUD showHUDAddedTo:self.window animated:YES];
+        [[Z3CoordinateConvertFactory factory] requestReverseAGSPoint:point complication:^(CLLocation * _Nonnull location) {
+            [MBProgressHUD hideHUDForView:self.window animated:YES];
+            [[Z3MapViewHelper helper] openMapWithDestination:location addressDictionary:@{}];
+        }];
+    }else {
+        CLLocation *location = [self.identityResult destination];
+        [[Z3MapViewHelper helper] openMapWithDestination:location addressDictionary:@{}];
+    }
 }
 
 - (void)onEventReport:(id)sender {
