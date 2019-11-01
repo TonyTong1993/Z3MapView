@@ -57,9 +57,9 @@
 }
 
 - (AGSSymbol *)buildNormalEnvelopSymbol {
-    UIColor *lightGrayColor = [UIColor clearColor];
-    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor blackColor] width:1];
-    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleNull color:lightGrayColor outline:outline];
+    UIColor *lightGrayColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.1];;
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor redColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
     return symbol;
 }
 
