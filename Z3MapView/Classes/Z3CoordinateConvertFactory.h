@@ -22,12 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSPoint *)pointWithCLLocation:(CLLocation *)location
                   spatialRefrence:(AGSSpatialReference *)spatialRefrence;
 - (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate
+                           altitude:(double)altitude
                              wkid:(NSUInteger)wkid;
 - (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate
+                           altitude:(double)altitude
                   spatialRefrence:(AGSSpatialReference *)spatialRefrence;
 
 - (AGSPoint *)pointWithLatitude:(double)latitude
                        longitude:(double)longitude
+                       altitude:(double)altitude
                     wkid:(NSUInteger)wkid;
 
 - (AGSPoint *)pointWithX:(double)x

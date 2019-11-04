@@ -37,26 +37,35 @@
 }
 
 - (AGSPoint *)pointWithCLLocation:(CLLocation *)location spatialRefrence:(AGSSpatialReference *)spatialRefrence {
-    return [self pointWithCoordinate2D:location.coordinate spatialRefrence:spatialRefrence];
+    return [self pointWithCoordinate2D:location.coordinate altitude:location.altitude spatialRefrence:spatialRefrence];
 }
 
-- (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate wkid:(NSUInteger)wkid {
+- (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate altitude:(double)altitude wkid:(NSUInteger)wkid {
     AGSSpatialReference *sp = [[AGSSpatialReference alloc] initWithWKID:wkid];
-    return [self pointWithCoordinate2D:coordinate spatialRefrence:sp];
+    return [self pointWithCoordinate2D:coordinate altitude:altitude spatialRefrence:sp];
 }
-- (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate spatialRefrence:(AGSSpatialReference *)spatialRefrence {
-    return [self pointWithLatitude:coordinate.latitude longitude:coordinate.longitude patialRefrence:spatialRefrence];
+- (AGSPoint *)pointWithCoordinate2D:(CLLocationCoordinate2D)coordinate
+                           altitude:(double)altitude
+                    spatialRefrence:(AGSSpatialReference *)spatialRefrence {
+    return [self pointWithLatitude:coordinate.latitude longitude:coordinate.longitude altitude:altitude patialRefrence:spatialRefrence];
 }
 
-- (AGSPoint *)pointWithLatitude:(double)latitude longitude:(double)longitude wkid:(NSUInteger)wkid {
+- (AGSPoint *)pointWithLatitude:(double)latitude
+                      longitude:(double)longitude
+                       altitude:(double)altitude
+                           wkid:(NSUInteger)wkid {
     AGSSpatialReference *sp = [[AGSSpatialReference alloc] initWithWKID:wkid];
-    return [self pointWithLatitude:latitude longitude:longitude patialRefrence:sp];
+    return [self pointWithLatitude:latitude longitude:longitude  altitude:altitude patialRefrence:sp];
 }
 
-- (AGSPoint *)pointWithLatitude:(double)latitude longitude:(double)longitude patialRefrence:(AGSSpatialReference *)spatialRefrence {
+- (AGSPoint *)pointWithLatitude:(double)latitude
+                      longitude:(double)longitude
+                       altitude:(double)altitude
+                 patialRefrence:(AGSSpatialReference *)spatialRefrence {
     CoorTranUtil *coorTrans = [Z3MobileConfig shareConfig].coorTrans;
-    CGPoint point = [coorTrans CoorTrans:latitude lon:longitude height:0];
+    CGPoint point = [coorTrans CoorTrans:latitude lon:longitude height:altitude];
     AGSPoint *agsPoint = [self pointWithX:point.x y:point.y spatialRefrence:spatialRefrence];
+    
     return agsPoint;
 }
 

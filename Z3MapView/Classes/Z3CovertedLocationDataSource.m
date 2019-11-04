@@ -10,6 +10,7 @@
 #import "Z3LocationManager.h"
 #import "Z3CoordinateConvertFactory.h"
 #import "Z3BaseRequest.h"
+#import "Z3MobileConfig.h"
 @interface Z3CovertedLocationDataSource()
 @property (nonatomic,strong) Z3BaseRequest *request;
 @end
@@ -25,16 +26,24 @@
         if ([self.request isExecuting]) {
             [self.request.requestTask cancel];
         }
-        __weak typeof(self) weakSelf = self;
-        Z3BaseRequest *request = [[Z3CoordinateConvertFactory factory] requestConvertWGS48Location:location complication:^(AGSPoint * _Nonnull point) {
+        if ([Z3MobileConfig shareConfig].coorTransToken && location) {
+            __weak typeof(self) weakSelf = self;
+            Z3BaseRequest *request = [[Z3CoordinateConvertFactory factory] requestConvertWGS48Location:location complication:^(AGSPoint * _Nonnull point) {
+                AGSLocation *agsLocation = [[AGSLocation alloc] initWithPosition:point horizontalAccuracy:horizontalAccuracy velocity:velocity course:course lastKnown:lastKnown];
+                [weakSelf didUpdateLocation:agsLocation];
+            }];
+            self.request = request;
+            
+        }else {
+            NSInteger wkid = [Z3MobileConfig shareConfig].wkid;
+            AGSPoint *point = [[Z3CoordinateConvertFactory factory] pointWithCLLocation:location wkid:wkid];
             AGSLocation *agsLocation = [[AGSLocation alloc] initWithPosition:point horizontalAccuracy:horizontalAccuracy velocity:velocity course:course lastKnown:lastKnown];
-            [weakSelf didUpdateLocation:agsLocation];
-        }];
-        self.request = request;
+            [self didUpdateLocation:agsLocation];
+        }
     }];
     
     [[Z3LocationManager manager] registerLocationHeadingDidChangeListener:^(double heading) {
-         [self didUpdateHeading:heading];
+        [self didUpdateHeading:heading];
     }];
     [self didStartOrFailWithError:error];
 }

@@ -63,7 +63,7 @@
     [trace enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         double latitude = [[obj valueForKey:@"lat"] doubleValue];
         double longitude = [[obj valueForKey:@"lon"] doubleValue];
-        AGSPoint *point = [[Z3CoordinateConvertFactory factory] pointWithLatitude:latitude longitude:longitude wkid:2437];
+        AGSPoint *point = [[Z3CoordinateConvertFactory factory] pointWithLatitude:latitude longitude:longitude altitude:0.0 wkid:2437];
         [temp addObject:point];
     }];
     AGSPolylineBuilder *builder = [[AGSPolylineBuilder alloc] initWithPoints:temp];
