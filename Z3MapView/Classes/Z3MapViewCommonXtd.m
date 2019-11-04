@@ -50,6 +50,7 @@
         self.targetViewController.navigationItem.leftBarButtonItem = lefttem;
         self.rightItems = self.targetViewController.navigationItem.rightBarButtonItems;
         self.targetViewController.navigationItem.rightBarButtonItems = nil;
+        [self.targetViewController.tabBarController.tabBar setHidden:YES];
     }
 }
 
@@ -64,6 +65,9 @@
     if (!(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
         self.targetViewController.navigationItem.leftBarButtonItem = nil;
         self.targetViewController.navigationItem.rightBarButtonItems = self.rightItems;
+        [self.targetViewController.tabBarController.tabBar setHidden:NO];
+        [self.mapView.callout dismiss];
+        [self.mapView.callout setCustomView:nil];
     }
 }
 

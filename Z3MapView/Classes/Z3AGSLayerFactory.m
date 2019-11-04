@@ -34,7 +34,6 @@
 
 - (AGSLayer *)loadMapLayer:(Z3MapLayer *)mapLayer {
     if (mapLayer == nil) {
-        NSAssert(false, @"mapLayer is nil");
         return nil;
     }
     NSString *rootURLPath  = [Z3URLConfig configration].rootURLPath;

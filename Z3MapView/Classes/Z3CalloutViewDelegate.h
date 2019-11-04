@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @class Z3MapViewIdentityResult,AGSArcGISFeature;
 @protocol Z3CalloutViewDelegate <NSObject>
+@optional
 - (void)setIdentityResult:(AGSArcGISFeature *)result;
 - (void)setFeature:(AGSArcGISFeature *)featrue;
 @end
