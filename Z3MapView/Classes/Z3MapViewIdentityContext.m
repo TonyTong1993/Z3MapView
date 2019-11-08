@@ -184,6 +184,9 @@
                              userInfo:(NSDictionary *)userInfo {
     NSInteger wkid =  self.mapView.spatialReference.WKID;
     AGSEnvelope *extent = self.mapView.visibleArea.extent;
+    if (extent == nil) {
+        return;
+    }
     NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildIdentityParameterWithGeometry:geometry wkid:wkid mapExtent:extent tolerance:tolerance excludePipeLine:self.excludePipeLine userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
      _queryGeometry = [geometry toJSON:nil];

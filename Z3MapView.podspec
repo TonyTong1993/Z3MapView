@@ -44,4 +44,5 @@ TODO: Add long description of the pod here.
   s.dependency 'Z3Login','~> 0.1.1'
   s.dependency 'Z3Network', '~>0.0.1'
   s.dependency 'Z3CommonLib', '~>0.1.1'
+  s.dependency 'Z3LocationService', '~>0.1.1'
 end

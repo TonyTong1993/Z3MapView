@@ -8,4 +8,5 @@ target 'Z3MapView_Example' do
   pod 'Z3Network', :path => '../../Z3Network'
   pod 'Z3CommonLib', :path => '../../Z3CommonLib'
   pod 'CoordinateTransform',:path => '../../CoordinateTransform'
+  pod 'Z3LocationService', :path => '../../Z3LocationService'
 end

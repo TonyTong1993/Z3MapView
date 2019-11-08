@@ -28,9 +28,14 @@
         }
         if ([Z3MobileConfig shareConfig].coorTransToken && location) {
             __weak typeof(self) weakSelf = self;
-            Z3BaseRequest *request = [[Z3CoordinateConvertFactory factory] requestConvertWGS48Location:location complication:^(AGSPoint * _Nonnull point) {
-                AGSLocation *agsLocation = [[AGSLocation alloc] initWithPosition:point horizontalAccuracy:horizontalAccuracy velocity:velocity course:course lastKnown:lastKnown];
-                [weakSelf didUpdateLocation:agsLocation];
+            Z3BaseRequest *request = [[Z3CoordinateConvertFactory factory] requestConvertWGS48Location:location complication:^(AGSPoint * _Nonnull point,NSError *error) {
+                if (error) {
+                    
+                }else {
+                    AGSLocation *agsLocation = [[AGSLocation alloc] initWithPosition:point horizontalAccuracy:horizontalAccuracy velocity:velocity course:course lastKnown:lastKnown];
+                    [weakSelf didUpdateLocation:agsLocation];
+                }
+               
             }];
             self.request = request;
             

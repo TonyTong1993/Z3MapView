@@ -20,6 +20,7 @@
 #import "Z3LoginViewController.h"
 #import "Z3MapConfigRequest.h"
 #import "Z3MapConfigResponse.h"
+#import "Z3PostCoorTransConfigRequest.h"
 #import "Z3XmllRequest.h"
 
 FOUNDATION_EXPORT double Z3LoginVersionNumber;

@@ -65,7 +65,6 @@
     CoorTranUtil *coorTrans = [Z3MobileConfig shareConfig].coorTrans;
     CGPoint point = [coorTrans CoorTrans:latitude lon:longitude height:altitude];
     AGSPoint *agsPoint = [self pointWithX:point.x y:point.y spatialRefrence:spatialRefrence];
-    
     return agsPoint;
 }
 
@@ -98,7 +97,7 @@
 }
 
 - (Z3BaseRequest *)requestConvertWGS48Location:(CLLocation *)location
-                                  complication:(void(^)(AGSPoint *point))complication {
+                                  complication:(void(^)(AGSPoint *point,NSError *error))complication {
     if ([Z3MobileConfig shareConfig].coorTransToken && location) {
         CLLocationCoordinate2D coordinate = location.coordinate;
         return [self requestConvertWGS48Latitude:coordinate.latitude longitued:coordinate.longitude complication:complication];
@@ -108,7 +107,7 @@
 
 - (Z3BaseRequest *)requestConvertWGS48Latitude:(double)latitude
                                      longitued:(double)longitude
-                                  complication:(void(^)(AGSPoint *point))complication {
+                                  complication:(void(^)(AGSPoint *point,NSError *error))complication {
     if ([Z3MobileConfig shareConfig].coorTransToken) {
         NSString *url = @"http://z3pipe.com:2436/api/v1/coordinate/trans";
         NSDictionary *params = @{
@@ -130,12 +129,19 @@
                 double agsX = reverse ? y : x;
                 double agsY = reverse ? x : y;
                 AGSPoint *point = [self pointWithX:agsX y:agsY wkid:[Z3MobileConfig shareConfig].wkid];
-                complication(point);
+                complication(point,nil);
             }else {
-                
+                NSErrorDomain domain = @"com.zzht.error";
+                NSError *error = [NSError errorWithDomain:domain code:400 userInfo:@{NSLocalizedDescriptionKey:@"获取坐标失败"}];
+                complication(nil,error);
             }
         } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
-
+            NSError *error = response.error;
+            if (error == nil) {
+                NSErrorDomain domain = @"com.zzht.error";
+                error = [NSError errorWithDomain:domain code:400 userInfo:@{NSLocalizedDescriptionKey:@"获取坐标失败"}];
+            }
+            complication(nil,error);
         }];
         [request start];
         return request;

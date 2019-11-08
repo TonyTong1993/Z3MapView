@@ -50,9 +50,9 @@
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgistiledmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
-        layer.minScale = [mapLayer.dispMinScale doubleValue];
-        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
-       [layer setLayerID:mapLayer.ID];
+//        layer.minScale = [mapLayer.dispMinScale doubleValue];
+//        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
+        [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisfeaturelayer"]) {
         NSAssert(false, @"AGSFeatureLayer not support");
@@ -130,39 +130,8 @@
     return nil ;
 }
 
-    //TODO:离线图层 从.geodatabase中加载离线图层
+//TODO:离线图层 从.geodatabase中加载离线图层
 - (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler {
-    // Do any additional setup after loading the view, typically from a nib.
-    //    AGSSyncGeodatabaseParameters *syncGeodatabaseParameters = [AGSSyncGeodatabaseParameters syncGeodatabaseParameters];
-    //    syncGeodatabaseParameters.geodatabaseSyncDirection = AGSSyncDirectionDownload;
-    //
-    //        //指明图层的同步方向
-    //    AGSSyncLayerOption *sync1001LayerOption = [AGSSyncLayerOption syncLayerOptionWithLayerID:1001 syncDirection:AGSSyncDirectionDownload];
-    //    AGSSyncLayerOption *sync1002LayerOption = [AGSSyncLayerOption syncLayerOptionWithLayerID:1002 syncDirection:AGSSyncDirectionUpload];
-    //    syncGeodatabaseParameters.layerOptions = @[sync1001LayerOption,sync1002LayerOption];
-    //        //失败回滚
-    //    syncGeodatabaseParameters.rollbackOnFailure = true;
-    //
-    //
-    //    AGSGenerateGeodatabaseParameters *generateGeodatabaseParameters = [AGSGenerateGeodatabaseParameters generateGeodatabaseParameters];
-    //
-    //    generateGeodatabaseParameters.attachmentSyncDirection = AGSAttachmentSyncDirectionBidirectional;
-    //        //设置更新范围
-    //    NSArray<AGSPoint *> *points = @[];
-    //    generateGeodatabaseParameters.extent = [AGSPolygon polygonWithPoints:points];
-    //
-    //    AGSGenerateLayerOption *generate1001LayerOption = [[AGSGenerateLayerOption alloc] initWithLayerID:1001];
-    //        //待理解
-    //    generate1001LayerOption.queryOption = AGSGenerateLayerQueryOptionUseFilter;
-    //        //
-    //    generate1001LayerOption.useGeometry = true;
-    //    AGSGenerateLayerOption *generate1002LayerOption = [[AGSGenerateLayerOption alloc] initWithLayerID:1002 whereClause:@""];
-    //    AGSGenerateLayerOption *generate1003LayerOption = [[AGSGenerateLayerOption alloc] initWithLayerID:1003 includeRelated:true];
-    //    generateGeodatabaseParameters.layerOptions = @[generate1001LayerOption,generate1002LayerOption,generate1003LayerOption];
-    //        //用于本地坐标系与服务坐标系不一致时
-    //    generateGeodatabaseParameters.outSpatialReference = [AGSSpatialReference WGS84];
-    //        //指明是同步整个数据库，还是同步某些图层
-    //    generateGeodatabaseParameters.syncModel = AGSSyncModelGeodatabase;
     NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgss.geodatabase"];
     NSURL *gdbURL = [NSURL URLWithString:geodatabasePath];
@@ -282,7 +251,7 @@
         return;
     }
     NSArray *mapImageSublayers =  layer.mapImageSublayers;
-    NSArray *sources = [Z3MobileConfig shareConfig].mapConfig.sources;
+    NSArray *sources = [Z3MobileConfig shareConfig].mapConfig.layers;
     NSMutableArray *lines = [sources firstObject];
     NSMutableArray *points = [sources lastObject];
     //TODO:FIX crash 100 图层加载失败,此处无法获取到数据

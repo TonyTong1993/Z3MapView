@@ -47,11 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (CLLocation *)locaitonWithGeometry:(AGSGeometry *)geometry;
 
 - (Z3BaseRequest *)requestConvertWGS48Location:(CLLocation *)location
-                                  complication:(void(^)(AGSPoint *point))complication;
+                                  complication:(void(^)(AGSPoint *point,NSError *error))complication;
 
 - (Z3BaseRequest *)requestConvertWGS48Latitude:(double)latitude
                                      longitued:(double)longitude
-                                  complication:(void(^)(AGSPoint *point))complication;
+                                  complication:(void(^)(AGSPoint *point,NSError *error))complication;
 
 - (Z3BaseRequest *)requestReverseAGSPoint:(AGSPoint *)point
                              complication:(void(^)(CLLocation *location))complication;
