@@ -205,4 +205,27 @@
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
     return graphic;
 }
+
+/*
+ *绘制轨迹
+ */
+
+- (AGSGraphic *)buildTraceStartPoint:(AGSPoint *)startPoint {
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildTraceStartSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:startPoint symbol:symbol attributes:@{}];
+    return graphic;
+}
+
+- (AGSGraphic *)buildTraceEndPoint:(AGSPoint *)endPoint {
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildTraceEndSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:endPoint symbol:symbol attributes:@{}];
+    return graphic;
+}
+
+- (AGSGraphic *)buildTrace:(AGSPolyline *)trace {
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildTraceSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:trace symbol:symbol attributes:@{}];
+    return graphic;
+}
+
 @end

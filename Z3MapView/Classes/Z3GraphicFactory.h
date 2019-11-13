@@ -175,6 +175,39 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)buildBookMarkGraphicWithPoint:(AGSPoint *)point
                                          text:(NSString * _Nullable)text
                                    attributes:(NSDictionary * _Nullable)attributes;
+
+/**
+ 创建书签类型的AGSGraphic
+ 
+ @param startPoint 书签的位置
+ @param endPoint 绘制在地图上的文本
+ @param attributes 书签的属性
+ @return AGSGraphic
+ */
+
+/**
+ 轨迹绘制
+
+ @param startPoint 轨迹绘制-起点
+ @return 起点AGSGraphic
+ */
+- (AGSGraphic *)buildTraceStartPoint:(AGSPoint *)startPoint;
+
+/**
+ 轨迹绘制
+ 
+ @param endPoint 轨迹绘制-终点
+ @return 终点AGSGraphic
+ */
+- (AGSGraphic *)buildTraceEndPoint:(AGSPoint *)endPoint;
+
+/**
+ 轨迹绘制
+
+ @param trace 轨迹绘制-轨迹线
+ @return 轨迹线
+ */
+- (AGSGraphic *)buildTrace:(AGSPolyline *)trace;
 @end
 
 NS_ASSUME_NONNULL_END

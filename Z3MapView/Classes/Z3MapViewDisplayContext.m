@@ -215,16 +215,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
         [self zoomToPoint:location withScale:2000];
     }
 }
-    
-    //- (void)showTaplocationAnotationView:(AGSPoint *)location {
-    //    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildAddressGraphicWithPoint:location attributes:nil];
-    //    [self.tapGraphicsOverlay.graphics addObject:graphic];
-    //    if (self.mapView.mapScale > 2000) {
-    //        [self zoomToPoint:location withScale:2000];
-    //    }
-    //
-    //}
-    
+
 - (void)removeAddressAnotationView {
     [self.addressGraphicsOverlay.graphics removeAllObjects];
 }

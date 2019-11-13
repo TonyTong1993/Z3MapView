@@ -134,6 +134,12 @@ NS_ASSUME_NONNULL_BEGIN
  @return Symbol
  */
 - (AGSSymbol *)buildBookMarkSymbolWithText:(NSString *)text;
+
+- (AGSSymbol *)buildTraceStartSymbol;
+
+- (AGSSymbol *)buildTraceEndSymbol;
+
+- (AGSSymbol *)buildTraceSymbol;
 @end
 
 NS_ASSUME_NONNULL_END

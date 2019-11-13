@@ -203,4 +203,24 @@
     AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
     return compositeSymbol;
 }
+
+- (AGSSymbol *)buildTraceStartSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_track_navi_start"]];
+    symbol.width = 19;
+    symbol.height = 26;
+    return symbol;
+}
+
+- (AGSSymbol *)buildTraceEndSymbol {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_track_navi_end"]];
+    symbol.width = 19;
+    symbol.height = 26;
+    
+    return symbol;
+}
+
+- (AGSSymbol *)buildTraceSymbol {
+    AGSSimpleLineSymbol *symbol = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor colorWithHex:themeColorHex] width:4];
+    return symbol;
+}
 @end
