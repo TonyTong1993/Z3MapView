@@ -20,6 +20,9 @@
     NSError *error = [Z3LocationManager manager].error;
     [[Z3LocationManager manager] registerLocationDidChangeListener:^(CLLocation * _Nonnull location) {
         double horizontalAccuracy = location.horizontalAccuracy;
+        if (horizontalAccuracy > 2.0) {
+            horizontalAccuracy = 2.0;
+        }
         double velocity = location.speed;
         double course = location.course;
         double lastKnown = YES;

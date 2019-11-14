@@ -21,6 +21,7 @@
 @property (nonatomic,strong) AGSPoint *tapLocation;//管段上距离触发点最近的点
 @property (nonatomic,strong) Z3MapViewIdentityResult *result;//管段
 @property (nonatomic,copy) QueryPipeComplication queryPipeComplication;
+@property (nonatomic,strong) NSMutableSet *mset;
 @end
 @implementation Z3MapViewQueryLeakPipeXtd
 static  CGFloat PipeLeakCalloutViewWidth = 100.0f;
@@ -106,7 +107,9 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 }
     
 - (void)calloutView:(UIView *)sender closeValve:(NSString *)valveId {
-    [self searchRelativeValves:valveId];
+    [self.mset addObject:valveId];
+    NSString *valveIds = [[self.mset allObjects] componentsJoinedByString:@","];
+    [self searchRelativeValves:valveIds];
 }
 
 - (void)searchRelativeValves:(NSString *)valveNods {
@@ -140,6 +143,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     
 - (void)clearAnalyseResults {
     [self dismiss];
+    [_mset removeAllObjects];
 }
 
 - (void)dismiss {
@@ -152,6 +156,13 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     if (self.queryGraphicsOverlay) {
         [self.queryGraphicsOverlay.graphics removeAllObjects];
     }
+}
+
+- (NSMutableSet *)mset {
+    if (!_mset) {
+        _mset = [[NSMutableSet alloc] init];
+    }
+    return _mset;
 }
 
 
