@@ -15,10 +15,12 @@
 }
 
 - (AGSGeometry *)toGeometry {
-   double x = [self.geometry[@"x"] doubleValue];
-   double y = [self.geometry[@"y"] doubleValue];
-   NSInteger wkid = [Z3MobileConfig shareConfig].wkid;
-   AGSSpatialReference *spatialReference = [[AGSSpatialReference alloc] initWithWKID:wkid];
-   return AGSPointMake(x, y, spatialReference);
+    NSInteger wkid = [Z3MobileConfig shareConfig].wkid;
+    AGSSpatialReference *spatialReference = [[AGSSpatialReference alloc] initWithWKID:wkid];
+    NSDictionary *spatialReferenceDict = [spatialReference toJSON:nil];
+    NSMutableDictionary *mGeometry = [[NSMutableDictionary alloc] initWithDictionary:self.geometry];
+    [mGeometry addEntriesFromDictionary:spatialReferenceDict];
+    AGSGeometry *geometry = (AGSGeometry *)[AGSGeometry fromJSON:mGeometry error:nil];
+    return geometry;
 }
 @end

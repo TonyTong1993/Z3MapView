@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) AGSGeometry *displayGeometry;
 @property (nonatomic,copy) NSString *value;
 
+- (NSString *)dispayText;
+
 /**
  获取导航的目的地
 

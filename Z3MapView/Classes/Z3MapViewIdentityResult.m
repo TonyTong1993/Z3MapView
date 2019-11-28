@@ -94,5 +94,10 @@
              ];
 }
 
+- (NSString *)dispayText {
+    NSString *code = self.attributes[@"FACILITYID"] ?:@"";
+    return [NSString stringWithFormat:@"%@ 编号:%@",self.value,code];
+}
+
 
 @end

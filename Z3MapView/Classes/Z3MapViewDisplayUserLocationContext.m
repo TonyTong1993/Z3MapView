@@ -34,7 +34,7 @@
 
 - (void)showUserLocation {
     [self setLocationDataSource];
-    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeNavigation;
+    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeOff;
     self.mapView.locationDisplay.showLocation = YES;
 }
 

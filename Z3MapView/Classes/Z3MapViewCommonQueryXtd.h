@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param arguments 参数
  @param complcation 结果回调
  */
-- (void)queryWithGeometry:(AGSGeometry *)geometry
+- (void)queryWithGeometry:(AGSGeometry * _Nullable)geometry
                     arguments:(NSDictionary *)arguments
                  complcation:(void (^)(NSArray * _Nullable results,NSDictionary *geometry,NSError * _Nullable error))complcation;
 

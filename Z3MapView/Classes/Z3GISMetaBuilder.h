@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)deviceLayerIds;
 
-
+- (NSString *)deviceLayerIdsWithNetName:(NSString *)netName;
 /**
  获取书签的图层ID
 

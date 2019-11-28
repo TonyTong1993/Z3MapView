@@ -21,15 +21,16 @@
 #import "Z3MobileConfig.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
-    @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
-    
-    /**
-     显示当前地图中心点的文本
-     */
-    @property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
-    
-    @property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
-    @end
+@property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
+
+/**
+ 显示当前地图中心点的文本
+ */
+@property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
+
+@property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
+@property (nonatomic,strong) AGSGeodatabase *gdb;
+@end
 @implementation Z3MapViewDisplayContext
     
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
@@ -46,7 +47,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     NSAssert(map, @"map must not be null,please set map before to loadAGSLayers");
     Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
     if ([Z3MobileConfig shareConfig].offlineLogin) {
-        [self loadLayersByShapefiles:map];
+        [self loadLayersByGeodatabase:map];
     }else {
         NSArray *layers = [factory loadMapLayers];
         [map.operationalLayers addObjectsFromArray:layers];
@@ -69,6 +70,36 @@ static NSString *context = @"Z3MapViewDisplayContext";
         [factory loadOfflineGeoDatabaseWithFileName:fileName complicationHandler:^(NSArray *layers, NSError * error) {
             if (error) return;
             [map.operationalLayers addObjectsFromArray:layers];
+        }];
+    }
+}
+
+- (void)loadLayersByGeodatabase:(AGSMap *)map {
+    [self loadOfflineMapLayersFromGeoDatabase:^(NSArray * _Nonnull layers) {
+        [map.operationalLayers addObjectsFromArray:layers];
+    }];
+}
+
+- (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler {
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgss.geodatabase"];
+    BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:geodatabasePath];
+    NSMutableArray *layers = [[NSMutableArray alloc] init];
+    if (isExist) {
+      NSURL *gdbURL = [[NSURL alloc] initFileURLWithPath:geodatabasePath];
+      self.gdb =  [[AGSGeodatabase alloc] initWithFileURL:gdbURL];
+         __weak typeof(self) weakSelf = self;
+        [self.gdb loadWithCompletion:^(NSError * _Nullable error) {
+            if (error) {
+              
+            }else {
+                NSArray *tables = weakSelf.gdb.geodatabaseFeatureTables;
+                for (AGSGeodatabaseFeatureTable *table in tables) {
+                    AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
+                    [layers addObject:layer];
+                }
+            }
+            complicationHandler([layers copy]);
         }];
     }
 }
@@ -119,13 +150,8 @@ static NSString *context = @"Z3MapViewDisplayContext";
         if (status == AGSLoadStatusLoaded) {
             if ([object isKindOfClass:[AGSFeatureLayer class]]) {
                 AGSFeatureLayer *layer = object;
-                AGSFeatureTable *table = layer.featureTable;
             }else if ([object isKindOfClass:[AGSArcGISMapImageLayer class]]) {
                 AGSArcGISMapImageLayer *layer = object;
-#warning 澳门管网宝用于区分底图和要素图层的图层名 GWDT MWS SL 代表的是澳门的要素图层
-                if ([layer.name isEqualToString:Z3MapViewOnlineFeatureLayerNameKey]) {
-                    [[Z3AGSLayerFactory factory] subLayersForOnlineWithAGSArcGISMapImageLayer:layer];
-                }
             }else if ([object isKindOfClass:[AGSArcGISVectorTiledLayer class]]) {
                 AGSArcGISVectorTiledLayer *layer = object;
                 NSLog(@"AGSArcGISVectorTiledLayer load success");
@@ -136,10 +162,6 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSNumber *value = change[NSKeyValueChangeNewKey];
         AGSLoadStatus status =  [value intValue];
         if (status == AGSDrawStatusCompleted) {
-            //           NSArray *layers = self.mapView.map.operationalLayers;
-            //            for (AGSFeatureLayer *layer in layers) {
-            //
-            //            }
         }
     }
 }
@@ -311,7 +333,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
 }
     
     
-    @end
+@end
 
 
 

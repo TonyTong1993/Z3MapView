@@ -75,7 +75,7 @@
 }
 
 - (NSDictionary *)buildQueryParameterWithGeometry:(AGSGeometry *)geometry
-                                            userInfo:(NSDictionary *)userInfo{
+                                         userInfo:(NSDictionary *)userInfo{
     NSString *geometryType = @"esriGeometryEnvelope";
     AGSEnvelope *envelop = nil;
     if ([geometry isKindOfClass:[AGSPoint class]]) {
@@ -91,20 +91,21 @@
         geometryType = @"esriGeometryEnvelope";
         envelop = [geometry extent];
     }
-    NSError * __autoreleasing error = nil;
-    NSDictionary *geometryJson= [envelop toJSON:&error];
-    NSData *data = [NSJSONSerialization dataWithJSONObject:geometryJson options:NSJSONWritingPrettyPrinted error:&error];
-    NSString *geometryJsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if (error) {
-        NSAssert(false, @"geometry to json string failure");
-    }
     NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
+    if (envelop) {
+        NSError * __autoreleasing error = nil;
+        NSDictionary *geometryJson= [envelop toJSON:&error];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:geometryJson options:NSJSONWritingPrettyPrinted error:&error];
+        NSString *geometryJsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (error) {
+            NSAssert(false, @"geometry to json string failure");
+        }
+        mparams[@"geometryType"] = geometryType;
+        mparams[@"geometry"] = geometryJsonString;
+    }
     if (userInfo) {
         [mparams addEntriesFromDictionary:userInfo];
     }
-    
-    mparams[@"geometryType"] = geometryType;
-    mparams[@"geometry"] = geometryJsonString;
     mparams[@"returnGeometry"] = @"true";
     return [mparams copy];
 }
@@ -165,6 +166,7 @@
     mparams[@"geometry"] = @"";
     mparams[@"returnGeometry"] = @"false";
     mparams[@"timeout"] = @(60000);
+    mparams[@"where"] = @"1=1";
     return [mparams copy];
 }
 

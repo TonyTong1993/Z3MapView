@@ -88,7 +88,7 @@
             for (Z3FeatureLayer *feature in features) {
                 Z3FeatureQueryCondition *condition = [[Z3FeatureQueryCondition alloc] init];
                 condition.name = feature.dname;
-                condition.alias = feature.dname;
+                condition.alias = feature.dalias;
                 condition.layerid = feature.layerid;
                 condition.featureNum = feature.dno;
                 NSArray *properties = [self buildFeaturePropertyConditionsWithFields:feature.fields];
@@ -318,6 +318,12 @@
 - (NSString *)deviceLayerIds {
     NSString *jsName = [Z3StatisticsConfigurationFacotry factory].jsName;
     NSArray *results = [self devicesWithCode:jsName];
+    NSArray *layerIds = [results valueForKey:@"layerid"];
+    return   [layerIds componentsJoinedByString:@","];
+}
+
+- (NSString *)deviceLayerIdsWithNetName:(NSString *)netName {
+    NSArray *results = [self devicesWithCode:netName];
     NSArray *layerIds = [results valueForKey:@"layerid"];
     return   [layerIds componentsJoinedByString:@","];
 }

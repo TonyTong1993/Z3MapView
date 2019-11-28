@@ -75,6 +75,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)buildAddressGraphicWithPoint:(AGSPoint *)point
                                   attributes:(NSDictionary * _Nullable)attributes;
 
+
+/**
+ 支持点，线，面类型的POI
+
+ @param geometry 几何数据
+ @param text 文本数据
+ @param attributes 属性
+ @return 标绘
+ */
+- (AGSGraphic *)buildPOIGraphicWithGeometry:(AGSGeometry *)geometry
+                                       text:(NSString *)text
+                                 attributes:(NSDictionary * _Nullable)attributes;
+
 /**
  构建文本的graphic
  

@@ -142,6 +142,44 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildPOIGraphicWithLine:(AGSPolyline *)line
+                                    text:(NSString *)text
+                              attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPOISymbolWithText:text];
+    AGSGraphic *graphic = [self buildLineGraphicWithPolyline:line color:[UIColor redColor] width:4.0f attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildPOIGraphicWithPolygon:(AGSPolygon *)polygon
+                                   text:(NSString *)text
+                             attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPOISymbolWithText:text];
+    UIColor *outLineColor = [UIColor colorWithRed:173/255.0 green:121/255.0 blue:122/255.0 alpha:1.0];
+    UIColor *fillColor = [UIColor colorWithRed:173/255.0 green:121/255.0 blue:122/255.0 alpha:0.5];
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildFillSymbolWithOutLineColor:outLineColor outLineWidth:4.0 fillColor:fillColor];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildPOIGraphicWithGeometry:(AGSGeometry *)geometry
+                                    text:(NSString *)text
+                              attributes:(NSDictionary * _Nullable)attributes{
+    switch (geometry.geometryType) {
+        case AGSGeometryTypePoint:
+            return [self buildPOIGraphicWithPoint:(AGSPoint *)geometry text:text attributes:attributes];
+            break;
+         case AGSGeometryTypePolyline:
+            return [self buildPOIGraphicWithLine:(AGSPolyline *)geometry text:text attributes:attributes];
+            break;
+        case AGSGeometryTypePolygon:
+            return [self buildPOIGraphicWithPolygon:(AGSPolygon *)geometry text:text attributes:attributes];
+            break;
+        default:
+            return [self buildSimpleGeometryGraphicWithGeometry:geometry attributes:attributes];
+            break;
+    }
+}
+
 - (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
                                     text:(NSString *)text
                               attributes:(NSDictionary * _Nullable)attributes{

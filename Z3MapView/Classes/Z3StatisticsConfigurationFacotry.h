@@ -67,6 +67,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)jsName;
 
+
+/**
+ 得到供水管网code标识默认为JS
+ 
+ @return name
+ */
+- (NSString *)calFieldName;
+
 @end
 
 NS_ASSUME_NONNULL_END

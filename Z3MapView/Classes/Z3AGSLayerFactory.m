@@ -134,11 +134,10 @@
 - (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler {
     NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgss.geodatabase"];
-    NSURL *gdbURL = [NSURL URLWithString:geodatabasePath];
-    NSString *localDBPath = [documents stringByAppendingString:@"package"];
     BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:geodatabasePath];
     NSMutableArray *layers = [[NSMutableArray alloc] init];
     if (isExist) {
+        NSURL *gdbURL = [[NSURL alloc] initFileURLWithPath:geodatabasePath];
         AGSGeodatabase *gdb =  [[AGSGeodatabase alloc] initWithFileURL:gdbURL];
         [gdb loadWithCompletion:^(NSError * _Nullable error) {
             if (error) {
@@ -147,33 +146,6 @@
                 NSArray *tables = gdb.geodatabaseFeatureTables;
                 for (AGSGeodatabaseFeatureTable *table in tables) {
                     AGSFeatureLayer *layer = [[AGSFeatureLayer alloc] initWithFeatureTable:table];
-                    NSInteger serviceLayerID =  table.serviceLayerID;
-                    AGSPictureMarkerSymbol *symbol = nil;
-                    switch (serviceLayerID) {
-                            case 2:
-                           symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"valve"]];
-                            break;
-                            case 3:
-                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"hydrant"]];
-                            break;
-                            case 4:
-                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"TAPVALVE"]];
-                            break;
-                            case 5:
-                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"DILIVERY_POINT"]];
-                            break;
-                            case 6:
-                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"B.I"]];
-                            break;
-                            case 7:
-                            symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"PUMP"]];
-                            break;
-                        default:
-                            break;
-                    }
-                    if (symbol) {
-                        layer.renderer = [[AGSSimpleRenderer alloc] initWithSymbol:symbol];
-                    }
                     [layers addObject:layer];
                 }
             }
@@ -220,28 +192,65 @@
     return [layers copy];
 }
 
-- (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer {
-    NSArray *mapImageSublayers =  layer.mapImageSublayers;
-    NSMutableArray *lines = [NSMutableArray array];
-    NSMutableArray *points = [NSMutableArray array];
-    NSArray *contents = layer.subLayerContents;
-    for (int i = 0; i < mapImageSublayers.count; i++) {
-        AGSArcGISMapImageSublayer *subLayer = mapImageSublayers[i];
-        id<AGSLayerContent> content = contents[i];
-        Z3MapLayer *mapLayer = [[Z3MapLayer alloc] init];
-        mapLayer.name = subLayer.name;
-        mapLayer.visible = subLayer.visible;
-        mapLayer.ID = [@(subLayer.sublayerID) stringValue];
-#warning 区分不同类型的图层
-        if (content.subLayerContents.count) {
-              [lines addObject:mapLayer];
-        }else {
-             [points addObject:mapLayer];
-        }
+- (void)legendsFromAGSArcGISMapImageLayer:(id<AGSLayerContent>)layer
+                             complication:(void(^)(Z3MapLayer *layer))complication{
+    __block Z3MapLayer *mapLayer = [[Z3MapLayer alloc] init];
+    mapLayer.name = layer.name;
+    mapLayer.visible = layer.visible;
+    if ([layer isKindOfClass:[AGSArcGISMapImageSublayer class]]) {
+        AGSArcGISMapImageSublayer *subLayer = (AGSArcGISMapImageSublayer *)layer;
+          mapLayer.ID = [@(subLayer.sublayerID) stringValue];
+    }else if ([layer isKindOfClass:[AGSArcGISMapImageLayer class]]) {
+        AGSArcGISMapImageLayer *pLayer = (AGSArcGISMapImageLayer *)layer;
+        mapLayer.ID = pLayer.layerID;
+    }else if ([layer isKindOfClass:[AGSFeatureLayer class]]) {
+        AGSFeatureLayer *fLayer = (AGSFeatureLayer *)layer;
+        mapLayer.ID = fLayer.layerID;
     }
-    
-    [Z3MobileConfig shareConfig].mapConfig.layers = @[lines,points];
-    
+    mapLayer.agsLayer = layer;
+    NSArray *contents = layer.subLayerContents;
+    NSUInteger count = contents.count;
+    dispatch_group_t group = dispatch_group_create();
+    if (count > 1) {
+        NSMutableArray *layers = [[NSMutableArray alloc] init];
+        for (id<AGSLayerContent> sublayer in contents) {
+            dispatch_group_enter(group);
+            [self legendsFromAGSArcGISMapImageLayer:sublayer complication:^(Z3MapLayer *layer) {
+                [layers addObject:layer];
+                dispatch_group_leave(group);
+            }];
+        }
+        
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            mapLayer.subLayers = layers;
+            complication(mapLayer);
+        });
+    }else {
+        [layer fetchLegendInfosWithCompletion:^(NSArray<AGSLegendInfo *> * _Nullable legendInfos, NSError * _Nullable error) {
+            AGSLegendInfo *legend = legendInfos.firstObject;
+            if ([legend.symbol isKindOfClass:[AGSPictureMarkerSymbol class]]) {
+                AGSPictureMarkerSymbol *picSymble = (AGSPictureMarkerSymbol *)legend.symbol;
+                mapLayer.symbolImage = picSymble.image;
+            }
+            complication(mapLayer);
+            
+        }];
+    }
+}
+
+- (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(id<AGSLayerContent>)layer {
+    NSArray *contents = layer.subLayerContents;
+    NSUInteger count = contents.count;
+    if (count > 1) {
+        NSMutableArray *legends = [[NSMutableArray alloc] init];
+        for (id<AGSLayerContent> sublayer in contents) {
+            [self subLayersForOnlineWithAGSArcGISMapImageLayer:sublayer];
+        }
+    }else {
+        [layer fetchLegendInfosWithCompletion:^(NSArray<AGSLegendInfo *> * _Nullable legendInfos, NSError * _Nullable error) {
+              AGSLegendInfo *legend = [legendInfos lastObject];
+        }];
+    }
 }
 
 - (void)filterSubLayesForOnLineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer
@@ -251,7 +260,7 @@
         return;
     }
     NSArray *mapImageSublayers =  layer.mapImageSublayers;
-    NSArray *sources = [Z3MobileConfig shareConfig].mapConfig.layers;
+    NSArray *sources = nil;//[Z3MobileConfig shareConfig].mapConfig.layers;
     NSMutableArray *lines = [sources firstObject];
     NSMutableArray *points = [sources lastObject];
     //TODO:FIX crash 100 图层加载失败,此处无法获取到数据

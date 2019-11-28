@@ -86,7 +86,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     if (self.queryPipeComplication) {
         self.queryPipeComplication(reslut);
     }
-    [self post:Z3MapViewDidSelectDeviceNotification message:reslut];
+    [self post:Z3MapViewDidSelectDeviceNotification message:@[reslut]];
     
 }
 

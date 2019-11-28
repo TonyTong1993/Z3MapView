@@ -84,10 +84,13 @@ static  CGFloat CalloutViewHeight = 150.0f;
     if (indexPath.row < self.dataSource.count) {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         NSDictionary *attributes = self.dataSource[indexPath.row];
-        NSString *key = [attributes allKeys][0];
-        NSString *value = attributes[key];
-        cell.textLabel.text = key;
-        cell.detailTextLabel.text = value;
+        NSArray *allKeys = [attributes allKeys];
+        if (allKeys.count) {
+            NSString *key = [attributes allKeys][0];
+            NSString *value = attributes[key];
+            cell.textLabel.text = key;
+            cell.detailTextLabel.text = value;
+        }
         cell.accessoryType = UITableViewCellAccessoryNone;
        
     }else {

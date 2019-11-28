@@ -102,8 +102,8 @@
     if (_results.count) {
         [self buildGraphics];
         //默认选中第一个
-        AGSGraphic *graphic = [self.graphics firstObject];
-        [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:showPopup];
+//        AGSGraphic *graphic = [self.graphics firstObject];
+//        [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:showPopup];
     }
 }
 
@@ -333,7 +333,8 @@
 
 - (void)identityResultDiplayViewDidChangeSelectIndexNotification:(NSNotification *)notification {
     NSIndexPath *indexPath = notification.userInfo[@"message"];
-    if (self.graphics.count) {
+    NSUInteger count = self.graphics.count;
+    if (count > indexPath.row) {
         AGSGraphic *graphic = self.graphics[indexPath.row];
         [self setSelectedIdentityGraphic:graphic mapPoint:nil];
     }else {

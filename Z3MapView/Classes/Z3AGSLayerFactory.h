@@ -10,6 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class AGSBasemap,AGSLayer,AGSArcGISMapImageLayer,Z3MapLayer;
+@protocol AGSLayerContent;
 @interface Z3AGSLayerFactory : NSObject
 + (instancetype)factory;
 - (NSArray *)loadMapLayers;
@@ -18,10 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSBasemap *)onlineBaseMapWithMapLayer:(Z3MapLayer *)mapLayer;
 - (AGSLayer *)localBaseMapLayer;
 - (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler;
-- (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer;
+- (void)subLayersForOnlineWithAGSArcGISMapImageLayer:(id<AGSLayerContent>)layer;
 - (void)filterSubLayesForOnLineWithAGSArcGISMapImageLayer:(AGSArcGISMapImageLayer *)layer
                                                       ids:(NSArray *)ids
                                                   visible:(BOOL)visible;
+
+- (void)legendsFromAGSArcGISMapImageLayer:(id<AGSLayerContent>)layer
+                             complication:(void(^)(Z3MapLayer *layer))complication;
 /**
  加载离线数据
 

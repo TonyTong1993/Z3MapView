@@ -204,7 +204,10 @@
                              geometry:(AGSGeometry *)geometry
                              mapPoint:(AGSPoint *)mapPoint
                              userInfo:(NSDictionary *)userInfo {
-     _queryGeometry = [geometry toJSON:nil];
+    if (geometry != nil) {
+          _queryGeometry = [geometry toJSON:nil];
+    }
+   
     NSDictionary *params = [[Z3MapViewParameterBuilder builder] buildQueryParameterWithGeometry:geometry  userInfo:userInfo];
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];

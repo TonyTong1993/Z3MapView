@@ -46,7 +46,7 @@
         Z3MapPOI *result = self.pois[i];
         AGSGeometry *geometry = [result toGeometry];
         NSString *text = [NSString stringWithFormat:@"%d",(i+1)];
-        AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithPoint:(AGSPoint *)geometry text:text attributes:result.attributes];
+        AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:geometry text:text attributes:result.attributes];
          [graphics addObject:graphic];
     }
     [self.displayPOIGraphicsOverlay.graphics addObjectsFromArray:graphics];
@@ -57,7 +57,12 @@
 }
 
 - (void)setSelectPOIAtIndex:(NSUInteger)index {
-    AGSGraphic *graphic = self.displayPOIGraphicsOverlay.graphics[index];
+    NSMutableArray *graphics = self.displayPOIGraphicsOverlay.graphics;
+    NSUInteger count = graphics.count;
+    if (count < index) {
+        return;
+    }
+    AGSGraphic *graphic = graphics[index];
     if (_current != graphic) {
         [graphic setSelected:YES];
         [_current setSelected:NO];

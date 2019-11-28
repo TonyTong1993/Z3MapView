@@ -120,7 +120,7 @@
     [self.mapView.callout dismiss];
 }
 
-- (void)queryWithGeometry:(AGSGeometry *)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable,NSDictionary *geometry,NSError * _Nullable))complcation {
+- (void)queryWithGeometry:(AGSGeometry * _Nullable)geometry arguments:(NSDictionary *)arguments complcation:(nonnull void (^)(NSArray * _Nullable,NSDictionary *geometry,NSError * _Nullable))complcation {
     self.handler =  complcation;
     Z3MobileTask *task = [[Z3QueryTaskHelper helper] queryTaskWithName:SPACIAL_SEARCH_URL_TASK_NAME];
     NSNumber *layerId = arguments[@"layers"];
