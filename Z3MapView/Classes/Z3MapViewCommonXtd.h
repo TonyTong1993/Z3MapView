@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <PromiseKit.h>
 NS_ASSUME_NONNULL_BEGIN
 @class AGSMapView,UIViewController;
 typedef void(^OnComplicationBlock)(void);

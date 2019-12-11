@@ -57,6 +57,14 @@
 - (void)dismiss {
     if (self.complication) {
         self.complication();
+    }else {
+        if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)) {
+            NSArray *childViewControllers = [self.targetViewController.navigationController childViewControllers];
+            NSUInteger index = [childViewControllers indexOfObject:self.targetViewController];
+            if (index > 0) {
+                [self.targetViewController.navigationController popViewControllerAnimated:YES];
+            }
+        }
     }
 }
 

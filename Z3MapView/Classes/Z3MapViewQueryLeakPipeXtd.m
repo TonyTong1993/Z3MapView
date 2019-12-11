@@ -61,7 +61,8 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
                            mapPoint:(nonnull AGSPoint *)mapPoint
-                    identityResults:(nonnull NSArray *)results {
+                    identityResults:(nonnull NSArray *)results
+                        displayType:(NSInteger)displayType {
     //过滤爆管点
     __block double tmpDistance = 100000000000;
     __block Z3MapViewIdentityResult *reslut = nil;
@@ -81,7 +82,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     }];
     self.tapLocation = mapPoint;
     self.result = reslut;
-    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:@[reslut]];
+    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:@[reslut] displayType:displayType];
     [self displayPipeLeakGraphicWithGeometry:tapLocation];
     if (self.queryPipeComplication) {
         self.queryPipeComplication(reslut);
@@ -102,7 +103,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 }
 
 - (void)identityGraphicFailure {
-    [self.displayIdentityResultContext setSelectedIdentityGraphic:nil mapPoint:self.tapLocation];
+    [self.displayIdentityResultContext setSelectedIdentityGraphic:nil mapPoint:self.tapLocation displayType:0];
     [self.mapView.callout dismiss];
 }
     

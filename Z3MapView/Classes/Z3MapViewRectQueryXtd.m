@@ -12,10 +12,12 @@
 #import "Z3GraphicFactory.h"
 #import "Z3QueryTaskHelper.h"
 #import "Z3MobileTask.h"
+
 @interface Z3MapViewRectQueryXtd ()
 @property (nonatomic,strong) NSMutableArray *mpoints;
 @property (nonatomic,copy) ComplicationHander handler;
 @property (nonatomic,copy) MakeRectComplication makeRectComplication;
+@property (nonatomic,assign) NSInteger type;
 @end
 @implementation Z3MapViewRectQueryXtd
 
@@ -27,6 +29,15 @@
     }
     return self;
 }
+
+
+- (void)setUserInfo:(NSDictionary *)userInfo {
+    [super setUserInfo:userInfo];
+    if ([userInfo.allKeys containsObject:@"type"]) {
+       _type = [userInfo[@"type"] intValue];
+    }
+}
+
 
 - (void)displayPointGraphicWithGeometry:(AGSPoint *)geometry {
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:geometry attributes:nil];
@@ -103,8 +114,9 @@
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
                            mapPoint:mapPoint
-                    identityResults:(nonnull NSArray *)results{
-    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:results];
+                    identityResults:(nonnull NSArray *)results
+                        displayType:(NSInteger)displayType{
+    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:results displayType:_type];
 
 }
 
@@ -118,8 +130,17 @@
     }
 }
 
+
+- (void)identityGraphicSuccess:(AGSGraphic *)graphic mapPoint:(AGSPoint *)mapPoint displayType:(NSInteger)displayType {
+    [super identityGraphicSuccess:graphic mapPoint:mapPoint displayType:_type];
+}
+
 - (void)identityGraphicFailure {
     [self.mapView.callout dismiss];
 }
 
+
+
 @end
+
+

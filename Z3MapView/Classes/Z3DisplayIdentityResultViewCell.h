@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class Z3MapViewIdentityResult;
 @interface Z3DisplayIdentityResultViewCell : UICollectionViewCell
 @property (strong, nonatomic)  UILabel *deviceLabel;
-- (void)setIdentityResult:(Z3MapViewIdentityResult *)result;
+- (void)setIdentityResult:(Z3MapViewIdentityResult *)result
+              displayType:(NSInteger)displayType;
 //隐藏底部按钮
 - (void)setButtonHidden:(BOOL)hidden;
 @end

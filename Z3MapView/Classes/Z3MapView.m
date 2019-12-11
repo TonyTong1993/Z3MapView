@@ -9,8 +9,10 @@
 #import "Z3MapView.h"
  NSNotificationName const Z3MapViewRequestFormNotification = @"zzht.mapview.request.form";
  NSNotificationName const Z3MapViewRequestDetailNotification = @"zzht.mapview.request.detail";
+ NSNotificationName const Z3MapViewRequestDeviceFormNotification = @"zzht.mapview.request.device.form";
  NSString * const Z3MapViewRequestFormUserInfoKey = @"zzht.mapview.form.key";
  NSString * const Z3MapViewRequestDetailUserInfoKey = @"zzht.mapview.detail.key";
+ NSString * const Z3MapViewRequestDeviceUserInfoKey = @"zzht.mapview.device.key";
 
 NSNotificationName const Z3MapViewIdentityFeaturesInGlobalNotification = @"zzht.mapview.identiy.global";
 NSNotificationName const Z3MapViewIdentityFeaturesInVisibleNotification = @"zzht.mapview.identiy.visiable";

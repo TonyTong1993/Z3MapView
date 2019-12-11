@@ -41,7 +41,6 @@ TODO: Add long description of the pod here.
   s.frameworks = 'UIKit', 'MapKit'
   s.vendored_frameworks = 'ArcGIS.framework'
   #s.dependency 'ArcGIS-Runtime-SDK-iOS', '~> 100.4'
-  s.dependency 'Z3Login','~> 0.1.1'
   s.dependency 'Z3Network', '~>0.0.1'
   s.dependency 'Z3CommonLib', '~>0.1.1'
   s.dependency 'Z3LocationService', '~>0.1.1'

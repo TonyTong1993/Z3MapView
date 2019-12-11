@@ -77,7 +77,8 @@
 
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
                            mapPoint:mapPoint
-                    identityResults:(nonnull NSArray *)results {
+                    identityResults:(nonnull NSArray *)results
+                        displayType:(NSInteger)displayType{
     NSArray *sortResults = nil;
     if (results.count > 1) {
        NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"geometry" ascending:YES comparator:^NSComparisonResult(AGSGeometry *obj1, AGSGeometry *obj2) {
@@ -97,7 +98,7 @@
     }else {
         sortResults = results;
     }
-    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:sortResults];
+    [super identityContextQuerySuccess:context mapPoint:mapPoint identityResults:sortResults displayType:displayType];
     [self dissmissGraphicsForQuery];
     [self post:Z3MapViewTapQueryXtdIdentitySuccessNotification message:sortResults];
 }
@@ -133,7 +134,7 @@
     [self.identityContext setIdentityExcludePipeline:YES];
     Z3MapViewIdentityResult *result = notification.userInfo[@"message"];
     if (result) {
-         [self.displayIdentityResultContext updateIdentityResults:@[result] mapPoint:(AGSPoint *)(result.geometry) showPopup:NO];
+         [self.displayIdentityResultContext updateIdentityResults:@[result] mapPoint:(AGSPoint *)(result.geometry) showPopup:NO displayType:0];
     }
     _tapForLocationEnable = NO;
 }
@@ -141,7 +142,7 @@
 - (void)devicePickerViewCellTapForReselectDeviceNotification:(NSNotification *)notification  {
     Z3MapViewIdentityResult *result = notification.userInfo[@"message"];
     if (result) {
-        [self.displayIdentityResultContext updateIdentityResults:@[result] mapPoint:(AGSPoint *)(result.geometry) showPopup:NO];
+        [self.displayIdentityResultContext updateIdentityResults:@[result] mapPoint:(AGSPoint *)(result.geometry) showPopup:NO displayType:0];
     }
     
 }

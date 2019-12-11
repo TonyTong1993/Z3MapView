@@ -25,6 +25,7 @@
 @property (strong, nonatomic)  UIImageView *leftFlagImageView;
 @property (strong, nonatomic)  UIButton *navBtn;
 @property (strong, nonatomic)  UIButton *eventBtn;
+@property (strong, nonatomic)  UIButton *okBtn;
 @end
 @implementation Z3DisplayIdentityResultViewCell
 
@@ -86,6 +87,12 @@
     [_eventBtn setTitle:@"信息采集" forState:UIControlStateNormal];
     [_eventBtn setTitleColor:[UIColor colorWithHexString:textTintHex] forState:UIControlStateNormal];
     [_eventBtn addTarget:self action:@selector(onEventReport:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _okBtn = [[UIButton alloc] init];
+    [_okBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [_okBtn setTitleColor:[UIColor colorWithHexString:textTintHex] forState:UIControlStateNormal];
+    [_okBtn addTarget:self action:@selector(onOkButton:) forControlEvents:UIControlEventTouchUpInside];
+    
     self.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_deviceLabel];
     
@@ -99,6 +106,7 @@
     [self.contentView addSubview:_leftFlagImageView];
     [self.contentView addSubview:_navBtn];
     [self.contentView addSubview:_eventBtn];
+    [self.contentView addSubview:_okBtn];
       
     [self.materialLabel addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:0];
 }
@@ -161,14 +169,29 @@
         make.height.mas_equalTo(44.0f);
     }];
     
+    [_okBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-8);
+         make.height.mas_equalTo(44.0f);
+         make.centerX.mas_equalTo(self.contentView.mas_centerX);
+    }];
+    
     [super updateConstraints];
 }
 
-- (void)setIdentityResult:(Z3MapViewIdentityResult *)result {
+- (void)setIdentityResult:(Z3MapViewIdentityResult *)result displayType:(NSInteger)displayType{
     _identityResult = result;
     self.deviceLabel.text = [self deviceWithAttributes:result];
     self.materialLabel.text = [self materialWithAttributes:result.attributes];
     self.addressLabel.text = [self addressWithAttributes:result.attributes];
+    if (displayType == 1) {
+        [_eventBtn setHidden:YES];
+        [_navBtn setHidden:YES];
+        [_okBtn setHidden:NO];
+    }else {
+        [_eventBtn setHidden:NO];
+        [_navBtn setHidden:NO];
+        [_okBtn setHidden:YES];
+    }
 }
 
 - (NSString *)deviceWithAttributes:(Z3MapViewIdentityResult *)result {
@@ -209,8 +232,19 @@
 
 - (void)onEventReport:(id)sender {
     CLLocation *location =  [_identityResult destination];
-    NSDictionary *data = @{Z3MapViewRequestFormUserInfoKey:location};
+    NSMutableDictionary *mattributes = _identityResult.attributes;
+    mattributes[@"layerId"] = @(_identityResult.layerId);
+    mattributes[@"layerName"] = _identityResult.layerName;
+    NSDictionary *data = @{Z3MapViewRequestFormUserInfoKey:location,Z3MapViewRequestDeviceFormNotification:mattributes};
     [self post:Z3MapViewRequestFormNotification userInfo:data];
+}
+
+- (void)onOkButton:(id)sender {
+    NSMutableDictionary *mattributes = _identityResult.attributes;
+    mattributes[@"layerId"] = @(_identityResult.layerId);
+    mattributes[@"layerName"] = _identityResult.layerName;
+    NSDictionary *data = @{Z3MapViewRequestDeviceUserInfoKey:[mattributes copy]};
+    [self post:Z3MapViewRequestDeviceFormNotification userInfo:data];
 }
 
 - (void)onDetailClicked:(id)sender {

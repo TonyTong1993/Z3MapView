@@ -69,8 +69,8 @@
         [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:12 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
            AGSGraphic *graphic = [identifyResult.graphics firstObject];
             if (graphic) {
-                if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicSuccess:mapPoint:)]) {
-                    [weaksSelf.delegate identityGraphicSuccess:graphic mapPoint:mapPoint];
+                if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicSuccess:mapPoint:displayType:)]) {
+                    [weaksSelf.delegate identityGraphicSuccess:graphic mapPoint:mapPoint displayType:0];
                 }
                 
             }else {
@@ -108,8 +108,8 @@
             }
         }
         if (results.count) {
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
-                [weakSelf.delegate identityContextQuerySuccess:weakSelf mapPoint:mapPoint identityResults:results];
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:displayType:)]) {
+                [weakSelf.delegate identityContextQuerySuccess:weakSelf mapPoint:mapPoint identityResults:results displayType:0];
                 [weakSelf pause];
             }
         }
@@ -167,8 +167,13 @@
                              geometry:(AGSGeometry *)geometry
                              mapPoint:(AGSPoint *)mapPoint
                              userInfo:(NSDictionary *)userInfo {
-    AGSGeometry *temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
-    [self identityFeaturesWithGisServer:url geometry:temp mapPoint:mapPoint tolerance:2 userInfo:userInfo];
+    AGSGeometry *temp = nil;
+    if (geometry.geometryType == AGSGeometryTypePoint) {
+      temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:10];
+    }else {
+        temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
+    }
+    [self identityFeaturesWithGisServer:url geometry:temp mapPoint:mapPoint tolerance:10 userInfo:userInfo];
 }
 
 - (void)identityFeaturesWithGisServer:(NSString *)url
@@ -275,8 +280,8 @@
         }
         return;
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:)]) {
-        [self.delegate identityContextQuerySuccess:self mapPoint:mapPoint identityResults:response.data];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextQuerySuccess:mapPoint:identityResults:displayType:)]) {
+        [self.delegate identityContextQuerySuccess:self mapPoint:mapPoint identityResults:response.data displayType:0];
     }
 }
 

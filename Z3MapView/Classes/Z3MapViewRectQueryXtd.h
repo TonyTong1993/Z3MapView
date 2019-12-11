@@ -7,7 +7,7 @@
 //
 
 #import "Z3MapViewCommonQueryXtd.h"
-
+#import <PromiseKit.h>
 typedef void(^MakeRectComplication)(NSDictionary *geometry,NSError *error);
 NS_ASSUME_NONNULL_BEGIN
 @interface Z3MapViewRectQueryXtd : Z3MapViewCommonQueryXtd
@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setArguments:(NSDictionary *)arguments;
 - (void)registerQueryComplcation:(void (^)(NSArray * _Nullable results,NSDictionary * _Nullable geometry,NSError * _Nullable error))complcation;
 - (void)registerMakeRectComplcation:(MakeRectComplication)complcation;
+@end
+
+
+@interface Z3MapViewRectQueryXtd (Form)
+
 @end
 
 NS_ASSUME_NONNULL_END

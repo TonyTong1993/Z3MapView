@@ -86,7 +86,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)identityContextQuerySuccess:(Z3MapViewIdentityContext *)context
                            mapPoint:(AGSPoint *)mapPoint
-                    identityResults:(NSArray *)results;
+                    identityResults:(NSArray *)results
+                        displayType:(NSInteger)displayType;
 
 /**
  查询成功的
@@ -130,7 +131,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param mapPoint 地图上点击的位置
  */
 - (void)identityGraphicSuccess:(AGSGraphic *)graphic
-                      mapPoint:(AGSPoint *)mapPoint;
+                      mapPoint:(AGSPoint *)mapPoint
+                   displayType:(NSInteger)displayType;
 
 /**
  当查询到数据后,点击地图触发对graphic的查询

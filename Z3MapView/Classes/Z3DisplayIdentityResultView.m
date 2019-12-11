@@ -11,6 +11,7 @@
 @interface Z3DisplayIdentityResultView()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (nonatomic,copy) NSArray *dataSource;
+@property (nonatomic,assign) NSInteger dispalyType;
 @end
 @implementation Z3DisplayIdentityResultView
 static NSString *Z3DisplayIdentityResultViewCell_reuseIdentifier = @"Z3DisplayIdentityResultViewCell_reuseIdentifier";
@@ -44,6 +45,10 @@ static NSString *Z3DisplayIdentityResultViewCell_reuseIdentifier = @"Z3DisplayId
 - (void)setSelectItem:(NSUInteger)index {
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+}
+
+- (void)setDisplayType:(NSInteger)type {
+    _dispalyType = type;
 }
 
 - (void)initCollectionView {
@@ -98,7 +103,7 @@ static NSString *Z3DisplayIdentityResultViewCell_reuseIdentifier = @"Z3DisplayId
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     Z3DisplayIdentityResultViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:Z3DisplayIdentityResultViewCell_reuseIdentifier forIndexPath:indexPath];
     Z3MapViewIdentityResult *result = self.dataSource[indexPath.row];
-    [cell setIdentityResult:result];
+    [cell setIdentityResult:result displayType:_dispalyType];
     return cell;
 }
 

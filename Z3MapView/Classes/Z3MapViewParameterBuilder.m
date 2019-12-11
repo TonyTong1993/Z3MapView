@@ -166,7 +166,8 @@
     mparams[@"geometry"] = @"";
     mparams[@"returnGeometry"] = @"false";
     mparams[@"timeout"] = @(60000);
-    mparams[@"where"] = @"1=1";
+    NSString *where = @"1=1";
+    mparams[@"where"] = where;
     return [mparams copy];
 }
 

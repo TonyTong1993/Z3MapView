@@ -37,7 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param mapPoint 当前点击的位置
  */
 - (void)updateIdentityResults:(NSArray *)results
-                     mapPoint:(AGSPoint *)mapPoint;
+                     mapPoint:(AGSPoint *)mapPoint
+                  displayType:(NSInteger)displayType;
 
 
 /**
@@ -46,10 +47,12 @@ NS_ASSUME_NONNULL_BEGIN
  @param results 查询数据结果
  @param mapPoint 当前点击的位置
  @param showPopup 是否显示popup
+ @param displayType 控制视图显示的类型，待优化
  */
 - (void)updateIdentityResults:(NSArray *)results
                      mapPoint:(AGSPoint *)mapPoint
-                    showPopup:(BOOL)showPopup;
+                    showPopup:(BOOL)showPopup
+                  displayType:(NSInteger)displayType;
 
 /**
  将爆管分析结果绘制到地图上
@@ -96,7 +99,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param mapPoint 当前点击的位置
  */
 - (void)setSelectedIdentityGraphic:(AGSGraphic * _Nullable)graphic
-                          mapPoint:(AGSPoint * _Nullable)mapPoint;
+                          mapPoint:(AGSPoint * _Nullable)mapPoint
+                       displayType:(NSInteger)displayType;
 
 
 /**
@@ -106,7 +110,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param showPopup 是否显示showPopupView
  */
 - (void)setSelectedGraphicAtIndex:(NSUInteger)index
-                        showPopup:(BOOL)showPopup;
+                        showPopup:(BOOL)showPopup
+                      displayType:(NSInteger)displayType;
 
 /**
  控制是否显示popup view

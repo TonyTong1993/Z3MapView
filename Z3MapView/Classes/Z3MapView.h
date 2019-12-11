@@ -10,8 +10,10 @@
 
 extern NSNotificationName const Z3MapViewRequestFormNotification;
 extern NSNotificationName const Z3MapViewRequestDetailNotification;
+extern NSNotificationName const Z3MapViewRequestDeviceFormNotification;
 extern NSString * const Z3MapViewRequestFormUserInfoKey;
 extern NSString * const Z3MapViewRequestDetailUserInfoKey;
+extern NSString * const Z3MapViewRequestDeviceUserInfoKey;
 
 //组合条件查询相关的通知
 extern NSNotificationName const Z3MapViewIdentityFeaturesInGlobalNotification;

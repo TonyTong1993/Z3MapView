@@ -94,25 +94,30 @@
 }
 
 - (void)display {
-    [self displayWithMapPoint:nil showPopup:YES];
+    [self displayWithMapPoint:nil showPopup:YES dispalyType:0];
 }
 
 - (void)displayWithMapPoint:(AGSPoint *)mapPoint
-                  showPopup:(BOOL)showPopup {
+                  showPopup:(BOOL)showPopup
+                dispalyType:(NSInteger)dispalyType {
     if (_results.count) {
         [self buildGraphics];
         //默认选中第一个
-//        AGSGraphic *graphic = [self.graphics firstObject];
-//        [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:showPopup];
+        if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+            AGSGraphic *graphic = [self.graphics firstObject];
+            [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:showPopup dispalyType:dispalyType];
+        }
+        
     }
 }
 
-- (void)dispalyPopviewWithMapPoint:(AGSPoint *)mapPoint {
+- (void)dispalyPopviewWithMapPoint:(AGSPoint *)mapPoint
+                       displayType:(NSInteger)displayType{
     if (_showPopup && (self.selectedGraphic.attributes.allKeys.count)) {
         if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
             [self dispalyPopviewForIpadWithMapPoint:mapPoint];
         }else if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-            [self displayPopViewForIphoneWithMapPoint:mapPoint];
+            [self displayPopViewForIphoneWithMapPoint:mapPoint displayType:displayType];
         }
     }
 }
@@ -137,10 +142,11 @@
     }
 }
 
-- (void)displayPopViewForIphoneWithMapPoint:(AGSPoint *)mapPoint {
+- (void)displayPopViewForIphoneWithMapPoint:(AGSPoint *)mapPoint displayType:(NSInteger)displayType {
     if (_displayIdentityResultView == nil) {
         [self.mapView addSubview:self.displayIdentityResultView];
         [self updateContraints];
+        [self.displayIdentityResultView setDisplayType:displayType];
         [self.displayIdentityResultView setDataSource:self.results];
         if (self.animationConstraintsForDismiss) {
             [self.mapView removeConstraints:self.animationConstraintsForDismiss];
@@ -169,7 +175,7 @@
     }
    BOOL isSame = self.selectedGraphic == self.graphics[index];
     if (!isSame) {
-        [self setSelectedIdentityGraphic:self.graphics[index] mapPoint:nil];
+        [self setSelectedIdentityGraphic:self.graphics[index] mapPoint:nil dispalyType:0];
     }
 }
 
@@ -209,22 +215,23 @@
 
 }
 
-- (void)updateIdentityResults:(NSArray *)results mapPoint:(AGSPoint *)mapPoint {
-    [self updateIdentityResults:results mapPoint:mapPoint showPopup:YES];
+- (void)updateIdentityResults:(NSArray *)results mapPoint:(AGSPoint *)mapPoint displayType:(NSInteger)displayType{
+    [self updateIdentityResults:results mapPoint:mapPoint showPopup:YES displayType:displayType];
 }
 
 - (void)updateIdentityResults:(NSArray *)results
                      mapPoint:(AGSPoint *)mapPoint
-                    showPopup:(BOOL)showPopup{
+                    showPopup:(BOOL)showPopup
+                  displayType:(NSInteger)displayType{
     [self dismiss];
     _results = results;
     _graphics = [NSMutableArray arrayWithCapacity:_results.count];
-    [self displayWithMapPoint:mapPoint showPopup:showPopup];
+    [self displayWithMapPoint:mapPoint showPopup:showPopup dispalyType:displayType];
 }
 
 - (void)updatePipeAnalyseResult:(Z3MapViewPipeAnaylseResult *)result mapPoint:(AGSPoint *)mapPoint {
     NSMutableArray *resluts = [[NSMutableArray alloc] initWithArray:result.valves];
-    [self updateIdentityResults:[resluts copy] mapPoint:mapPoint];
+    [self updateIdentityResults:[resluts copy] mapPoint:mapPoint displayType:0];
     [self buildPolygonGraphicWithGeometry:result.closearea];
 }
 
@@ -232,35 +239,39 @@
                        closeArea:(AGSPolygon *)closeArea
                         mapPoint:(AGSPoint *)mapPoint {
     
-    [self updateIdentityResults:results mapPoint:mapPoint];
+    [self updateIdentityResults:results mapPoint:mapPoint displayType:0];
     [self buildPolygonGraphicWithGeometry:closeArea];
 }
 
 
 - (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result mapPoint:(AGSPoint *)mapPoint{
-     [self updateIdentityResults:@[result] mapPoint:mapPoint];
+     [self updateIdentityResults:@[result] mapPoint:mapPoint displayType:0];
 }
 
 - (void)updateDevicePickerResult:(Z3MapViewPipeAnaylseResult *)result
                         mapPoint:(AGSPoint *)mapPoint
                        showPopup:(BOOL)showPopup{
-    [self updateIdentityResults:@[result] mapPoint:mapPoint showPopup:showPopup];
+    [self updateIdentityResults:@[result] mapPoint:mapPoint showPopup:showPopup displayType:0];
 }
 
 
-- (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic mapPoint:(AGSPoint *)mapPoint {
-    [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:YES];
+- (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
+                          mapPoint:(AGSPoint *)mapPoint
+                       dispalyType:(NSInteger)dispalyType {
+    [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:YES dispalyType:dispalyType];
 }
 
 - (void)setSelectedGraphicAtIndex:(NSUInteger)index
-                        showPopup:(BOOL)showPopup {
+                        showPopup:(BOOL)showPopup
+                      dispalyType:(NSInteger)dispalyType{
     AGSGraphic *graphic = self.graphics[index];
-    [self setSelectedIdentityGraphic:graphic mapPoint:nil showPopup:showPopup];
+    [self setSelectedIdentityGraphic:graphic mapPoint:nil showPopup:showPopup dispalyType:dispalyType];
 }
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
                           mapPoint:(AGSPoint *)mapPoint
-                         showPopup:(BOOL)showPopup{
+                         showPopup:(BOOL)showPopup
+                       dispalyType:(NSInteger)dispalyType{
     if (_selectedGraphic != nil) {
         [_selectedGraphic setSelected:false];
     }
@@ -276,13 +287,13 @@
         if (scale > 2000) {
             [self.mapView setViewpointScale:2000 completion:^(BOOL finished) {
                 if (showPopup) {
-                    [self dispalyPopviewWithMapPoint:center];
+                    [self dispalyPopviewWithMapPoint:center displayType:dispalyType];
                 }
                 
             }];
         }else {
             if (showPopup) {
-                [self dispalyPopviewWithMapPoint:center];
+                [self dispalyPopviewWithMapPoint:center displayType:dispalyType];
             }
         }
     }];
@@ -336,13 +347,13 @@
     NSUInteger count = self.graphics.count;
     if (count > indexPath.row) {
         AGSGraphic *graphic = self.graphics[indexPath.row];
-        [self setSelectedIdentityGraphic:graphic mapPoint:nil];
+        [self setSelectedIdentityGraphic:graphic mapPoint:nil dispalyType:0];
     }else {
         [self buildGraphics];
         NSAssert(self.graphics, @"graphics is nil");
         if (self.graphics.count > indexPath.row) {
             AGSGraphic *graphic = self.graphics[indexPath.row];
-            [self setSelectedIdentityGraphic:graphic mapPoint:nil];
+            [self setSelectedIdentityGraphic:graphic mapPoint:nil dispalyType:0];
         }
         
     }
