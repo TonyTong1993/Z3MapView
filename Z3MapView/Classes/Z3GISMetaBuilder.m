@@ -190,7 +190,7 @@
                     NSDictionary *info = @{
                                            @"layerID":@(obj.layerid),
                                            @"name":obj.dname ?: @"",
-                                           @"alias":obj.dname ?: @""
+                                           @"alias":obj.dalias ?: @""
                                            };
                     [layers addObject:info];
                 }

@@ -175,7 +175,7 @@
     }
    BOOL isSame = self.selectedGraphic == self.graphics[index];
     if (!isSame) {
-        [self setSelectedIdentityGraphic:self.graphics[index] mapPoint:nil dispalyType:0];
+        [self setSelectedIdentityGraphic:self.graphics[index] mapPoint:nil displayType:0];
     }
 }
 
@@ -254,18 +254,17 @@
     [self updateIdentityResults:@[result] mapPoint:mapPoint showPopup:showPopup displayType:0];
 }
 
+- (void)setSelectedGraphicAtIndex:(NSUInteger)index
+                        showPopup:(BOOL)showPopup
+                      displayType:(NSInteger)displayType{
+    AGSGraphic *graphic = self.graphics[index];
+    [self setSelectedIdentityGraphic:graphic mapPoint:nil showPopup:showPopup dispalyType:displayType];
+}
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
                           mapPoint:(AGSPoint *)mapPoint
-                       dispalyType:(NSInteger)dispalyType {
-    [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:YES dispalyType:dispalyType];
-}
-
-- (void)setSelectedGraphicAtIndex:(NSUInteger)index
-                        showPopup:(BOOL)showPopup
-                      dispalyType:(NSInteger)dispalyType{
-    AGSGraphic *graphic = self.graphics[index];
-    [self setSelectedIdentityGraphic:graphic mapPoint:nil showPopup:showPopup dispalyType:dispalyType];
+                       displayType:(NSInteger)displayType {
+     [self setSelectedIdentityGraphic:graphic mapPoint:mapPoint showPopup:YES dispalyType:displayType];
 }
 
 - (void)setSelectedIdentityGraphic:(AGSGraphic *)graphic
@@ -347,13 +346,13 @@
     NSUInteger count = self.graphics.count;
     if (count > indexPath.row) {
         AGSGraphic *graphic = self.graphics[indexPath.row];
-        [self setSelectedIdentityGraphic:graphic mapPoint:nil dispalyType:0];
+        [self setSelectedIdentityGraphic:graphic mapPoint:nil displayType:0];
     }else {
         [self buildGraphics];
         NSAssert(self.graphics, @"graphics is nil");
         if (self.graphics.count > indexPath.row) {
             AGSGraphic *graphic = self.graphics[indexPath.row];
-            [self setSelectedIdentityGraphic:graphic mapPoint:nil dispalyType:0];
+            [self setSelectedIdentityGraphic:graphic mapPoint:nil displayType:0];
         }
         
     }
