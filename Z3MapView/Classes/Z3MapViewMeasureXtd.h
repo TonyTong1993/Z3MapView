@@ -6,11 +6,11 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 
-#import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewCommandXtd.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Z3MapViewMeasureXtd : Z3MapViewCommonXtd
+@interface Z3MapViewMeasureXtd : Z3MapViewCommandXtd
 
 @end
 

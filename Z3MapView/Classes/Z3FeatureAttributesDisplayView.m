@@ -9,7 +9,7 @@
 #import "Z3FeatureAttributesDisplayView.h"
 #import "Z3MobileConfig.h"
 #import "Z3MapViewIdentityResult.h"
-#import "Z3GISMetaBuilder.h"
+#import "Z3GISMetaQuery.h"
 #import "Z3FeatureLayer.h"
 #import "Z3FeatureLayerProperty.h"
 #import "NSString+Chinese.h"
@@ -63,7 +63,7 @@
       __block NSMutableArray *properties = [[NSMutableArray alloc] init];
     if ([result respondsToSelector:@selector(layerName)]) {
         if (result.layerName) {
-            Z3FeatureLayer *feature = [[Z3GISMetaBuilder builder] aomen_buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
+            Z3FeatureLayer *feature = [[Z3GISMetaQuery querier] aomen_buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
             NSArray *fields = feature.fields;
             [fields enumerateObjectsUsingBlock:^(Z3FeatureLayerProperty *property, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([property.alias isChinese]) {
@@ -89,7 +89,8 @@
             self.dataSource = properties;
         }
     }else {
-        NSArray<AGSField*> *fields = result.featureTable.fields;
+        AGSArcGISFeature *feature = (AGSArcGISFeature *)result;
+        NSArray<AGSField*> *fields = feature.featureTable.fields;
         NSDictionary *attributes = result.attributes;
         __block NSMutableArray *properties = [[NSMutableArray alloc] init];
         [fields enumerateObjectsUsingBlock:^(AGSField * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

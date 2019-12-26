@@ -8,7 +8,7 @@
 
 #import "Z3MapViewParameterBuilder.h"
 #import <ArcGIS/ArcGIS.h>
-#import "Z3GISMetaBuilder.h"
+#import "Z3GISMetaQuery.h"
 @implementation Z3MapViewParameterBuilder
 + (instancetype)builder {
     return [[super alloc] init];
@@ -53,13 +53,13 @@
     }
     
     if (exclude) {
-        NSString *layerIDs = [Z3GISMetaBuilder builder].allExcludePipelineLayerIDs;
+        NSString *layerIDs = [Z3GISMetaQuery querier].allExcludePipelineLayerIDs;
         mparams[@"layers"] = layerIDs;
     }
     
     if (![mparams.allKeys containsObject:@"layers"]) {
         //获取查询的图层
-        NSString *layerIDs = [Z3GISMetaBuilder builder].allGISMetaLayerIDs;
+        NSString *layerIDs = [Z3GISMetaQuery querier].allGISMetaLayerIDs;
         mparams[@"layers"] = layerIDs;
     }
     mparams[@"geometryType"] = geometryType;
@@ -158,7 +158,8 @@
  */
 - (NSDictionary *)buildQueryStatisticPipeParameterWithGroupByFieldsForStatistics:(NSString *)groupByFieldsForStatistics
                                                                        outFields:(NSString *)outFields
-                                                                   outStatistics:(NSString *)outStatistics {
+                                                                   outStatistics:(NSString *)outStatistics
+                                                                           where:(NSString *)where {
     NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
     mparams[@"groupByFieldsForStatistics"] = groupByFieldsForStatistics;
     mparams[@"outFields"] = outFields;
@@ -166,7 +167,6 @@
     mparams[@"geometry"] = @"";
     mparams[@"returnGeometry"] = @"false";
     mparams[@"timeout"] = @(60000);
-    NSString *where = @"1=1";
     mparams[@"where"] = where;
     return [mparams copy];
 }

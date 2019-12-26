@@ -67,13 +67,13 @@
     
     _addressFlagLabel = [[UILabel alloc] init];
     _addressFlagLabel.font = [UIFont systemFontOfSize:15];
-    _addressFlagLabel.text = @"所在位置：";
+    _addressFlagLabel.text = @"所在道路：";
     
     _addressLabel = [[UILabel alloc] init];
     _addressLabel.numberOfLines = 0;
     _addressLabel.font = [UIFont systemFontOfSize:15];
      _leftFlagBtn = [[UIButton alloc] init];
-     [_leftFlagBtn setTitle:@"查看详情" forState:UIControlStateNormal];
+     [_leftFlagBtn setTitle:@"详情" forState:UIControlStateNormal];
      [_leftFlagBtn setTitleColor:[UIColor colorWithHexString:@"#007AFF"] forState:UIControlStateNormal];
     _leftFlagBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [_leftFlagBtn addTarget:self action:@selector(onDetailClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -84,7 +84,7 @@
     [_navBtn setTitleColor:[UIColor colorWithHexString:textTintHex] forState:UIControlStateNormal];
     [_navBtn addTarget:self action:@selector(onNaviagtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     _eventBtn = [[UIButton alloc] init];
-    [_eventBtn setTitle:@"信息采集" forState:UIControlStateNormal];
+    [_eventBtn setTitle:@"事件上报" forState:UIControlStateNormal];
     [_eventBtn setTitleColor:[UIColor colorWithHexString:textTintHex] forState:UIControlStateNormal];
     [_eventBtn addTarget:self action:@selector(onEventReport:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -178,11 +178,32 @@
     [super updateConstraints];
 }
 
-- (void)setIdentityResult:(Z3MapViewIdentityResult *)result displayType:(NSInteger)displayType{
+- (void)setIdentityResult:(Z3MapViewIdentityResult *)result
+                indexPath:(NSIndexPath *)indexPath
+              displayType:(NSInteger)displayType{
     _identityResult = result;
-    self.deviceLabel.text = [self deviceWithAttributes:result];
-    self.materialLabel.text = [self materialWithAttributes:result.attributes];
-    self.addressLabel.text = [self addressWithAttributes:result.attributes];
+    NSString *title = @"";
+    NSString *material = @"";
+    NSString *address = [self addressWithAttributes:result.attributes];
+    if ([result.layerName isEqualToString:@"JS_lin"]) {
+        title = [NSString stringWithFormat:@"%ld：管段",indexPath.row+1];
+        material = [self materialWithAttributes:result.attributes];
+        if (address.length) {
+            _addressFlagLabel.text = @"所在道路：";
+        }else {
+         _addressFlagLabel.text = @"管径：";
+         address = result.attributes[@"管径"];
+        }
+        _materialFlagLabel.text = @"材质：";
+    }else if ([result.layerName isEqualToString:@"JS_nod"]) {
+        title = [NSString stringWithFormat:@"%ld：%@",indexPath.row+1,[self deviceWithAttributes:result]];
+        material = result.attributes[@"设备类型"];
+        _materialFlagLabel.text = @"类型：";
+        _addressFlagLabel.text = @"所在道路：";
+    }
+    self.deviceLabel.text = title;
+    self.materialLabel.text = material;
+    self.addressLabel.text = address;
     if (displayType == 1) {
         [_eventBtn setHidden:YES];
         [_navBtn setHidden:YES];
@@ -195,24 +216,35 @@
 }
 
 - (NSString *)deviceWithAttributes:(Z3MapViewIdentityResult *)result {
-    NSString *device = result.attributes[@"名称"];
+    NSDictionary *attributes = result.attributes;
+    NSString *device = @"";
+    if ([attributes.allKeys containsObject:@"名称"]) {
+        device = attributes[@"名称"];
+    }else if([attributes.allKeys containsObject:@"组分类型"]) {
+        device = attributes[@"组分类型"];
+    }
     return device;
 }
 
 - (NSString *)materialWithAttributes:(NSDictionary *)attribues {
     NSString *material = attribues[@"材质"];
     if (material.length) {
-        return [NSString stringWithFormat:@"材质：%@",material];
+        return material;
     }
     return @"";
 }
 
 - (NSString *)addressWithAttributes:(NSDictionary *)attribues {
-    NSString *address = attribues[@"所在位置"];
-    if (address.length > 0) {
-        return [NSString stringWithFormat:@"%@",address];
+     NSString *address = @"";
+    if ([attribues.allKeys containsObject:@"所在道路"]) {
+        address = attribues[@"所在道路"];
+    }else if([attribues.allKeys containsObject:@"所在位置"]) {
+        address = attribues[@"所在位置"];
     }
-   return @"无";
+    if (address.length > 0) {
+        return address;
+    }
+   return address;
 }
 
 - (void)onNaviagtonClicked:(id)sender {
@@ -235,7 +267,7 @@
     NSMutableDictionary *mattributes = _identityResult.attributes;
     mattributes[@"layerId"] = @(_identityResult.layerId);
     mattributes[@"layerName"] = _identityResult.layerName;
-    NSDictionary *data = @{Z3MapViewRequestFormUserInfoKey:location,Z3MapViewRequestDeviceFormNotification:mattributes};
+    NSDictionary *data = @{Z3MapViewRequestFormUserInfoKey:location,Z3MapViewRequestDeviceUserInfoKey:mattributes};
     [self post:Z3MapViewRequestFormNotification userInfo:data];
 }
 

@@ -16,11 +16,12 @@
 }
 
 - (AGSSymbol *)buildNormalPonitSymbol {
-        //inner color EA3323 234 52 35 outer color F2A93C 242 169 60
-    UIColor *red = [UIColor colorWithRed:234/255.0 green:52/255.0 blue:35/255.0 alpha:1];
-    AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:red size:10];
+    //inner color EA3323 234 52 35 outer color F2A93C 242 169 60
+    UIColor *lightGreen = [UIColor colorWithHex:@"#D01E1D"];
+    UIColor *orange = [UIColor colorWithHex:@"#B88239"];
+    AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:lightGreen size:10];
+    symbol.outline  = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:orange width:2];
     return symbol;
-    
 }
 
 - (AGSSymbol *)buildPonitSymbolWithColor:(UIColor *)color {
@@ -29,7 +30,6 @@
 }
 
 - (AGSSymbol *)buildSelectedPonitSymbol {
-    //inner color 75FB4C 117 251 76 outer color F2A93C 242 169 60
     UIColor *lightGreen = [UIColor colorWithRed:117/255.0 green:251/255.0 blue:76/255.0 alpha:1];
     UIColor *orange = [UIColor colorWithRed:117/255.0 green:251/255.0 blue:76/255.0 alpha:1];
     AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:lightGreen size:10];
@@ -38,8 +38,7 @@
 }
 
 - (AGSSymbol *)buildNormalPolyLineSymbol {
-    //inner color 9C453A 156 69 58 outer color F2A93C 242 169 60
-    UIColor *deepRed = [UIColor colorWithRed:156/255.0 green:69/255.0 blue:58/255.0 alpha:1];
+    UIColor *deepRed = [UIColor colorWithHex:@"#5F212C"];
     AGSSimpleLineSymbol *symbol = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:deepRed width:3];
     return symbol;
 }
@@ -66,6 +65,14 @@
 - (AGSSymbol *)buildEnvelopSymbolWithColor:(UIColor *)color {
     AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:color width:1];
     AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:color outline:outline];
+    return symbol;
+}
+
+- (AGSSymbol *)buildVertexForRectSymbol {
+    UIColor *lightGreen = [UIColor colorWithHex:@"#00C711"];
+    UIColor *orange = [UIColor colorWithHex:@"#B88239"];
+    AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:lightGreen size:10];
+    symbol.outline  = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:orange width:2];
     return symbol;
 }
 

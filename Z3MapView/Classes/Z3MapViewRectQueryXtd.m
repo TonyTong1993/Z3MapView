@@ -12,12 +12,15 @@
 #import "Z3GraphicFactory.h"
 #import "Z3QueryTaskHelper.h"
 #import "Z3MobileTask.h"
-
+#import "Z3GISMetaQuery.h"
+#import "Z3FeatureCollectionLayer.h"
+#import "Z3FeatureLayer.h"
 @interface Z3MapViewRectQueryXtd ()
 @property (nonatomic,strong) NSMutableArray *mpoints;
 @property (nonatomic,copy) ComplicationHander handler;
 @property (nonatomic,copy) MakeRectComplication makeRectComplication;
 @property (nonatomic,assign) NSInteger type;
+@property (nonatomic,strong) NSArray *featureCollectionLayers;
 @end
 @implementation Z3MapViewRectQueryXtd
 
@@ -38,16 +41,36 @@
     }
 }
 
+- (void)updateNavigationBar {
+    [super updateNavigationBar];
+    UIImage *cleanImage = [UIImage imageNamed:@"nav_clear"];
+    UIBarButtonItem *cleanItem = [[UIBarButtonItem alloc] initWithImage:cleanImage style:UIBarButtonItemStylePlain target:self action:@selector(clear)];
+    UIImage *filterImage = [UIImage imageNamed:@"nav_filter"];
+    UIBarButtonItem *filterItem = [[UIBarButtonItem alloc] initWithImage:filterImage style:UIBarButtonItemStylePlain target:self action:@selector(filter:)];
+    self.targetViewController.navigationItem.rightBarButtonItems = @[cleanItem,filterItem];
+}
+
+- (void)filter:(id)sender {
+    if (_featureCollectionLayers == nil) {
+        _featureCollectionLayers = [[Z3GISMetaQuery querier] queryAllContainNetsFeatureCollectionLayer];
+    }
+   
+    for (Z3FeatureCollectionLayer *featureCollectionLayer in _featureCollectionLayers) {
+        NSLog(@"features count = %ld",featureCollectionLayer.net.count);
+    }
+}
+
 
 - (void)displayPointGraphicWithGeometry:(AGSPoint *)geometry {
-    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimpleMarkGraphicWithPoint:geometry attributes:nil];
+    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildVertexForRectGraphicWithPoint:geometry];
+    graphic.zIndex = 10;
     [self.queryGraphicsOverlay.graphics addObject:graphic];
-    [graphic setSelected:YES];
 }
 
 - (void)displayEnvelopGraphicWithGeometry:(AGSGeometry *)geometry {
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildSimpleEnvelopGraphicWithEnvelop:(AGSEnvelope *)geometry  attributes:nil];
-    [self.queryGraphicsOverlay.graphics addObject:graphic];
+    [self.queryGraphicsOverlay.graphics insertObject:graphic atIndex:0];
+    graphic.zIndex = 9;
     [graphic setSelected:YES];
 }
 

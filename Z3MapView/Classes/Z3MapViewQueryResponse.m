@@ -23,6 +23,10 @@
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:features.count];
     [features enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         Z3MapViewIdentityResult *result = [Z3MapViewIdentityResult modelWithJSON:obj];
+        NSDictionary *json = obj[@"geometry"];
+        result.geometry = (AGSGeometry *)[AGSGeometry fromJSON:json error:nil];
+        NSDictionary *attributes = obj[@"attributes"];
+        [result.attributes addEntriesFromDictionary:attributes];
         [models addObject:result];
     }];
     

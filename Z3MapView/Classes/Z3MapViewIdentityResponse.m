@@ -15,8 +15,12 @@
     NSArray *results = data[@"results"];
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:results.count];
     for (NSDictionary *info in results) {
-      Z3MapViewIdentityResult *result=  [Z3MapViewIdentityResult modelWithJSON:info];
-      [models addObject:result];
+        Z3MapViewIdentityResult *result=  [Z3MapViewIdentityResult modelWithJSON:info];
+        NSDictionary *json = info[@"geometry"];
+        result.geometry = (AGSGeometry *)[AGSGeometry fromJSON:json error:nil];
+        NSDictionary *attributes = info[@"attributes"];
+        [result.attributes addEntriesFromDictionary:attributes];
+        [models addObject:result];
     }
     _data = models;
 }

@@ -9,7 +9,7 @@
 #import "Z3AGSPopupFactory.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewIdentityResult.h"
-#import "Z3GISMetaBuilder.h"
+#import "Z3GISMetaQuery.h"
 @implementation Z3AGSPopupFactory
 
 + (instancetype)factory {
@@ -17,7 +17,7 @@
 }
 
 - (AGSPopup *)buildPopupWithIdentityResult:(Z3MapViewIdentityResult *)result graphic:(AGSGraphic *)graphic{
-    NSDictionary *deviceInfo = [[Z3GISMetaBuilder builder] buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
+    NSDictionary *deviceInfo = [[Z3GISMetaQuery querier] buildDeviceMetaWithTargetLayerName:result.layerName targetLayerId:result.layerId];
     NSInteger type = [deviceInfo[@"disptype"] intValue];
     AGSPopupDefinition *popupDefinition = [AGSPopupDefinition popupDefinition];
     NSArray *fields = [self popupFieldsWithAttribute:result.attributes];

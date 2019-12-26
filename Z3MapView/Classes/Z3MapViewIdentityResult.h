@@ -6,11 +6,11 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 #import <Foundation/Foundation.h>
-#import <ArcGIS/AGSArcGISFeature.h>
+#import <ArcGIS/AGSGeoElement.h>
 #import "YYKit.h"
 NS_ASSUME_NONNULL_BEGIN
 @class AGSGeometry;
-@interface Z3MapViewIdentityResult : AGSArcGISFeature<YYModel>
+@interface Z3MapViewIdentityResult : NSObject<YYModel,AGSGeoElement>
 /**
  Identity
  */
@@ -19,8 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) NSString *displayFieldName;
 @property (nonatomic,assign) NSInteger count;
 @property (nonatomic,copy) NSString *geometryType;
-@property (nonatomic,copy) NSDictionary *mGeometry;
-@property (nonatomic,strong) NSMutableDictionary *mAttributes;
 /**
  query
  */

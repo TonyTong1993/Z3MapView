@@ -13,7 +13,7 @@
 #import "Z3HUDPipeLeakCalloutView.h"
 #import "Z3MapViewIdentityResult.h"
 #import "Z3MapView.h"
-#import "Z3GISMetaBuilder.h"
+#import "Z3GISMetaQuery.h"
 #import "Z3MobileConfig.h"
 #import "Z3MobileTask.h"
 #import "Z3QueryTaskHelper.h"
@@ -32,7 +32,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     callout.delegate = self;
     CGSize size = CGSizeZero;
     NSString *layerId = [NSString stringWithFormat:@"%ld",result.layerId];
-    if ([[Z3GISMetaBuilder builder].valveLayerIDs containsObject:layerId]) {
+    if ([[Z3GISMetaQuery querier].valveLayerIDs containsObject:layerId]) {
         size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
     }else {
         size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);

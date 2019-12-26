@@ -23,7 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSSymbol *)buildNormalEnvelopSymbol;
 - (AGSSymbol *)buildEnvelopSymbolWithColor:(UIColor *)color;
 
-    //创建SketchEditor模式下，select vet点x样式
+
+/// 拉框查询，顶点AGSSymbol
+- (AGSSymbol *)buildVertexForRectSymbol;
+
+    //创建SketchEditor模式下，select 顶点样式
 - (AGSSymbol *)buildSelectedVertexSymbol;
     //创建SketchEditor模式下，normal点x样式
 - (AGSSymbol *)buildNormalVertexSymbol;

@@ -16,11 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)factory;
 
 /**
- 获取数据统计的统计模型集合
- @return 需要统计的集合
- */
-- (NSArray *)allStatistics;
-/**
  得到管径字段名
 
  @return name

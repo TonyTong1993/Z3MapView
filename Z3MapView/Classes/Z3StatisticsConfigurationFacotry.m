@@ -28,26 +28,12 @@
     if (![cache containsObjectForKey:statistic]) {
         NSString *path = [[UIApplication sharedApplication].documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"DataJson-%@.json",statistic]];
         NSData *data = [[NSData alloc] initWithContentsOfFile:path];
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        [cache setObject:json forKey:statistic];
+        if (data) {
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+            [cache setObject:json forKey:statistic];
+        }
     }
     return [[super alloc] init];
-}
-
-- (NSArray *)allStatistics{
-    Z3OneStatistics *one = [[Z3OneStatistics alloc] init];
-    one.title = @"管段汇总统计";
-    Z3StatisticsField *field1 = [[Z3StatisticsField alloc] init];
-    field1.title = @"口径";
-    
-    Z3StatisticsField *field2 = [[Z3StatisticsField alloc] init];
-    field2.title = @"管材";
-    one.switchFields = @[field1,field2];
-    
-    Z3OneStatistics *two = [[Z3OneStatistics alloc] init];
-    two.title = @"设备汇总统计";
-    
-    return @[one,two];
 }
 
 - (NSString *)pipeDiameterName {

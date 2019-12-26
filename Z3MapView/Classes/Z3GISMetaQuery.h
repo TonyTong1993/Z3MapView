@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class Z3FeatureLayer;
-@interface Z3GISMetaBuilder : NSObject
-+ (instancetype)builder;
+@interface Z3GISMetaQuery : NSObject
++ (instancetype)querier;
 
 /**
  获取设备元数据信息
@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return 设备属性
  */
 - (Z3FeatureLayer *)aomen_buildDeviceMetaWithTargetLayerName:(NSString *)layerName targetLayerId:(NSInteger)layerId;
+
+/// 查询元数据中所有包含管网的图层
+- (NSArray *)queryAllContainNetsFeatureCollectionLayer;
 
     /// 获取目标图层的ID
     /// @param layerName 目标图层名字

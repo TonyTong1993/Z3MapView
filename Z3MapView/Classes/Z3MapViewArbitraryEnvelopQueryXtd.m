@@ -10,6 +10,7 @@
 #import "Z3MapViewPrivate.h"
 #import "Z3QueryTaskHelper.h"
 #import "Z3MobileTask.h"
+#import "Z3AGSSymbolFactory.h"
 @implementation Z3MapViewArbitraryEnvelopQueryXtd
 - (void)display {
     [super display];
@@ -27,7 +28,6 @@
 
 - (void)updateNavigationBar {
     [super updateNavigationBar];
-    
     NSMutableArray *rightItems = [NSMutableArray arrayWithCapacity:2];
     UIImage *cleanImage = [UIImage imageNamed:@"nav_clear"];
     UIBarButtonItem *cleanItem = [[UIBarButtonItem alloc] initWithImage:cleanImage style:UIBarButtonItemStylePlain target:self action:@selector(clear)];
@@ -43,9 +43,9 @@
 
 - (void)measure{
     AGSSketchEditor *sketchEditor = [AGSSketchEditor sketchEditor];
+    [sketchEditor setStyle:[self style]];
     [self.mapView setSketchEditor:sketchEditor];
     [self.mapView.sketchEditor startWithCreationMode:[self creationMode] editConfiguration:[self sketchEditConfiguration]];
-    
 }
 
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {
@@ -85,7 +85,6 @@
 
 - (AGSSketchEditConfiguration *)sketchEditConfiguration {
     AGSSketchEditConfiguration *configuration = [[AGSSketchEditConfiguration alloc] init];
-    
     return configuration;
 }
 
@@ -94,6 +93,12 @@
 }
 
 - (AGSSketchStyle *)style {
-    return nil;
+    AGSSketchStyle *style =[[AGSSketchStyle alloc] init];
+    Z3AGSSymbolFactory *factory =[Z3AGSSymbolFactory factory];
+    style.vertexSymbol = [factory buildNormalVertexSymbol];
+    style.midVertexSymbol = [factory buildMidVertexSymbol];
+    style.selectedMidVertexSymbol = [factory buildMidVertexSymbol];
+    style.selectedVertexSymbol = [factory buildSelectedVertexSymbol];
+    return style;
 }
 @end

@@ -6,14 +6,14 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 
-#import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewCommandXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
 #import <YYKit/YYKit.h>
-@interface Z3MapViewCommonXtd ()
+@interface Z3MapViewCommandXtd ()
 @property (nonatomic,strong) NSArray *rightItems;
 @end
-@implementation Z3MapViewCommonXtd
+@implementation Z3MapViewCommandXtd
 
 - (instancetype)initWithTargetViewController:(UIViewController *)targetViewController mapView:(AGSMapView *)mapView {
     self = [super init];

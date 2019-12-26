@@ -27,6 +27,17 @@ NS_ASSUME_NONNULL_BEGIN
                                           color:(UIColor *)color
                                      attributes:(NSDictionary *)attributes;
 
+
+/// 创建拉框查询，顶点 AGSGraphic
+/// @param point AGSPoint
+- (AGSGraphic *)buildVertexForRectGraphicWithPoint:(AGSPoint *)point;
+
+/// 查询要素，使用Graphic突出的点类型feature
+/// @param point feature所在位置
+/// @param attributes feature的属性
+- (AGSGraphic *)buildPointGraphicForFeatureWithPoint:(AGSPoint *)point
+                                          attributes:(NSDictionary *)attributes;
+
     /// 创建简单的线类型mark
     /// @param polyline 线的位置
     /// @param attributes 线属性

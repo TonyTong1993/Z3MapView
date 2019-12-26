@@ -6,9 +6,9 @@
 //  Copyright © 2019 ZZHT. All rights reserved.
 //
 
-#import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewCommandXtd.h"
 NS_ASSUME_NONNULL_BEGIN
-@interface Z3MapViewQueryLocationXtd : Z3MapViewCommonXtd
+@interface Z3MapViewQueryLocationXtd : Z3MapViewCommandXtd
 
 @end
 

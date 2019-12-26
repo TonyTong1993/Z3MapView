@@ -9,7 +9,7 @@
 #import "Z3HUDPipeLeakCalloutView.h"
 #import "Z3MapView.h"
 #import "Z3MapViewIdentityResult.h"
-#import "Z3GISMetaBuilder.h"
+#import "Z3GISMetaQuery.h"
 #import "Z3Theme.h"
 #import "UIColor+Z3.h"
 #import <Masonry/Masonry.h>
@@ -71,7 +71,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     CGSize size = CGSizeZero;
     if (self.closeValveable) {
         NSString *layerId = [NSString stringWithFormat:@"%ld",_result.layerId];
-        if ([[Z3GISMetaBuilder builder].valveLayerIDs containsObject:layerId]) {
+        if ([[Z3GISMetaQuery querier].valveLayerIDs containsObject:layerId]) {
             size = CGSizeMake(PipeLeakCalloutViewWidth*2, PipeLeakCalloutViewHeight);
         }else {
             size = CGSizeMake(PipeLeakCalloutViewWidth, PipeLeakCalloutViewHeight);
@@ -87,7 +87,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
     _result = result;
     if (self.closeValveable) {
         NSString *layerId = [NSString stringWithFormat:@"%ld",_result.layerId];
-        if ([[Z3GISMetaBuilder builder].valveLayerIDs containsObject:layerId]) {
+        if ([[Z3GISMetaQuery querier].valveLayerIDs containsObject:layerId]) {
             [_closeValve setHidden:NO];
         }else {
             [_closeValve setHidden:YES];

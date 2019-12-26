@@ -71,7 +71,8 @@ access_token=eyJ1c2VyTmFtZSI6ImFkbWluIiwidGltZSI6IjIwMTktMDktMDkgMTg6MDc6MDYifQ=
  */
 - (NSDictionary *)buildQueryStatisticPipeParameterWithGroupByFieldsForStatistics:(NSString *)groupByFieldsForStatistics
                                                                        outFields:(NSString *)outFields
-                                                                   outStatistics:(NSString *)outStatistics;
+                                                                   outStatistics:(NSString *)outStatistics
+                                                                           where:(NSString *)where;
 
 
 @end

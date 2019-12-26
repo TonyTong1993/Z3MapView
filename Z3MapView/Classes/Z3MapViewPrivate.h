@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewCommandXtd.h"
 #import "Z3MapViewMeasureXtd.h"
 #import "Z3MapViewCommonQueryXtd.h"
 #import <ArcGIS/AGSEnumerations.h>
@@ -18,7 +18,7 @@ extern NSString * const QUERY_GRAPHICS_OVERLAY_ID;
 extern NSString * const TRACK_GRAPHICS_OVERLAY_ID;
 extern NSString * const POI_GRAPHICS_OVERLAY_ID;
 extern NSString * const SKETCH_GRAPHICS_OVERLAY_ID;
-@interface Z3MapViewCommonXtd (Private)
+@interface Z3MapViewCommandXtd (Private)
 - (void)display;
 - (void)dismiss;
 - (void)updateNavigationBar;

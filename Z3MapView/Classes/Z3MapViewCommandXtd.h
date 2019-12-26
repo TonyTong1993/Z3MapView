@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @class AGSMapView,UIViewController;
 typedef void(^OnComplicationBlock)(void);
-@interface Z3MapViewCommonXtd : NSObject
+@interface Z3MapViewCommandXtd : NSObject
 @property (nonatomic,weak,readonly) UIViewController *targetViewController;
 @property (nonatomic,weak,readonly) AGSMapView *mapView;
 @property (nonatomic,copy,readonly) OnComplicationBlock complication;

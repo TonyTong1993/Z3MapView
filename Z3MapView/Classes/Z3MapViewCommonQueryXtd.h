@@ -6,12 +6,12 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //
 
-#import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewCommandXtd.h"
 #import "Z3MapViewIdentityContext.h"
 #import "Z3MapViewDisplayIdentityResultContext.h"
 NS_ASSUME_NONNULL_BEGIN
 @class AGSGraphicsOverlay;
-@interface Z3MapViewCommonQueryXtd : Z3MapViewCommonXtd<Z3MapViewIdentityContextDelegate,Z3MapViewDisplayIdentityResultContextDelegate>
+@interface Z3MapViewCommonQueryXtd : Z3MapViewCommandXtd<Z3MapViewIdentityContextDelegate,Z3MapViewDisplayIdentityResultContextDelegate>
 @property (nonatomic,strong,readonly) Z3MapViewIdentityContext *identityContext;
 @property (nonatomic,strong,readonly) AGSGraphicsOverlay *queryGraphicsOverlay;
 @property (nonatomic,readonly,strong) Z3MapViewDisplayIdentityResultContext *displayIdentityResultContext;

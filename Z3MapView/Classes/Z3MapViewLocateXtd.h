@@ -6,11 +6,11 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //坐标定位功能
 
-#import "Z3MapViewCommonXtd.h"
+#import "Z3MapViewCommandXtd.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Z3MapViewLocateXtd : Z3MapViewCommonXtd
+@interface Z3MapViewLocateXtd : Z3MapViewCommandXtd
 
 @end
 
