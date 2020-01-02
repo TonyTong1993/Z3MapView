@@ -10,8 +10,7 @@
 #import "Z3MobileConfig.h"
 #import "Z3MapViewIdentityResult.h"
 #import "Z3GISMetaQuery.h"
-#import "Z3FeatureLayer.h"
-#import "Z3FeatureLayerProperty.h"
+#import "Z3FeatureCollectionLayer.h"
 #import "NSString+Chinese.h"
 #import <Masonry/Masonry.h>
 #import "Z3Theme.h"

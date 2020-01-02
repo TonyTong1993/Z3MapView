@@ -9,8 +9,6 @@
 #import "Z3GISMetaQuery.h"
 #import "Z3MobileConfig.h"
 #import "Z3FeatureCollectionLayer.h"
-#import "Z3FeatureLayer.h"
-#import "Z3FeatureLayerProperty.h"
 #import "Z3FeatureQueryCondition.h"
 #import "NSString+Chinese.h"
 #import "Z3StatisticsConfigurationFacotry.h"
@@ -170,25 +168,15 @@
 
 - (NSString *)pipeLayerID {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
-    __block NSString *layerID = @"";
+    NSMutableArray *lineFeatureLayerIds = [[NSMutableArray alloc] init];
     for (Z3FeatureCollectionLayer *meta in metas) {
-        if (meta.type != 4) {
-            continue;
-        }
-        
-        //澳门管网的code
-        if (![meta.code isEqualToString:@"MWGS"]) {
-            continue;
-        }
-        
         [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.geotype == 0) {
-                layerID = [NSString stringWithFormat:@"%ld",obj.layerid];
-                *stop = YES;
+                [lineFeatureLayerIds addObject:@(obj.layerid)];
             }
         }];
     }
-    return layerID;
+    return [lineFeatureLayerIds componentsJoinedByString:@","];
 }
 
 - (NSArray *)pipeLayerIDsWithJS:(NSString *)js {
@@ -265,23 +253,23 @@
     return layerID;
 }
 
-- (NSString *)layerIdWithDNO:(NSString *)dno {
+- (Z3FeatureLayer *)layerIdWithDNO:(NSString *)dno {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
-    __block NSString *layerId = nil;
+    __block Z3FeatureLayer *layer = nil;
     [metas enumerateObjectsUsingBlock:^(Z3FeatureCollectionLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *features = obj.net;
         [features enumerateObjectsUsingBlock:^(Z3FeatureLayer *feature, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([dno integerValue] == feature.dno) {
-                layerId = [@(feature.layerid) stringValue];
+                layer = feature;
                 *stop = YES;
             }
         }];
-        if (layerId != nil) {
+        if (layer != nil) {
             *stop = YES;
         }
     }];
     
-    return layerId;
+    return layer;
 }
 
 - (NSArray *)metaInfosWithNetNotEmpty {

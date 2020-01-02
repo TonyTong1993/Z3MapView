@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Z3CalloutViewDelegate.h"
+#import "Z3DisplayIdentityResultView.h"
 NS_ASSUME_NONNULL_BEGIN
 @class Z3MapViewDisplayIdentityResultContext,Z3MapViewIdentityResult,Z3MapViewPipeAnaylseResult,AGSGraphic,AGSGeometry,AGSPoint;
 @protocol Z3MapViewDisplayIdentityResultContextDelegate <NSObject>
@@ -25,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,weak,readonly) AGSGraphic *selectedGraphic;
 @property (nonatomic,readonly,strong) NSMutableArray *graphics;
 @property (nonatomic,weak) id<Z3MapViewDisplayIdentityResultContextDelegate> delegate;
+@property (nonatomic,strong,readonly) Z3DisplayIdentityResultView *displayIdentityResultView;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -133,6 +135,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateBookMark:(AGSGraphic *)bookMark
                atIndex:(NSUInteger)index;
 - (void)deleteBookMarkAtIndex:(NSUInteger)index;
+@end
+
+@interface Z3MapViewDisplayIdentityResultContext (Filter)
+- (void)filterGraphicsWithFeatureCollectionLayers:(NSArray *)featureCollectionLayers;
 @end
 
 NS_ASSUME_NONNULL_END

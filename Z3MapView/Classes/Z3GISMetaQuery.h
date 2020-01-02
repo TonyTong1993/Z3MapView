@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
  根据DNO查询layerId
 
  @param dno dno
- @return layerId
+ @return Z3FeatureLayer
  */
-- (NSString *)layerIdWithDNO:(NSString *)dno;
+- (Z3FeatureLayer *)layerIdWithDNO:(NSString *)dno;
 
 /**
  获取所有图层ID 集合

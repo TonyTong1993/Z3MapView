@@ -27,6 +27,7 @@
         result.geometry = (AGSGeometry *)[AGSGeometry fromJSON:json error:nil];
         NSDictionary *attributes = obj[@"attributes"];
         [result.attributes addEntriesFromDictionary:attributes];
+        [result.attributes setValue:@(result.layerId) forKey:@"layerId"];
         [models addObject:result];
     }];
     

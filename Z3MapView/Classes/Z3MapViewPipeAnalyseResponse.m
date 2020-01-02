@@ -33,7 +33,12 @@
     NSArray *valves = valvesObj[@"results"];
     NSMutableArray *mvalves = [[NSMutableArray alloc] init];
     for (NSDictionary *json in valves) {
-       Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
+        Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
+        NSDictionary *geometry = json[@"geometry"];
+        identityResult.geometry = (AGSGeometry *)[AGSGeometry fromJSON:geometry error:nil];
+        NSDictionary *attributes = json[@"attributes"];
+        [identityResult.attributes addEntriesFromDictionary:attributes];
+        [identityResult.attributes setValue:@(identityResult.layerId) forKey:@"layerId"];
         [mvalves addObject:identityResult];
     }
       result.valves = [mvalves copy];
@@ -42,6 +47,11 @@
     NSMutableArray *musers = [[NSMutableArray alloc] init];
     for (NSDictionary *json in users) {
         Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
+        NSDictionary *geometry = json[@"geometry"];
+        identityResult.geometry = (AGSGeometry *)[AGSGeometry fromJSON:geometry error:nil];
+        NSDictionary *attributes = json[@"attributes"];
+        [identityResult.attributes addEntriesFromDictionary:attributes];
+        [identityResult.attributes setValue:@(identityResult.layerId) forKey:@"layerId"];
         [musers addObject:identityResult];
     }
      result.users = [musers copy];
@@ -49,7 +59,12 @@
     NSArray *closeLines = closeLinesObj[@"results"];
     NSMutableArray *mcloseLines = [[NSMutableArray alloc] init];
     for (NSDictionary *json in closeLines) {
-        Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
+       Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
+        NSDictionary *geometry = json[@"geometry"];
+        identityResult.geometry = (AGSGeometry *)[AGSGeometry fromJSON:geometry error:nil];
+        NSDictionary *attributes = json[@"attributes"];
+        [identityResult.attributes addEntriesFromDictionary:attributes];
+        [identityResult.attributes setValue:@(identityResult.layerId) forKey:@"layerId"];
         [mcloseLines addObject:identityResult];
     }
     result.closeLines = [mcloseLines copy];
@@ -58,6 +73,11 @@
     NSMutableArray *mcloseNodes = [[NSMutableArray alloc] init];
     for (NSDictionary *json in closeNodes) {
         Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
+        NSDictionary *geometry = json[@"geometry"];
+        identityResult.geometry = (AGSGeometry *)[AGSGeometry fromJSON:geometry error:nil];
+        NSDictionary *attributes = json[@"attributes"];
+        [identityResult.attributes addEntriesFromDictionary:attributes];
+        [identityResult.attributes setValue:@(identityResult.layerId) forKey:@"layerId"];
         [mcloseNodes addObject:identityResult];
     }
     result.closeNodes = [mcloseNodes copy];

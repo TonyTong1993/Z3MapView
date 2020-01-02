@@ -15,6 +15,8 @@
 #import "Z3MobileConfig.h"
 #import "Z3CoordinateConvertFactory.h"
 #import "MBProgressHUD.h"
+#import "Z3GISMetaQuery.h"
+#import "Z3FeatureCollectionLayer.h"
 @interface Z3DisplayIdentityResultViewCell ()
 @property (nonatomic,strong) Z3MapViewIdentityResult *identityResult;
 @property (strong, nonatomic)  UILabel *materialFlagLabel;
@@ -185,17 +187,20 @@
     NSString *title = @"";
     NSString *material = @"";
     NSString *address = [self addressWithAttributes:result.attributes];
-    if ([result.layerName isEqualToString:@"JS_lin"]) {
+    NSString *dno = result.attributes[@"dno"];
+    Z3FeatureLayer *featureLayer = [[Z3GISMetaQuery querier] layerIdWithDNO:dno];
+    
+    if (featureLayer.geotype == 0) {
         title = [NSString stringWithFormat:@"%ld：管段",indexPath.row+1];
         material = [self materialWithAttributes:result.attributes];
         if (address.length) {
             _addressFlagLabel.text = @"所在道路：";
         }else {
-         _addressFlagLabel.text = @"管径：";
-         address = result.attributes[@"管径"];
+            _addressFlagLabel.text = @"管径：";
+            address = result.attributes[@"管径"];
         }
         _materialFlagLabel.text = @"材质：";
-    }else if ([result.layerName isEqualToString:@"JS_nod"]) {
+    }else if (featureLayer.geotype == 1) {
         title = [NSString stringWithFormat:@"%ld：%@",indexPath.row+1,[self deviceWithAttributes:result]];
         material = result.attributes[@"设备类型"];
         _materialFlagLabel.text = @"类型：";
@@ -204,14 +209,30 @@
     self.deviceLabel.text = title;
     self.materialLabel.text = material;
     self.addressLabel.text = address;
-    if (displayType == 1) {
-        [_eventBtn setHidden:YES];
-        [_navBtn setHidden:YES];
-        [_okBtn setHidden:NO];
-    }else {
-        [_eventBtn setHidden:NO];
-        [_navBtn setHidden:NO];
-        [_okBtn setHidden:YES];
+    switch (displayType) {
+        case 0:
+        {
+            [_eventBtn setHidden:NO];
+            [_navBtn setHidden:NO];
+            [_okBtn setHidden:YES];
+        }
+            break;
+        case 1:
+        {
+            [_eventBtn setHidden:YES];
+            [_navBtn setHidden:YES];
+            [_okBtn setHidden:NO];
+        }
+            break;
+        case 2:
+        {
+            [_eventBtn setHidden:YES];
+            [_navBtn setHidden:YES];
+            [_okBtn setHidden:YES];
+        }
+            break;
+        default:
+            break;
     }
 }
 

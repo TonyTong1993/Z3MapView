@@ -16,15 +16,17 @@
 #import "Z3MapViewPrivate.h"
 #import "Z3MapView.h"
 #import <ArcGIS/ArcGIS.h>
+#import "Z3FeatureCollectionLayer.h"
 @interface Z3MapViewDisplayIdentityResultContext()<Z3DisplayIdentityResultViewDelegate>
 @property (nonatomic,copy) NSArray *results;
+@property (nonatomic,copy) NSArray *filters;
 @property (nonatomic,strong) AGSGraphicsOverlay *mGraphicsOverlay;
-@property (nonatomic,strong) Z3DisplayIdentityResultView *displayIdentityResultView;
 @property (nonatomic,strong) NSMutableArray *animationConstraintsForPresent;
 @property (nonatomic,strong) NSMutableArray *animationConstraintsForDismiss;
 @property (nonatomic,assign) BOOL showPopup;
 @end
 @implementation Z3MapViewDisplayIdentityResultContext
+@synthesize displayIdentityResultView = _displayIdentityResultView;
 - (instancetype)initWithAGSMapView:(AGSMapView *)mapView {
     self = [super init];
     if (self) {
@@ -48,9 +50,9 @@
 
 - (void)buildGraphics {
     NSMutableArray *graphics = [[NSMutableArray alloc] init];
-    for (AGSArcGISFeature *result in self.results) {
+    for (id<AGSGeoElement> result in self.results) {
         AGSGeometry *geometry = result.geometry;
-        NSDictionary *attributes = result.attributes;
+        NSMutableDictionary *attributes = result.attributes;
         AGSGraphic *graphic;
         if ([geometry isKindOfClass:[AGSPoint class]]) {
             if (_delegate && [_delegate respondsToSelector:@selector(pointGraphicForDisplayIdentityResultInMapViewWithGeometry:attributes:)]) {
@@ -71,7 +73,7 @@
            
         }
     }
-    
+    self.filters = self.results;
     [self.graphics addObjectsFromArray:graphics];
 }
 
@@ -151,13 +153,20 @@
         if (self.animationConstraintsForDismiss) {
             [self.mapView removeConstraints:self.animationConstraintsForDismiss];
         }
+        NSString *vFormat = nil;
+        if (displayType == 2) {
+            vFormat = @"V:[_displayIdentityResultView(86)]-0-|";
+        }else {
+            vFormat = @"V:[_displayIdentityResultView(146)]-0-|";
+        }
         _animationConstraintsForPresent = [NSMutableArray array];
-        [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_displayIdentityResultView(146)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
+        [_animationConstraintsForPresent addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:vFormat options:0 metrics:nil views:NSDictionaryOfVariableBindings(_displayIdentityResultView)]];
         [self.mapView addConstraints:_animationConstraintsForPresent];
 
     }else {
         NSUInteger index = [self.graphics indexOfObject:self.selectedGraphic];
-        [self.displayIdentityResultView setSelectItem:index];
+        NSUInteger targetIndex = [self.filters indexOfObject:self.results[index]];
+        [self.displayIdentityResultView setSelectItem:targetIndex];
     }
     
 }
@@ -170,12 +179,13 @@
 
 #pragma mark - Z3DisplayIdentityResultViewDelegate
 - (void)displayIdentityViewDidScrollToPageIndex:(NSUInteger)index {
-    if (index >= self.graphics.count) {
+    if (index >= self.filters.count) {
         NSAssert(false, @"bound is upper");
     }
-   BOOL isSame = self.selectedGraphic == self.graphics[index];
+    NSUInteger targetIndex = [self.results indexOfObject:self.filters[index]];
+   BOOL isSame = self.selectedGraphic == self.graphics[targetIndex];
     if (!isSame) {
-        [self setSelectedIdentityGraphic:self.graphics[index] mapPoint:nil displayType:0];
+        [self setSelectedIdentityGraphic:self.graphics[targetIndex] mapPoint:nil displayType:0];
     }
 }
 
@@ -208,7 +218,7 @@
     } completion:^(BOOL finished) {
         if (self.displayIdentityResultView) {
             [self.displayIdentityResultView removeFromSuperview];
-            self.displayIdentityResultView = nil;
+            self->_displayIdentityResultView = nil;
         }
     }];
     [self.mapView layoutIfNeeded];
@@ -306,7 +316,8 @@
         case AGSGeometryTypePolyline:
         {
             if (tapLocation) {
-                AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:geometry toPoint:tapLocation];
+                AGSPolyline *line = (AGSPolyline *) [AGSGeometryEngine projectGeometry:geometry toSpatialReference:self.mapView.spatialReference];
+                AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:line toPoint:tapLocation];
                 return proximityResult.point;
             }else {
                 AGSPolyline *line = (AGSPolyline *) geometry;
@@ -395,4 +406,26 @@
     return  self.mGraphicsOverlay.graphics;
 }
 
+@end
+
+@implementation Z3MapViewDisplayIdentityResultContext (Filter)
+- (void)filterGraphicsWithFeatureCollectionLayers:(NSArray *)featureCollectionLayers {
+    NSMutableArray *filters = [[NSMutableArray alloc] initWithCapacity:self.results.count];
+    [self.graphics enumerateObjectsUsingBlock:^(AGSGraphic *graphic, NSUInteger idx, BOOL * _Nonnull stop) {
+       NSDictionary *attributes = graphic.attributes;
+       NSUInteger layerId = [attributes[@"layerId"] integerValue];
+        [featureCollectionLayers enumerateObjectsUsingBlock:^(Z3FeatureCollectionLayer *collectionLayer, NSUInteger idx, BOOL * _Nonnull stop) {
+            [collectionLayer.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *layer, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (layer.layerid == layerId) {
+                    [graphic setVisible:layer.isVisiable];
+                }
+            }];
+        }];
+        if (graphic.isVisible) {
+           [filters addObject:self.results[idx]];
+        }
+    }];
+    self.filters = [filters copy];
+    [_displayIdentityResultView setDataSource:filters];
+}
 @end

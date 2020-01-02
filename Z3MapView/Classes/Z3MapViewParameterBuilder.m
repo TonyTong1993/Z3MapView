@@ -102,6 +102,8 @@
         }
         mparams[@"geometryType"] = geometryType;
         mparams[@"geometry"] = geometryJsonString;
+    }else {
+         mparams[@"geometry"] = @"";
     }
     if (userInfo) {
         [mparams addEntriesFromDictionary:userInfo];

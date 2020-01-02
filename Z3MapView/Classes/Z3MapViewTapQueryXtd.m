@@ -82,10 +82,12 @@
     NSArray *sortResults = nil;
     if (results.count > 1) {
        NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"geometry" ascending:YES comparator:^NSComparisonResult(AGSGeometry *obj1, AGSGeometry *obj2) {
-            AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:obj1 toPoint:mapPoint];
+           AGSGeometry *$1 = [AGSGeometryEngine projectGeometry:obj1 toSpatialReference:self.mapView.spatialReference];
+           AGSGeometry *$2 = [AGSGeometryEngine projectGeometry:obj2 toSpatialReference:self.mapView.spatialReference];
+            AGSProximityResult *proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:$1 toPoint:mapPoint];
             AGSPoint  *temPoint = proximityResult.point;
             double distance1 = [AGSGeometryEngine distanceBetweenGeometry1:temPoint geometry2:mapPoint];
-            proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:obj2 toPoint:mapPoint];
+            proximityResult  = [AGSGeometryEngine nearestCoordinateInGeometry:$2 toPoint:mapPoint];
             temPoint = proximityResult.point;
             double distance2 = [AGSGeometryEngine distanceBetweenGeometry1:temPoint geometry2:mapPoint];
             return (distance1 >= distance2);

@@ -134,7 +134,6 @@
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:arguments];
     [userInfo removeObjectForKey:@"layers"];
     [self.identityContext queryFeaturesWithGeometry:geometry userInfo:userInfo];
-    
 }
 
 
