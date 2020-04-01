@@ -60,9 +60,13 @@
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisdynamicmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
-        layer.minScale = 520000; //[mapLayer.dispMinScale doubleValue];
-        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
+//        layer.minScale = [mapLayer.dispMinScale doubleValue];
+//        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
         [layer setLayerID:mapLayer.ID];
+        if (mapLayer.token) {
+            AGSCredential *credential = [[AGSCredential alloc] initWithToken:mapLayer.token referer:nil];
+            layer.credential = credential;
+        }
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"agcgisvectortiledlayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
