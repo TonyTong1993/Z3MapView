@@ -42,17 +42,17 @@
     if ([proxyURL hasPrefix:@"http"]) {
         urlStr = mapLayer.url;
     }else {
-       urlStr = [NSString stringWithFormat:@"%@/%@",rootURLPath,proxyURL];
+        urlStr = [NSString stringWithFormat:@"%@/%@",rootURLPath,proxyURL];
     }
     NSURL *url = [NSURL URLWithString:urlStr];
     
     if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgislocaltiledlayer"]) {
-         NSAssert(false, @"arcgislocaltiledlayer not support");
+        NSAssert(false, @"arcgislocaltiledlayer not support");
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgistiledmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
-//        layer.minScale = [mapLayer.dispMinScale doubleValue];
-//        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
+            //        layer.minScale = [mapLayer.dispMinScale doubleValue];
+            //        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
         [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisfeaturelayer"]) {
@@ -64,25 +64,29 @@
         layer.maxScale = [mapLayer.dispMaxScale doubleValue];
         layer.opacity = mapLayer.opacity;
         [layer setLayerID:mapLayer.ID];
+        if (mapLayer.token) {
+            AGSCredential *credential = [[AGSCredential alloc] initWithToken:mapLayer.token referer:nil];
+            layer.credential = credential;
+        }
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"agcgisvectortiledlayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
-//        layer.minScale = [mapLayer.dispMinScale doubleValue];
-//        layer.maxScale = 250;//[mapLayer.dispMaxScale doubleValue];
+            //        layer.minScale = [mapLayer.dispMinScale doubleValue];
+            //        layer.maxScale = 250;//[mapLayer.dispMaxScale doubleValue];
         [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisimageservicelayer"]) {
         /*layers which display pre-cached maps from tiled services*/
         NSAssert(false, @"AGSServiceImageTiledLayer not support");
             //        [[AGSServiceImageTiledLayer alloc] initWithTileInfo:<#(nonnull AGSTileInfo *)#> fullExtent:<#(nonnull AGSEnvelope *)#>]
-    
+        
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"ecitytiledmapservicelayer"]) {
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
         [layer setLayerID:mapLayer.ID];
         return layer;
         /* 支持缓存的标准在线瓦片服务*/
-//        NSAssert(false, @"ecitytiledmapservicelayer not support");
+            //        NSAssert(false, @"ecitytiledmapservicelayer not support");
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"wmtslayer"]) {
         NSAssert(false, @"AGSWMTSLayer not support");
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"dblayer"]) {
@@ -94,7 +98,7 @@
 
 - (AGSBasemap *)localBaseMap {
     AGSArcGISTiledLayer *baseMapLayer = (AGSArcGISTiledLayer *)[self localBaseMapLayer];
-   return [[AGSBasemap alloc] initWithBaseLayer:baseMapLayer];
+    return [[AGSBasemap alloc] initWithBaseLayer:baseMapLayer];
 }
 
 - (AGSBasemap *)onlineBaseMap {
@@ -131,7 +135,7 @@
     return nil ;
 }
 
-//TODO:离线图层 从.geodatabase中加载离线图层
+    //TODO:离线图层 从.geodatabase中加载离线图层
 - (void)loadOfflineMapLayersFromGeoDatabase:(void (^)(NSArray *layers))complicationHandler {
     NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *geodatabasePath = [documents stringByAppendingPathComponent:@"mwgss.geodatabase"];
@@ -168,17 +172,17 @@
                 complicationHandler(nil,error);
                 return;
             }
-           NSArray *layers = [self loadFeatureLayerFormGeoDatabase:gdb];
+            NSArray *layers = [self loadFeatureLayerFormGeoDatabase:gdb];
             complicationHandler(layers,nil);
         }];
     }else {
         NSErrorDomain domain = @"zzht.load.layer.failure";
         NSInteger code = 404;
         NSDictionary *userInfo = @{
-                                   NSLocalizedDescriptionKey:@"Not Found",
-                                   };
+            NSLocalizedDescriptionKey:@"Not Found",
+        };
         NSError *error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
-         complicationHandler(nil,error);
+        complicationHandler(nil,error);
     }
     
 }
@@ -200,7 +204,7 @@
     mapLayer.visible = layer.visible;
     if ([layer isKindOfClass:[AGSArcGISMapImageSublayer class]]) {
         AGSArcGISMapImageSublayer *subLayer = (AGSArcGISMapImageSublayer *)layer;
-          mapLayer.ID = [@(subLayer.sublayerID) stringValue];
+        mapLayer.ID = [@(subLayer.sublayerID) stringValue];
     }else if ([layer isKindOfClass:[AGSArcGISMapImageLayer class]]) {
         AGSArcGISMapImageLayer *pLayer = (AGSArcGISMapImageLayer *)layer;
         mapLayer.ID = pLayer.layerID;
@@ -249,7 +253,7 @@
         }
     }else {
         [layer fetchLegendInfosWithCompletion:^(NSArray<AGSLegendInfo *> * _Nullable legendInfos, NSError * _Nullable error) {
-              AGSLegendInfo *legend = [legendInfos lastObject];
+            AGSLegendInfo *legend = [legendInfos lastObject];
         }];
     }
 }
@@ -264,7 +268,7 @@
     NSArray *sources = nil;//[Z3MobileConfig shareConfig].mapConfig.layers;
     NSMutableArray *lines = [sources firstObject];
     NSMutableArray *points = [sources lastObject];
-    //TODO:FIX crash 100 图层加载失败,此处无法获取到数据
+        //TODO:FIX crash 100 图层加载失败,此处无法获取到数据
     [ids enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSInteger layerId = [obj integerValue];
         for (AGSArcGISMapImageSublayer *layer in mapImageSublayers) {
@@ -290,37 +294,37 @@
 
 - (NSArray *)offlineGeodatabaseFileNames {
     NSArray *fileNames = @[
-                           @"PIPE00.geodatabase",
-                           @"PIPE01.geodatabase",
-                           @"PIPE02.geodatabase",
-                           @"PIPE03.geodatabase",
-                           @"PIPE04.geodatabase",
-                           @"B.I..geodatabase",
-                           @"BLANKING_FLANGE.geodatabase",
-                           @"COUPLING.geodatabase",
-                           @"CROSS.geodatabase",
-                           @"DILIVERY_POINT.geodatabase",
-                           @"COUPLING.geodatabase",
-                           @"EXPANSION.geodatabase",
-                           @"HYDRANT.geodatabase",
-                           @"METER.geodatabase",
-                           @"NSTRUCTURE.geodatabase",
-                           @"PUMP.geodatabase",
-                           @"REDUCER.geodatabase",
-                           @"SAMPLE.geodatabase",
-                           @"SERCON00.geodatabase",
-                           @"SERCON01.geodatabase",
-                           @"TAP.geodatabase",
-                           @"TAPVALVE.geodatabase",
-                           @"TEE.geodatabase",
-                           @"TOPO_POINT.geodatabase",
-                           @"TRANSITION.geodatabase",
-                           @"VALVE00.geodatabase"
-                           ];
+        @"PIPE00.geodatabase",
+        @"PIPE01.geodatabase",
+        @"PIPE02.geodatabase",
+        @"PIPE03.geodatabase",
+        @"PIPE04.geodatabase",
+        @"B.I..geodatabase",
+        @"BLANKING_FLANGE.geodatabase",
+        @"COUPLING.geodatabase",
+        @"CROSS.geodatabase",
+        @"DILIVERY_POINT.geodatabase",
+        @"COUPLING.geodatabase",
+        @"EXPANSION.geodatabase",
+        @"HYDRANT.geodatabase",
+        @"METER.geodatabase",
+        @"NSTRUCTURE.geodatabase",
+        @"PUMP.geodatabase",
+        @"REDUCER.geodatabase",
+        @"SAMPLE.geodatabase",
+        @"SERCON00.geodatabase",
+        @"SERCON01.geodatabase",
+        @"TAP.geodatabase",
+        @"TAPVALVE.geodatabase",
+        @"TEE.geodatabase",
+        @"TOPO_POINT.geodatabase",
+        @"TRANSITION.geodatabase",
+        @"VALVE00.geodatabase"
+    ];
     
     return fileNames;
 }
-    
+
 - (NSArray *)loadLayersByLocalShapefiles {
     NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *shapesPath = [documentsDirectory stringByAppendingPathComponent:@"shapes"];
