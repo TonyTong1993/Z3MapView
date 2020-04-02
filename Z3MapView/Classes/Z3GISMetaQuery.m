@@ -272,6 +272,18 @@
     return layer;
 }
 
+- (Z3FeatureCollectionLayer *)featureCollectionLayerWithLayerId:(NSInteger)layerId {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block Z3FeatureCollectionLayer *layer = nil;
+    [metas enumerateObjectsUsingBlock:^(Z3FeatureCollectionLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (layerId == [obj.layerid integerValue]) {
+            layer = obj;
+            *stop = YES;
+        }
+    }];
+    return layer;
+}
+
 - (NSArray *)metaInfosWithNetNotEmpty {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:metas.count];

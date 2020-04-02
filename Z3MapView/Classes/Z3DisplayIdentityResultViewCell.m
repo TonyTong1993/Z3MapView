@@ -186,25 +186,32 @@
     _identityResult = result;
     NSString *title = @"";
     NSString *material = @"";
-    NSString *address = [self addressWithAttributes:result.attributes];
+    NSArray *addressArray = [self addressWithAttributes:result.attributes];
+    NSString *address = addressArray[1];
+    NSString *addressTitle = addressArray[0];
     NSString *dno = result.attributes[@"dno"];
+    NSArray *allKeys = [result.attributes allKeys];
     Z3FeatureLayer *featureLayer = [[Z3GISMetaQuery querier] layerIdWithDNO:dno];
-    
     if (featureLayer.geotype == 0) {
-        title = [NSString stringWithFormat:@"%ld：管段",indexPath.row+1];
+        title = [NSString stringWithFormat:@"%ld：%@",indexPath.row+1,[self deviceWithAttributes:result]];
         material = [self materialWithAttributes:result.attributes];
         if (address.length) {
-            _addressFlagLabel.text = @"所在道路：";
+            _addressFlagLabel.text = addressTitle;
         }else {
-            _addressFlagLabel.text = @"管径：";
-            address = result.attributes[@"管径"];
+            if ([allKeys containsObject:@"管径"]) {
+                _addressFlagLabel.text = @"管径：";
+                address = result.attributes[@"管径"];
+            }else {
+                _addressFlagLabel.text = @"";
+                address = @"";
+            }
         }
         _materialFlagLabel.text = @"材质：";
     }else if (featureLayer.geotype == 1) {
         title = [NSString stringWithFormat:@"%ld：%@",indexPath.row+1,[self deviceWithAttributes:result]];
         material = result.attributes[@"设备类型"];
         _materialFlagLabel.text = @"类型：";
-        _addressFlagLabel.text = @"所在道路：";
+        _addressFlagLabel.text = addressTitle;
     }
     self.deviceLabel.text = title;
     self.materialLabel.text = material;
@@ -236,13 +243,18 @@
     }
 }
 
+/*
+ *1
+ */
 - (NSString *)deviceWithAttributes:(Z3MapViewIdentityResult *)result {
     NSDictionary *attributes = result.attributes;
     NSString *device = @"";
-    if ([attributes.allKeys containsObject:@"名称"]) {
+    if ([attributes.allKeys containsObject:@"名称"] && [attributes[@"名称"] length]) {
         device = attributes[@"名称"];
     }else if([attributes.allKeys containsObject:@"组分类型"]) {
         device = attributes[@"组分类型"];
+    }else {
+         device = @"管段";
     }
     return device;
 }
@@ -255,17 +267,20 @@
     return @"";
 }
 
-- (NSString *)addressWithAttributes:(NSDictionary *)attribues {
+- (NSArray *)addressWithAttributes:(NSDictionary *)attribues {
+     NSString *key = @"";
      NSString *address = @"";
     if ([attribues.allKeys containsObject:@"所在道路"]) {
         address = attribues[@"所在道路"];
+        key = @"所在道路";
     }else if([attribues.allKeys containsObject:@"所在位置"]) {
         address = attribues[@"所在位置"];
+        key = @"所在位置";
+    }else {
+        key = @"所在位置";
     }
-    if (address.length > 0) {
-        return address;
-    }
-   return address;
+    //TODO:目前只有宿迁和苏州水利这个地方不一样
+    return @[key,address];
 }
 
 - (void)onNaviagtonClicked:(id)sender {
