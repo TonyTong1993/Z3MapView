@@ -45,8 +45,9 @@
        urlStr = [NSString stringWithFormat:@"%@/%@",rootURLPath,proxyURL];
     }
     NSURL *url = [NSURL URLWithString:urlStr];
+    
     if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgislocaltiledlayer"]) {
-        
+         NSAssert(false, @"arcgislocaltiledlayer not support");
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgistiledmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
@@ -56,12 +57,12 @@
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisfeaturelayer"]) {
         NSAssert(false, @"AGSFeatureLayer not support");
-        
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisdynamicmapservicelayer"]) {
         NSAssert(mapLayer.url.length, @"map layer url if not valid");
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
         layer.minScale = 520000; //[mapLayer.dispMinScale doubleValue];
         layer.maxScale = [mapLayer.dispMaxScale doubleValue];
+        layer.opacity = mapLayer.opacity;
         [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"agcgisvectortiledlayer"]) {
@@ -85,7 +86,7 @@
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"wmtslayer"]) {
         NSAssert(false, @"AGSWMTSLayer not support");
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"dblayer"]) {
-        
+        NSAssert(false, @"dblayer not support");
     }
     
     return nil;

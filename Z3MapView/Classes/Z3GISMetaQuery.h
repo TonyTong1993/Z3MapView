@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class Z3FeatureLayer;
+@class Z3FeatureLayer,Z3FeatureCollectionLayer;
 @interface Z3GISMetaQuery : NSObject
 + (instancetype)querier;
 
@@ -46,6 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
  @return Z3FeatureLayer
  */
 - (Z3FeatureLayer *)layerIdWithDNO:(NSString *)dno;
+
+
+/// 根据layerId查询Z3FeatureCollectionLayer,苏州水利管网模型适配
+/// @param layerId 图层ID
+- (Z3FeatureCollectionLayer *)featureCollectionLayerWithLayerId:(NSInteger)layerId;
 
 /**
  获取所有图层ID 集合
