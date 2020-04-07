@@ -13,7 +13,7 @@
 #import "Z3Theme.h"
 #import "UIColor+Z3.h"
 @interface Z3MapViewMeasurePolygonXtd()
-@property (nonatomic,strong) AGSGraphicsOverlay *sketchGraphicsOverlay;
+
 @end
 @implementation Z3MapViewMeasurePolygonXtd
 - (AGSSketchCreationMode)creationMode {
@@ -24,6 +24,8 @@
     [super dismiss];
     [self.sketchGraphicsOverlay.graphics removeAllObjects];
 }
+
+
 
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {
     AGSPolygon *geometry = (AGSPolygon *)self.mapView.sketchEditor.geometry;
@@ -37,8 +39,10 @@
                 double midX = (startPoint.x + endPoint.x) / 2;
                 double midY = (startPoint.y + endPoint.y) / 2;
                 AGSPoint *midPoint = AGSPointMake(midX, midY, geometry.spatialReference);
-                double distance = [AGSGeometryEngine distanceBetweenGeometry1:startPoint geometry2:endPoint];
+                AGSGeodeticDistanceResult *result = [AGSGeometryEngine geodeticDistanceBetweenPoint1:startPoint point2:endPoint distanceUnit:[AGSLinearUnit meters] azimuthUnit:[AGSAngularUnit degrees] curveType:AGSGeodeticCurveTypeGeodesic];
+                double distance = [result distance];
                 [self drawLengthOfSideWithMidPoint:midPoint length:distance];
+                
             }
         }
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
@@ -62,19 +66,5 @@
     [self.sketchGraphicsOverlay.graphics addObject:graphic];
 }
 
-- (AGSGraphicsOverlay *)sketchGraphicsOverlay {
-    if (!_sketchGraphicsOverlay) {
-        NSArray *graphicsOverlays = self.mapView.graphicsOverlays;
-        __block AGSGraphicsOverlay *target = nil;
-        [graphicsOverlays enumerateObjectsUsingBlock:^(AGSGraphicsOverlay *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj.overlayID isEqualToString:SKETCH_GRAPHICS_OVERLAY_ID]) {
-                target = obj;
-                *stop = YES;
-            }
-        }];
-        NSAssert(target, @"sketchGraphicsOverlay not found");
-        _sketchGraphicsOverlay = target;
-    }
-    return _sketchGraphicsOverlay;
-}
+
 @end

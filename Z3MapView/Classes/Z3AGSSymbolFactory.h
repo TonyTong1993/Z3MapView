@@ -26,13 +26,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 拉框查询，顶点AGSSymbol
 - (AGSSymbol *)buildVertexForRectSymbol;
-
     //创建SketchEditor模式下，select 顶点样式
 - (AGSSymbol *)buildSelectedVertexSymbol;
     //创建SketchEditor模式下，normal点x样式
 - (AGSSymbol *)buildNormalVertexSymbol;
     //创建SketchEditor模式下，end点x样式
-- (AGSSymbol *)buildMidVertexSymbol;
+- (AGSSymbol *)buildSelectedMidVertexSymbol;
+- (AGSSymbol *)buildNormalMidVertexSymbol;
 
 /**
  设置SketchEditor模式下,FillSymbol

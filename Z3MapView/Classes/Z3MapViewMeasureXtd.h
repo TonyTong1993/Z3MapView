@@ -9,9 +9,9 @@
 #import "Z3MapViewCommandXtd.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class AGSGraphicsOverlay;
 @interface Z3MapViewMeasureXtd : Z3MapViewCommandXtd
-
+@property (nonatomic,strong,readonly) AGSGraphicsOverlay *sketchGraphicsOverlay;
 @end
 
 NS_ASSUME_NONNULL_END

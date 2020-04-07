@@ -93,11 +93,14 @@
 
 
 - (AGSSymbol *)buildSelectedVertexSymbol {
-        //inner color 75FB4C 117 251 76 outer color F2A93C 242 169 60
-    return [self buildSelectedPonitSymbol];
+    UIColor *blue = [UIColor colorWithHex:@"#E40000"];
+    UIColor *orange = [UIColor colorWithHex:@"#B88239"];
+    AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:blue size:10];
+    symbol.outline  = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:orange width:2];
+    return symbol;
 }
 
-- (AGSSymbol *)buildMidVertexSymbol {
+- (AGSSymbol *)buildSelectedMidVertexSymbol {
         //inner color 1500F5 21 0 245 outer color F2A93C 242 169 60
     UIColor *deepBlue = [UIColor colorWithRed:21/255.0 green:0/255.0 blue:245/255.0 alpha:1];
     UIColor *orange = [UIColor colorWithRed:117/255.0 green:251/255.0 blue:76/255.0 alpha:1];
@@ -107,8 +110,22 @@
 }
 
 - (AGSSymbol *)buildNormalVertexSymbol {
-    return [self buildNormalPonitSymbol];
+    UIColor *blue = [UIColor colorWithHex:@"#1C00C3"];
+    UIColor *orange = [UIColor colorWithHex:@"#B88239"];
+    AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:blue size:10];
+    symbol.outline  = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:orange width:2];
+    return symbol;
 }
+
+- (AGSSymbol *)buildNormalMidVertexSymbol {
+    UIColor *white = [UIColor whiteColor];
+    UIColor *orange = [UIColor colorWithHex:@"#B88239"];
+    AGSSimpleMarkerSymbol *symbol = [[AGSSimpleMarkerSymbol alloc] initWithStyle:AGSSimpleMarkerSymbolStyleCircle color:white size:10];
+    symbol.outline  = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:orange width:2];
+    return symbol;
+}
+
+
 - (AGSSymbol *)buildFillSymbolWithColor:(UIColor *)color {
     AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor blackColor] width:1];
     AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleDiagonalCross color:color outline:outline];

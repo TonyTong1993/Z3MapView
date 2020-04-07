@@ -6,11 +6,11 @@
 //  Copyright © 2019 Tony Tony. All rights reserved.
 //获取位置
 
-#import "Z3MapViewCommandXtd.h"
+#import "Z3MapViewMeasureXtd.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Z3MapViewObtainLocationXtd : Z3MapViewCommandXtd
+@interface Z3MapViewObtainLocationXtd : Z3MapViewMeasureXtd
 
 @end
 

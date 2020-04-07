@@ -9,6 +9,7 @@
 #import "Z3MapViewMeasureXtd.h"
 #import <ArcGIS/ArcGIS.h>
 #import "Z3MapViewPrivate.h"
+#import "Z3AGSSymbolFactory.h"
 @interface Z3MapViewMeasureXtd()
 
 @end
@@ -38,20 +39,17 @@
     UIImage *cleanImage = [UIImage imageNamed:@"nav_clear"];
     UIBarButtonItem *cleanItem = [[UIBarButtonItem alloc] initWithImage:cleanImage style:UIBarButtonItemStylePlain target:self action:@selector(clear)];
     [rightItems addObject:cleanItem];
-//    UIImage *redoImage = [UIImage imageNamed:@"nav_redo"];
-//    UIBarButtonItem *redoItem = [[UIBarButtonItem alloc] initWithImage:redoImage style:UIBarButtonItemStylePlain target:self action:@selector(redo)];
-//    [rightItems addObject:redoItem];
-//    UIImage *undoImage = [UIImage imageNamed:@"nav_undo"];
-//    UIBarButtonItem *undoItem = [[UIBarButtonItem alloc] initWithImage:undoImage style:UIBarButtonItemStylePlain target:self action:@selector(undo)];
-//    [rightItems addObject:undoItem];
     self.targetViewController.navigationItem.rightBarButtonItems = rightItems;
 }
 
 - (void)measure{
     AGSSketchEditor *sketchEditor = [AGSSketchEditor sketchEditor];
     [self.mapView setSketchEditor:sketchEditor];
-    [self.mapView.sketchEditor startWithCreationMode:[self creationMode] editConfiguration:[self sketchEditConfiguration]];
-    
+    [sketchEditor startWithCreationMode:[self creationMode] editConfiguration:[self sketchEditConfiguration]];
+    AGSSketchStyle *style = [self style];
+    if (style) {
+        [sketchEditor setStyle:style];
+    }
 }
 
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {
@@ -61,6 +59,7 @@
 - (void)clear {
     [self.mapView.sketchEditor clearGeometry];
     [self.mapView.callout dismiss];
+    [self.sketchGraphicsOverlay.graphics removeAllObjects];
 }
 
 - (AGSSketchEditConfiguration *)sketchEditConfiguration {
@@ -74,9 +73,31 @@
 }
 
 - (AGSSketchStyle *)style {
-    return nil;
+    AGSSketchStyle *style = [[AGSSketchStyle alloc] init];
+    Z3AGSSymbolFactory *factory = [Z3AGSSymbolFactory factory];
+    style.vertexSymbol = [factory buildNormalVertexSymbol];
+    style.selectedVertexSymbol = [factory buildSelectedVertexSymbol];
+    style.selectedMidVertexSymbol = [factory buildSelectedMidVertexSymbol];
+    style.midVertexSymbol = [factory buildNormalMidVertexSymbol];
+    return style;
 }
 
+@synthesize sketchGraphicsOverlay = _sketchGraphicsOverlay;
+- (AGSGraphicsOverlay *)sketchGraphicsOverlay {
+    if (!_sketchGraphicsOverlay) {
+        NSArray *graphicsOverlays = self.mapView.graphicsOverlays;
+        __block AGSGraphicsOverlay *target = nil;
+        [graphicsOverlays enumerateObjectsUsingBlock:^(AGSGraphicsOverlay *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.overlayID isEqualToString:SKETCH_GRAPHICS_OVERLAY_ID]) {
+                target = obj;
+                *stop = YES;
+            }
+        }];
+        NSAssert(target, @"sketchGraphicsOverlay not found");
+        _sketchGraphicsOverlay = target;
+    }
+    return _sketchGraphicsOverlay;
+}
 
 
 @end
