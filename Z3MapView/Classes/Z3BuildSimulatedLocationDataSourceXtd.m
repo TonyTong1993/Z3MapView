@@ -16,11 +16,10 @@
     return AGSSketchCreationModeFreehandPolyline;
 }
 
-//TODO: 国际化
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {
-    AGSPolygon *geometry = (AGSPolygon *)self.mapView.sketchEditor.geometry;
+    AGSPolyline *geometry = (AGSPolyline *)self.mapView.sketchEditor.geometry;
     if ((geometry == nil)&&geometry.isEmpty) return;
-    double length = [AGSGeometryEngine lengthOfGeometry:geometry];
+    double length = [AGSGeometryEngine geodeticLengthOfGeometry:geometry lengthUnit:[AGSLinearUnit meters] curveType:AGSGeodeticCurveTypeGeodesic];
     double maxLength = 10*1000;//10公里
     if (length > maxLength) {
         [self showFailureAlert:@"模拟轨迹范围过大，请重新设置"];
