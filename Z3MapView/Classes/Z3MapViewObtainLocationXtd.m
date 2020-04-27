@@ -9,6 +9,7 @@
 #import "Z3MapViewObtainLocationXtd.h"
 #import "Z3MapViewPrivate.h"
 #import "Z3AGSSymbolFactory.h"
+#import <ArcGIS/ArcGIS.h>
 
 @implementation Z3MapViewObtainLocationXtd
 - (void)onListenerGeometryDidChange:(NSNotification *)notification {

@@ -278,6 +278,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
     hud.customView = filterView;
     hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
     hud.bezelView.backgroundColor = [UIColor clearColor];
+    [self setLayerPopOffsetWithHub:hud andFilterView:filterView];
 }
     
 - (void)showMapOpertionViewWithDataSource:(NSArray *)dataSource delegate:(id<Z3MapViewOperationDelegate>)delegate{
@@ -330,6 +331,20 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSAssert(_addressGraphicsOverlay, @"identityGraphicsOverlay not create");
     }
     return _addressGraphicsOverlay;
+}
+
+/**
+ 设置图层控制pop的Y轴偏移量
+ */
+-(void)setLayerPopOffsetWithHub:(MBProgressHUD *)hud andFilterView:(Z3MapViewLayerFilterView *)filterView{
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
+    CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
+    CGFloat rectStatusHeight = rectStatus.size.height;
+    CGFloat marignTop = rectStatusHeight + 44;
+    CGFloat customeViewHeight = filterView.intrinsicContentSize.height;
+    CGFloat yOffSet = marignTop + customeViewHeight * 0.5;
+    CGPoint point = CGPointMake(0, - (screenHeight / 2) + yOffSet );
+    [hud setOffset:point];
 }
     
     

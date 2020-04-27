@@ -8,6 +8,7 @@
 
 #import "Z3MapViewIdentityResponse.h"
 #import "Z3MapViewIdentityResult.h"
+#import <ArcGIS/ArcGIS.h>
 @implementation Z3MapViewIdentityResponse
 @synthesize data = _data;
 - (void)toModel {

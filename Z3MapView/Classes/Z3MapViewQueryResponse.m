@@ -9,6 +9,7 @@
 #import "Z3MapViewQueryResponse.h"
 #import "Z3MapViewIdentityResult.h"
 #import "Z3MobileConfig.h"
+#import <ArcGIS/ArcGIS.h>
 @implementation Z3MapViewQueryResponse
 @synthesize data = _data;
 - (void)toModel {
