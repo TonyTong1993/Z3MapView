@@ -88,8 +88,8 @@
         geometryType = @"esriGeometryEnvelope";
         envelop = (AGSEnvelope *)geometry;
     }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
-        geometryType = @"esriGeometryEnvelope";
-        envelop = [geometry extent];
+        geometryType = @"esriGeometryPolygon";
+        envelop = (AGSEnvelope *)geometry;
     }
     NSMutableDictionary *mparams = [NSMutableDictionary dictionary];
     if (envelop) {
