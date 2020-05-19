@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)openMapWithDestination:(CLLocation *)destination
              addressDictionary:(NSDictionary * _Nullable )addressDictionary;
+- (void)openMapWithCoordinate:(CLLocationCoordinate2D)coordiante
+            addressDictionary:(NSDictionary *)addressDictionary;
 @end
 
 NS_ASSUME_NONNULL_END

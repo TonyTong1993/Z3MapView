@@ -62,6 +62,9 @@
                       longitude:(double)longitude
                        altitude:(double)altitude
                  patialRefrence:(AGSSpatialReference *)spatialRefrence {
+    if (spatialRefrence.WKID == [AGSSpatialReference WGS84].WKID) {
+       return AGSPointMakeWGS84(latitude, longitude);
+    }
     CoorTranUtil *coorTrans = [Z3MobileConfig shareConfig].coorTrans;
     CGPoint point = [coorTrans CoorTrans:latitude lon:longitude height:altitude];
     AGSPoint *agsPoint = [self pointWithX:point.x y:point.y spatialRefrence:spatialRefrence];
