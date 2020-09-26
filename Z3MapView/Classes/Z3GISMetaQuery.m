@@ -87,6 +87,8 @@
 - (NSArray *)buildPipeNetQueryConditions {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableArray *sections = [NSMutableArray array];
+    NSString *lastSelectedPipeNetCode = [[NSUserDefaults standardUserDefaults] stringForKey:LAST_SELECTED_PIPE_NET_CODE];
+    NSInteger lastSelectedPipeNetFeatureLayerID = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_PIPE_NET_FEATURE_LAYER_ID];
     for (Z3FeatureCollectionLayer *meta in metas) {
         NSArray *features = meta.net;
         if (features.count) {
@@ -94,6 +96,7 @@
             pipeNetCondition.code = meta.code;
             pipeNetCondition.alias = meta.layername;
             NSMutableArray *featureConditions = [NSMutableArray array];
+            Z3FeatureQueryCondition *lastSelectedFeature = nil;
             for (Z3FeatureLayer *feature in features) {
                 Z3FeatureQueryCondition *condition = [[Z3FeatureQueryCondition alloc] init];
                 condition.name = feature.dname;
@@ -102,7 +105,19 @@
                 condition.featureNum = feature.dno;
                 NSArray *properties = [self buildFeaturePropertyConditionsWithFields:feature.fields];
                 condition.properties = properties;
+                if (condition.layerid == lastSelectedPipeNetFeatureLayerID) {
+                    [self bindLastQueryPropertyConditionsWithFeatureCondition:condition];
+                    lastSelectedFeature = condition;
+                }
                 [featureConditions addObject:condition];
+            }
+            //绑定上次查询过的条件
+            if ([pipeNetCondition.code isEqualToString:lastSelectedPipeNetCode]) {
+                pipeNetCondition.selectedFeatureQueryCondition = lastSelectedFeature ?: [featureConditions firstObject];
+            } else {
+                Z3FeatureQueryCondition *selectedFeatureQueryCondition = [featureConditions firstObject];
+                selectedFeatureQueryCondition.selectedProperties = @[[selectedFeatureQueryCondition.properties firstObject]];
+                pipeNetCondition.selectedFeatureQueryCondition = selectedFeatureQueryCondition;
             }
             pipeNetCondition.featureConditions = [featureConditions copy];
             [sections addObject:pipeNetCondition];
@@ -139,6 +154,36 @@
     }
     NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"findex" ascending:YES];
     return [conditons sortedArrayUsingDescriptors:@[sort]];
+}
+
+- (void)bindLastQueryPropertyConditionsWithFeatureCondition:(Z3FeatureQueryCondition *)featureCondition {
+    NSArray *lastSelectedProperties = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_SELECTED_PIPE_NET_FEATURE_PROPERTIES];
+    NSMutableArray *mproperties = [[NSMutableArray alloc] initWithCapacity:3];
+    for (NSDictionary *property in lastSelectedProperties) {
+        NSString *name = property[@"name"];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@",name];
+        Z3FeaturePropertyCondition *target = [[featureCondition.properties filteredArrayUsingPredicate:predicate] lastObject];
+        target = [target copy];
+        if (target) {
+            id value = property[@"value"];
+            if (target.disptype != 3) {
+                target.value = value;
+            } else {
+                predicate = [NSPredicate predicateWithFormat:@"name == %@",value];
+                Z3FeaturePropertyOption *option =  [[target.selectOptions filteredArrayUsingPredicate:predicate] lastObject];
+                target.value = option;
+            }
+            target.relation = property[@"relation"];
+            [mproperties addObject:target];
+        }
+    }
+    
+    if (mproperties.count) {
+        featureCondition.selectedProperties = [mproperties copy];
+        return;
+    }
+    featureCondition.selectedProperties = @[[featureCondition.properties firstObject]];
+   
 }
 
 - (NSString *)allGISMetaLayerIDs {

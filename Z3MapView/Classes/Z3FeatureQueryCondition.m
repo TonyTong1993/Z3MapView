@@ -8,6 +8,11 @@
 
 #import "Z3FeatureQueryCondition.h"
 
+NSString * const LAST_SELECTED_PIPE_NET_CODE = @"last.selected.pipe.net.code";
+NSString * const LAST_SELECTED_PIPE_NET_FEATURE_LAYER_ID = @"last.selected.pipe.net.feature.layerid";
+NSString * const LAST_SELECTED_PIPE_NET_FEATURE_PROPERTIES = @"last.selected.pipe.net.feature.properties";
+NSString * const LAST_SELECTED_PIPE_NET_FEATURE_RELATIONS = @"last.selected.pipe.net.feature.relations";
+
 @implementation Z3PipeNetQueryCondition
 
 @synthesize alias;
@@ -34,6 +39,21 @@
 @synthesize alias;
 
 @synthesize name;
+
+- (id)copyWithZone:(NSZone *)zone {
+    Z3FeaturePropertyCondition *newInstance = [[Z3FeaturePropertyCondition alloc] init];
+    newInstance.name = self.name;
+    newInstance.alias = self.alias;
+    newInstance.esritype = self.esritype;
+    newInstance.prop = self.prop;
+    newInstance.findex = self.findex;
+    newInstance.displayName = self.displayName;
+    newInstance.statisticType = self.statisticType;
+    newInstance.value = self.value;
+    newInstance.relation = self.relation;
+    newInstance.selectOptions = self.selectOptions;
+    return newInstance;
+}
 
 @end
 
