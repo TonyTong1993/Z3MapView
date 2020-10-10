@@ -15,6 +15,7 @@
 #import "Z3SimutedLocationFactory.h"
 #import "Z3GraphicFactory.h"
 #import "MBProgressHUD+Z3.h"
+#import "Z3LocationManager.h"
 @interface Z3MapViewDisplayUserLocationContext()
 @property (nonatomic,assign) BOOL showTrack;
 @end
@@ -79,6 +80,15 @@
                 [MBProgressHUD showError:[error localizedDescription]];
             }
         }];
+        
+        CLLocation *curLocation = [Z3LocationManager manager].location;
+        if (!curLocation) {
+            AGSPoint *point = [dataSource locationToAgsPoint:curLocation];
+            [self.mapView setViewpointCenter:point completion:^(BOOL finished) {
+            }];
+            [dataSource didLocateWithLocation:curLocation];
+        }
+        
         Z3AGSSymbolFactory *factory = [Z3AGSSymbolFactory factory];
         locationDisplay.defaultSymbol = [factory buildDefaultSymbol];
         locationDisplay.acquiringSymbol = [factory buildDefaultSymbol];

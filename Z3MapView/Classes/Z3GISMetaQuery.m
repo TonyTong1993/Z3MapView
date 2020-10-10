@@ -245,7 +245,7 @@
      NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     __block NSInteger layerID = -1;
     [metas enumerateObjectsUsingBlock:^(Z3FeatureCollectionLayer *meta, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([meta.layername isEqualToString:@"GISERRORREPORT"]) {
+        if ([meta.layername isEqualToString:@"GISERRORREPORT_BASE"]) {
             layerID = [meta.layerid integerValue];
             *stop = YES;
         }
@@ -256,6 +256,7 @@
 - (Z3FeatureLayer *)layerIdWithDNO:(NSString *)dno {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     __block Z3FeatureLayer *layer = nil;
+    
     [metas enumerateObjectsUsingBlock:^(Z3FeatureCollectionLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *features = obj.net;
         [features enumerateObjectsUsingBlock:^(Z3FeatureLayer *feature, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -270,6 +271,16 @@
     }];
     
     return layer;
+}
+
+- (NSString *)getLayerIdWithDNO:(NSString *)dno {
+    Z3FeatureLayer *layer = [self layerIdWithDNO:dno];
+    if(nil == layer){
+        return nil;
+    }
+    NSInteger layerid = layer.layerid;
+    
+    return [NSString stringWithFormat:@"%ld", layerid];
 }
 
 - (Z3FeatureCollectionLayer *)featureCollectionLayerWithLayerId:(NSInteger)layerId {

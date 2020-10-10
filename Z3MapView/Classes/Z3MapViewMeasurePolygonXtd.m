@@ -60,7 +60,7 @@
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
     formatter.numberStyle = NSNumberFormatterDecimalStyle;
     NSString *fDistance = [formatter stringFromNumber:[NSNumber numberWithDouble:length]];
-    NSString *label = [NSString stringWithFormat:@"%@%@",fDistance,LocalizedString(@"str_unit_meter")];
+    NSString *label = [NSString stringWithFormat:@"%@%@",fDistance,LocalizedString(@"str_unit_unit_meter")];
     CGPoint offset = CGPointMake(20, 20);
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildTextGraphicWithPoint:mapPoint text:label textColor:[UIColor colorWithHex:leftNavBarColorHex] fontFamily:[Z3Theme themeFontFamilyName] fontSize:15 offset:offset attributes:@{}];
     [self.sketchGraphicsOverlay.graphics addObject:graphic];

@@ -25,7 +25,7 @@
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
         formatter.numberStyle = NSNumberFormatterDecimalStyle;
         NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:distance]];
-        self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_meter")];
+        self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_unit_meter")];
         
         [self.mapView.callout setAccessoryButtonHidden:YES];
         [self.mapView.callout showCalloutAt:mapPoint screenOffset:CGPointZero rotateOffsetWithMap:NO animated:YES];

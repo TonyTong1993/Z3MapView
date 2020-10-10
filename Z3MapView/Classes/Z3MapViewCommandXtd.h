@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <ArcGIS/ArcGIS.h>
 #import <PromiseKit.h>
 NS_ASSUME_NONNULL_BEGIN
 @class AGSMapView,UIViewController;
@@ -26,6 +27,7 @@ typedef void(^OnComplicationBlock)(void);
 - (void)removeAllGraphics;
 - (void)setOnComplicationListener:(OnComplicationBlock)conmplication;
 - (void)post:(NSNotificationName)notificationName message:(id _Nullable)message;
+- (void)updateLocaion:(AGSLocation * _Nonnull)location;
 @end
 
 NS_ASSUME_NONNULL_END

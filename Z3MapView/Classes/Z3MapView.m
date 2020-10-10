@@ -74,3 +74,10 @@ NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification = @"zzht.d
 #warning 因项目而变化
 NSString * const Z3MapViewOnlineFeatureLayerNameKey = @"GWDT MWS SL";
 
+NSNotificationName const Z3MapViewLocationChangedNotification = @"zzht.mapview.location.changed";
+NSString * const Z3MapViewChangedLocationInfoKey = @"zzht.mapview.changed.location.key";
+
+NSNotificationName const Z3MapViewPatrolPartConfirmNotification = @"zzht.mapview.patrol.part.confirm";
+NSString * const Z3MapViewPatrolPartConfirmPartsInfoKey = @"zzht.mapview.patrol.part.confirm.parts.key";
+NSString * const Z3MapViewPatrolPartConfirmTaskInfoKey = @"zzht.mapview.patrol.part.confirm.task.key";
+

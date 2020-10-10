@@ -200,6 +200,29 @@ NS_ASSUME_NONNULL_BEGIN
                                          text:(NSString * _Nullable)text
                                    attributes:(NSDictionary * _Nullable)attributes;
 
+- (AGSGraphic *)buildGraphicHightlightPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes;
+
+- (AGSGraphic *)buildGraphicNormalPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes;
+
+- (AGSGraphic *)buildGraphicPointWithYellowImge:(AGSPoint *)point attributes:(NSDictionary *)attributes;
+
+- (AGSGraphic *)buildGraphicHightlightPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes andText:(NSString *)text;
+
+- (AGSGraphic *)buildGraphicNormalPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes andText:(NSString *)text;
+
+- (AGSGraphic *)buildGraphicPointWithYellowImge:(AGSPoint *)point attributes:(NSDictionary *)attributes andText:(NSString *)text;
+
+- (AGSGraphic *)buildSimpleMarkGraphicWithPointWithImage:(AGSPoint *)point attributes:(NSDictionary *)attributes andState:(Boolean) isNormal andConfirmState:(Boolean)isConfirm;
+
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometryWithState:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes state:(Boolean) isNormal andConfirmState:(Boolean)isConfirm;
+
+
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometryWithState:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes state:(Boolean) isNormal andConfirmState:(Boolean)isConfirm andText:(NSString *)text;
+
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygonWithState:(AGSPolygon *)polygon attributes:(NSDictionary *)attributes andState:(Boolean)isNormal andConfirmState:(Boolean)isConfirm;
+
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygonWithState:(AGSPolygon *)polygon attributes:(NSDictionary *)attributes andState:(Boolean)isNormal andConfirmState:(Boolean)isConfirm andText:(NSString *)text;
+
 /**
  创建书签类型的AGSGraphic
  
@@ -232,6 +255,11 @@ NS_ASSUME_NONNULL_BEGIN
  @return 轨迹线
  */
 - (AGSGraphic *)buildTrace:(AGSPolyline *)trace;
+
+- (AGSGraphic *)buildGraphicWithPointAndText:(AGSPoint *)point
+                                       title:(NSString *)title
+                                     content:(NSString *)content
+                                  attributes:(NSDictionary *)attr;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -55,9 +55,59 @@
     return symbol;
 }
 
-- (AGSSymbol *)buildNormalEnvelopSymbol {
-    UIColor *lightGrayColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.1];;
+- (AGSSymbol *)buildNormalEnvelopSymbol{
+    UIColor *lightGrayColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
     AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor redColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
+    return symbol;
+}
+
+- (AGSSymbol *)buildNormalEnvelopSymbolWithText:(NSString *)text {
+    UIColor *lightGrayColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor redColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
+    
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 16;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildHighlightEnvelopSymbolWithText:(NSString *)text {
+    UIColor *lightGrayColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5];
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor greenColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
+    
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 16;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildYellowEnvelopSymbolWithText:(NSString *)text {
+    UIColor *lightGrayColor = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.5];
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor greenColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
+    
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 16;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildHighlightEnvelopSymbol {
+    UIColor *lightGrayColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5];
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor greenColor] width:1];
+    AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
+    return symbol;
+}
+
+- (AGSSymbol *)buildYellowEnvelopSymbol {
+    UIColor *lightGrayColor = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.5];
+    AGSSimpleLineSymbol *outline = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor greenColor] width:1];
     AGSSimpleFillSymbol *symbol = [[AGSSimpleFillSymbol alloc] initWithStyle:AGSSimpleFillSymbolStyleSolid color:lightGrayColor outline:outline];
     return symbol;
 }
@@ -243,8 +293,107 @@
     return symbol;
 }
 
+- (AGSSymbol *)buildPointNormalSymbolWithImage {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_location_red"]];
+    symbol.width = 20;
+    symbol.height = 28;
+    
+    return symbol;
+}
+
+- (AGSSymbol *)buildPointNormalSymbolWithImageAndText:(NSString *)text {    
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_location_red"]];
+    symbol.width = 20;
+    symbol.height = 28;
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 26;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildPointHighlightSymbolWithImageAndText:(NSString *)text {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_location_green"]];
+    symbol.width = 20;
+    symbol.height = 28;
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 26;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildPointHighlightSymbolWithYellowImageAndText:(NSString *)text {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_location_yellow"]];
+    symbol.width = 20;
+    symbol.height = 28;
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:text color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 26;
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildPointHighlightSymbolWithImage {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_location_green"]];
+    symbol.width = 20;
+    symbol.height = 28;
+    
+    return symbol;
+}
+
+- (AGSSymbol *)buildPointHighlightSymbolWithYellowImage {
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"map_location_yellow"]];
+    symbol.width = 20;
+    symbol.height = 28;
+    
+    return symbol;
+}
+
 - (AGSSymbol *)buildTraceSymbol {
     AGSSimpleLineSymbol *symbol = [[AGSSimpleLineSymbol alloc] initWithStyle:AGSSimpleLineSymbolStyleSolid color:[UIColor colorWithHex:themeColorHex] width:4];
     return symbol;
+}
+
+- (AGSSymbol *)buildSymbolWithTitleAndContent:(NSString *)title
+                                      content:(NSString *)content{
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_event_manager_location"]];
+    symbol.width = 36;
+    symbol.height = 36;
+    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:title color:[UIColor colorWithHex:@"#0b6d2c"] size:15 horizontalAlignment:AGSHorizontalAlignmentRight verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol.offsetY = 64;
+    textSymbol.color = [UIColor whiteColor];
+    
+    AGSTextSymbol *textSymbol1 = [[AGSTextSymbol alloc] initWithText:content color:[UIColor colorWithHex:@"#0b6d2c"] size:15 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+    textSymbol1.fontFamily = [Z3Theme themeFontFamilyName];
+    textSymbol1.offsetY = 36;
+    textSymbol1.color = [UIColor darkTextColor];
+    
+    AGSPictureMarkerSymbol *symbol1 = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"img_cursor"]];
+    symbol1.width = 145;
+    symbol1.height = 36;
+    symbol1.offsetY = 72;
+    
+    AGSPictureMarkerSymbol *symbol11 = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"workorder_list_normal"]];
+       symbol11.width = 145;
+       symbol11.height = 36;
+       symbol11.offsetY = 36;
+    
+    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol1,symbol,symbol11,textSymbol,textSymbol1]];
+   
+    return compositeSymbol;
+}
+
+- (AGSSymbol *)buildMyLocationSymbolWithText {
+  AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"nav_clear"]];
+    return symbol;
+////    symbol.width = 20;
+////    symbol.height = 28;
+//    AGSTextSymbol *textSymbol = [[AGSTextSymbol alloc] initWithText:@"我的位置" color:[UIColor blackColor] size:12 horizontalAlignment:AGSHorizontalAlignmentCenter verticalAlignment:AGSVerticalAlignmentBaseline];
+//    textSymbol.fontFamily = [Z3Theme themeFontFamilyName];
+//    textSymbol.offsetY = 26;
+//    AGSCompositeSymbol *compositeSymbol = [[AGSCompositeSymbol alloc] initWithSymbols:@[symbol,textSymbol]];
+//    return compositeSymbol;
 }
 @end

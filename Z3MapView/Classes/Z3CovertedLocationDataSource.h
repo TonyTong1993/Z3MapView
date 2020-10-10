@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Z3CovertedLocationDataSource : AGSLocationDataSource
-
+-(void)didLocateWithLocation:(CLLocation *)location;
+-(AGSPoint*)locationToAgsPoint:(CLLocation *)location;
 @end
 
 NS_ASSUME_NONNULL_END

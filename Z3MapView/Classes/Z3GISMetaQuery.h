@@ -47,6 +47,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (Z3FeatureLayer *)layerIdWithDNO:(NSString *)dno;
 
+/**
+ 根据DNO查询layerId
+
+ @param dno dno
+ @return Z3FeatureLayer
+ */
+- (NSString *)getLayerIdWithDNO:(NSString *)dno;
+
 
 /// 根据layerId查询Z3FeatureCollectionLayer,苏州水利管网模型适配
 /// @param layerId 图层ID

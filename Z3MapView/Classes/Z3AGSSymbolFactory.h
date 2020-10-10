@@ -144,6 +144,29 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSSymbol *)buildTraceEndSymbol;
 
 - (AGSSymbol *)buildTraceSymbol;
+
+- (AGSSymbol *)buildSymbolWithTitleAndContent:(NSString *)title content:(NSString *)content;
+
+- (AGSSymbol *)buildPointNormalSymbolWithImage;
+- (AGSSymbol *)buildPointNormalSymbolWithImageAndText:(NSString *)text;
+
+- (AGSSymbol *)buildPointHighlightSymbolWithImage;
+- (AGSSymbol *)buildPointHighlightSymbolWithImageAndText:(NSString *)text;
+
+- (AGSSymbol *)buildPointHighlightSymbolWithYellowImage;
+- (AGSSymbol *)buildPointHighlightSymbolWithYellowImageAndText:(NSString *)text;
+
+
+- (AGSSymbol *)buildHighlightEnvelopSymbol;
+- (AGSSymbol *)buildYellowEnvelopSymbol;
+
+- (AGSSymbol *)buildNormalEnvelopSymbolWithText:(NSString *)text ;
+
+- (AGSSymbol *)buildHighlightEnvelopSymbolWithText:(NSString *)text ;
+
+- (AGSSymbol *)buildYellowEnvelopSymbolWithText:(NSString *)text ;
+
+- (AGSSymbol *)buildMyLocationSymbolWithText;
 @end
 
 NS_ASSUME_NONNULL_END

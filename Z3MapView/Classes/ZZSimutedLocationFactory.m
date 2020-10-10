@@ -57,6 +57,9 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:fileName ofType:@"json"];
     NSData *data = [[NSData alloc] initWithContentsOfFile:path];
     NSError __autoreleasing *error = nil;
+    if(nil == data){
+        return nil;
+    }
     NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     NSArray *trace = [result valueForKey:@"trace"];
     NSMutableArray *temp = [NSMutableArray array];

@@ -89,6 +89,14 @@ extern NSNotificationName const Z3AGSCalloutViewIPadBrowserPhotoNotification;
 
 extern NSString * const Z3MapViewOnlineFeatureLayerNameKey;
 
+extern NSNotificationName const Z3MapViewLocationChangedNotification; //
+extern NSString * const Z3MapViewChangedLocationInfoKey;
+
+extern NSNotificationName const Z3MapViewPatrolPartConfirmNotification ;
+extern NSString * const Z3MapViewPatrolPartConfirmInfoKey;
+extern NSString * const Z3MapViewPatrolPartConfirmPartsInfoKey;
+extern NSString * const Z3MapViewPatrolPartConfirmTaskInfoKey;
+
 @class Z3BookMark;
 typedef void(^ChangeSelectedBookMarkListener)(Z3BookMark *bookMark,NSUInteger index);
 typedef void(^AddBookMarkSuccess)(Z3BookMark *bookMark);

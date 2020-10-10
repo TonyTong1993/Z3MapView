@@ -13,6 +13,8 @@
 #import <YYKit/YYKit.h>
 #import "MBProgressHUD+Z3.h"
 #import "Z3URLConfig.h"
+#import "Z3User.h"
+
 @implementation Z3AGSLayerFactory
 + (instancetype)factory {
     return [[super alloc] init];
@@ -205,7 +207,7 @@
     if ([layer isKindOfClass:[AGSArcGISMapImageSublayer class]]) {
         AGSArcGISMapImageSublayer *subLayer = (AGSArcGISMapImageSublayer *)layer;
         mapLayer.ID = [@(subLayer.sublayerID) stringValue];
-    }else if ([layer isKindOfClass:[AGSArcGISMapImageLayer class]]) {
+    } else if ([layer isKindOfClass:[AGSArcGISMapImageLayer class]]) {
         AGSArcGISMapImageLayer *pLayer = (AGSArcGISMapImageLayer *)layer;
         mapLayer.ID = pLayer.layerID;
     }else if ([layer isKindOfClass:[AGSFeatureLayer class]]) {

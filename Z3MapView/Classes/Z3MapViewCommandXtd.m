@@ -98,5 +98,10 @@
     
 }
 
+
+- (void)updateLocaion:(AGSLocation * _Nonnull)location{
+    
+}
+
 @end
 

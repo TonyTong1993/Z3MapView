@@ -76,6 +76,32 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygonWithState:(AGSPolygon *)polygon attributes:(NSDictionary *)attributes andState:(Boolean)isNormal andConfirmState:(Boolean)isConfirm{
+    AGSSymbol *symbol = nil;
+    if(isNormal && !isConfirm){ //未到位 未确认
+        symbol = [[Z3AGSSymbolFactory factory] buildNormalEnvelopSymbol];
+    }else if(!isNormal && !isConfirm){ //已到位 未确认
+        symbol = [[Z3AGSSymbolFactory factory] buildYellowEnvelopSymbol];
+    } else { //已到位 已确认
+        symbol = [[Z3AGSSymbolFactory factory] buildHighlightEnvelopSymbol];
+    }
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildSimplePolygonGraphicWithPolygonWithState:(AGSPolygon *)polygon attributes:(NSDictionary *)attributes andState:(Boolean)isNormal andConfirmState:(Boolean)isConfirm andText:(NSString *)text{
+    AGSSymbol *symbol = nil;
+    if(isNormal && !isConfirm){ //未到位 未确认
+        symbol = [[Z3AGSSymbolFactory factory] buildNormalEnvelopSymbolWithText:text];
+    }else if(!isNormal && !isConfirm){ //已到位 未确认
+        symbol = [[Z3AGSSymbolFactory factory] buildYellowEnvelopSymbolWithText:text];
+    } else { //已到位 已确认
+        symbol = [[Z3AGSSymbolFactory factory] buildHighlightEnvelopSymbolWithText:text];
+    }
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:symbol attributes:attributes];
+    return graphic;
+}
+
 - (AGSGraphic *)buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)polygon color:(UIColor *)color attributes:(NSDictionary *)attributes {
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildEnvelopSymbolWithColor:color];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:polygon symbol:normalSymbol attributes:attributes];
@@ -92,11 +118,35 @@
 
 - (AGSGraphic *)buildSimpleGeometryGraphicWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes{
     if ([geometry isKindOfClass:[AGSPoint class]]) {
-        return [self buildSimpleMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+        return [self buildSimpleGeometryGraphicWithGeometry:(AGSPoint *)geometry attributes:attributes];
     }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
          return [self buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:attributes];
     }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
          return [self buildSimplePolygonGraphicWithPolygon:(AGSPolygon *)geometry attributes:attributes];
+    }
+    NSAssert(nil, @"please check geometry type");
+    return nil;
+}
+
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometryWithState:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes state:(Boolean) isNormal andConfirmState:(Boolean)isConfirm{
+    if ([geometry isKindOfClass:[AGSPoint class]]) {
+        return [self buildSimpleMarkGraphicWithPointWithImage:(AGSPoint *)geometry attributes:attributes andState:!isNormal andConfirmState:isConfirm];
+    }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
+         return [self buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:attributes];
+    }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
+         return [self buildSimplePolygonGraphicWithPolygonWithState:(AGSPolygon *)geometry attributes:attributes andState:!isNormal andConfirmState:isConfirm];
+    }
+    NSAssert(nil, @"please check geometry type");
+    return nil;
+}
+
+- (AGSGraphic *)buildSimpleGeometryGraphicWithGeometryWithState:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes state:(Boolean) isNormal andConfirmState:(Boolean)isConfirm andText:(NSString *)text{
+    if ([geometry isKindOfClass:[AGSPoint class]]) {
+        return [self buildSimpleMarkGraphicWithPointWithImage:(AGSPoint *)geometry attributes:attributes andState:!isNormal andConfirmState:isConfirm andText:text];
+    }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
+         return [self buildSimpleLineGraphicWithLine:(AGSPolyline *)geometry attributes:attributes];
+    }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
+         return [self buildSimplePolygonGraphicWithPolygonWithState:(AGSPolygon *)geometry attributes:attributes andState:!isNormal andConfirmState:isConfirm andText:text];
     }
     NSAssert(nil, @"please check geometry type");
     return nil;
@@ -246,6 +296,68 @@
 
 - (AGSGraphic *)buildBookMarkGraphicWithPoint:(AGSPoint *)point text:(NSString *)text attributes:(NSDictionary *)attributes {
     AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildBookMarkSymbolWithText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildGraphicWithPointAndText:(AGSPoint *)point title:(NSString *)title content:(NSString *)content  attributes:(NSDictionary *)attr {
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildSymbolWithTitleAndContent:title content:content];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attr];
+    return graphic;
+}
+
+- (AGSGraphic *)buildSimpleMarkGraphicWithPointWithImage:(AGSPoint *)point attributes:(NSDictionary *)attributes andState:(Boolean) isNormal andConfirmState:(Boolean)isConfirm{
+    if(isNormal &&  !isConfirm){
+        return [self buildGraphicNormalPoint:point attributes:attributes];
+    } else if(!isNormal && !isConfirm){
+        return [self buildGraphicPointWithYellowImge:point attributes:attributes];
+    } else {
+        return [self buildGraphicHightlightPoint:point attributes:attributes];
+    }
+}
+
+- (AGSGraphic *)buildSimpleMarkGraphicWithPointWithImage:(AGSPoint *)point attributes:(NSDictionary *)attributes andState:(Boolean) isNormal andConfirmState:(Boolean)isConfirm andText:(NSString *)text{
+    if(isNormal &&  !isConfirm){
+        return [self buildGraphicNormalPoint:point attributes:attributes andText:text];
+    } else if(!isNormal && !isConfirm){
+        return [self buildGraphicPointWithYellowImge:point attributes:attributes andText:text];
+    } else {
+        return [self buildGraphicHightlightPoint:point attributes:attributes andText:text];
+    }
+}
+
+- (AGSGraphic *)buildGraphicHightlightPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes andText:(NSString *)text{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildPointHighlightSymbolWithImageAndText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildGraphicNormalPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes andText:(NSString *)text{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildPointNormalSymbolWithImageAndText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildGraphicPointWithYellowImge:(AGSPoint *)point attributes:(NSDictionary *)attributes andText:(NSString *)text{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildPointHighlightSymbolWithYellowImageAndText:text];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildGraphicHightlightPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildPointHighlightSymbolWithImage];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildGraphicNormalPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildPointNormalSymbolWithImage];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildGraphicPointWithYellowImge:(AGSPoint *)point attributes:(NSDictionary *)attributes{
+    AGSSymbol *symbol = [[Z3AGSSymbolFactory factory] buildPointHighlightSymbolWithYellowImage];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:symbol attributes:attributes];
     return graphic;
 }

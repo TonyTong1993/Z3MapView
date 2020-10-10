@@ -19,6 +19,7 @@
 #import "Z3GraphicFactory.h"
 #import "Z3MapViewPrivate.h"
 #import "Z3MobileConfig.h"
+#import "Z3User.h"
 static NSString *context = @"Z3MapViewDisplayContext";
 @interface Z3MapViewDisplayContext()
 @property (nonatomic,copy) MapViewLoadStatusListener loadStatusListener;
@@ -55,14 +56,70 @@ static NSString *context = @"Z3MapViewDisplayContext";
             [layer addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
             [layer loadWithCompletion:^(NSError * _Nullable error) {
                 if (error) {
+                    NSLog(@"layer : %@load completion! error:%@",layer.name,[error localizedDescription]);
                     NSLog(@"%@",[error localizedDescription]);
+                } else {
+                    AGSArcGISMapImageLayer *imageLayer = (AGSArcGISMapImageLayer*)layer;
+                    [self checkLayerStatus:imageLayer];
                 }
             }];
         }
     }
     [self notifyMapViewLoadStatus];
 }
+
+//根据用户习惯恢复图层隐藏和显示状态
+-(void)checkLayerStatus :(AGSLayer *)layer{
+    AGSArcGISMapImageLayer *imageLayer = (AGSArcGISMapImageLayer*)layer;
+    NSMutableArray<AGSArcGISMapImageSublayer*> *mapImageSublayers = imageLayer.mapImageSublayers;
+    NSLog(@"layer:%@ contents count is: %lu",layer.name,mapImageSublayers.count);
+        
+    for (AGSArcGISMapImageSublayer *subLayer in mapImageSublayers) {
+        NSLog(@"所有图层id：%@",@(subLayer.sublayerID));//第一层级元素图层
+        NSArray *contents = subLayer.subLayerContents;
+        if([contents count] < 1){
+            subLayer.visible = [self resetLayerVisibileByLocalState:subLayer];
+            continue;
+        }
+        for (id<AGSLayerContent> subSubLayer in subLayer.subLayerContents) {
+            [self checkLayerStatusWithLayerContents:subSubLayer];
+        }
+    }
+}
+
+-(void)checkLayerStatusWithLayerContents:(id<AGSLayerContent>) sublayer {
+    NSArray *contents = sublayer.subLayerContents;
+    NSLog(@"layer:%@ contents count is: %lu",sublayer.name,contents.count);
+    if([contents count] < 1){
+        sublayer.visible = [self resetLayerVisibileByLocalState:sublayer];
+        return;
+    }
     
+    for (id<AGSLayerContent> layer in contents) {
+        [self checkLayerStatusWithLayerContents:layer];
+    }
+}
+
+-(BOOL)resetLayerVisibileByLocalState:(id<AGSLayerContent>)layer{
+    int nodeSelected = [self getLayerVisibleValueByKey:layer.name];
+    if(-1 == nodeSelected){
+        return layer.visible;
+    } else {
+       return nodeSelected;
+    }
+}
+
+//获取 复选框的勾选状态值
+-(int)getLayerVisibleValueByKey:(NSString *)name{
+    long userId = [Z3User shareInstance].uid;
+    NSString *key = [NSString stringWithFormat:@"%ld_%@_visible",userId,name];
+    NSNumber *visibleInt = [[NSUserDefaults standardUserDefaults] valueForKey:key];
+    if(nil == visibleInt){
+        return -1;
+    }
+    return visibleInt.intValue;
+}
+
 - (void)loadLayersByGeodatabases:(AGSMap *)map {
     Z3AGSLayerFactory *factory = [Z3AGSLayerFactory factory];
     NSArray *geodatabases = [factory offlineGeodatabaseFileNames];
@@ -162,6 +219,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSNumber *value = change[NSKeyValueChangeNewKey];
         AGSLoadStatus status =  [value intValue];
         if (status == AGSDrawStatusCompleted) {
+            
         }
     }
 }
