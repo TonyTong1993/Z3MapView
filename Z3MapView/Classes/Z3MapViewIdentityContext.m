@@ -66,7 +66,7 @@
 - (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
     if (self.isPause) {
         __weak typeof(self) weaksSelf = self;
-        [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:12 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
+        [self.mapView identifyGraphicsOverlay:[self identityGraphicsOverlay] screenPoint:screenPoint tolerance:2 returnPopupsOnly:NO completion:^(AGSIdentifyGraphicsOverlayResult * _Nonnull identifyResult) {
            AGSGraphic *graphic = [identifyResult.graphics firstObject];
             if (graphic) {
                 if (weaksSelf.delegate && [weaksSelf.delegate respondsToSelector:@selector(identityGraphicSuccess:mapPoint:displayType:)]) {
@@ -95,7 +95,7 @@
 - (void)identifyLayersAtScreenPoint:(CGPoint)screenPoint
                            mapPoint:(AGSPoint *)mapPoint{
     __weak typeof(self) weakSelf = self;
-    [self.mapView identifyLayersAtScreenPoint:screenPoint tolerance:22 returnPopupsOnly:NO completion:^(NSArray<AGSIdentifyLayerResult *> * _Nullable identifyResults, NSError * _Nullable error) {
+    [self.mapView identifyLayersAtScreenPoint:screenPoint tolerance:12 returnPopupsOnly:NO completion:^(NSArray<AGSIdentifyLayerResult *> * _Nullable identifyResults, NSError * _Nullable error) {
         if (error) {
             NSAssert(false, [error localizedDescription]);
             return;
@@ -167,13 +167,13 @@
                              geometry:(AGSGeometry *)geometry
                              mapPoint:(AGSPoint *)mapPoint
                              userInfo:(NSDictionary *)userInfo {
-    AGSGeometry *temp = nil;
-    if (geometry.geometryType == AGSGeometryTypePoint) {
-      temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:10];
-    }else {
-        temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
-    }
-    [self identityFeaturesWithGisServer:url geometry:temp mapPoint:mapPoint tolerance:10 userInfo:userInfo];
+//    AGSGeometry *temp = nil;
+//    if (geometry.geometryType == AGSGeometryTypePoint) {
+//      temp = geometry;
+//    }else {
+//        temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
+//    }
+    [self identityFeaturesWithGisServer:url geometry:geometry mapPoint:mapPoint tolerance:2 userInfo:userInfo];
 }
 
 - (void)identityFeaturesWithGisServer:(NSString *)url

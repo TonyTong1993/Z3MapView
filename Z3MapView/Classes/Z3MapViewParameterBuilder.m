@@ -21,10 +21,10 @@
                                      excludePipeLine:(BOOL)exclude
                                             userInfo:(NSDictionary *)userInfo{
     NSString *geometryType = @"esriGeometryEnvelope";
-    AGSEnvelope *envelop = nil;
+    AGSGeometry *envelop = nil;
     if ([geometry isKindOfClass:[AGSPoint class]]) {
-        geometryType = @"esriGeometryEnvelope";
-        envelop = [geometry extent];
+        geometryType = @"esriGeometryPoint";
+        envelop = geometry;
     }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
         geometryType = @"line";
         envelop = [geometry extent];
