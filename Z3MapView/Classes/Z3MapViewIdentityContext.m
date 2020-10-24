@@ -173,7 +173,7 @@
 //    }else {
 //        temp = [AGSGeometryEngine bufferGeometry:geometry byDistance:1];
 //    }
-    [self identityFeaturesWithGisServer:url geometry:geometry mapPoint:mapPoint tolerance:8 userInfo:userInfo];
+    [self identityFeaturesWithGisServer:url geometry:geometry mapPoint:mapPoint tolerance:16 userInfo:userInfo];
 }
 
 - (void)identityFeaturesWithGisServer:(NSString *)url
