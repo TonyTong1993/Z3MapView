@@ -19,6 +19,8 @@
 #import "Z3MapViewPrivate.h"
 #import "Z3MapView.h"
 #import "Z3MobileConfig.h"
+#import <YYKit/NSArray+YYAdd.h>
+#import <YYKit/NSDictionary+YYAdd.h>
 @interface Z3MapViewIdentityContext()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSLayer *identityLayer;
 @property (nonatomic,strong) AGSGraphicsOverlay *identityGraphicsOverlay;
@@ -239,26 +241,62 @@
     __weak typeof(self) weakSelf = self;
     [self showAccessoryView];
     self.identityRequest = [[Z3MapViewPipeAnalyseRequest alloc] initWithAbsoluteURL:url method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
-        [weakSelf handlePipeAnalyseSuccessResponse:response mapPoint:mapPoint];
+        [weakSelf handlePipeAnalyseSuccessResponse:response mapPoint:mapPoint userInfo:userInfo];
     } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
         [weakSelf handleFailureResponse:response];
     }];
     [self.identityRequest  start];
 }
 
-- (void)handlePipeAnalyseSuccessResponse:(Z3MapViewPipeAnalyseResponse *)response mapPoint:(AGSPoint *)mapPoint {
-    [self hidenAccessoryView];
-    if (response.errorMsg) {
-        [self showToast:response.errorMsg];
+- (void)handlePipeAnalyseSuccessResponse:(Z3MapViewPipeAnalyseResponse *)analyseResponse
+                                mapPoint:(AGSPoint *)mapPoint
+                                userInfo:(NSDictionary *)userInfo {
+        //新增用户影响范围的查询
+    if (analyseResponse.errorMsg) {
+        [self showToast:analyseResponse.errorMsg];
         if (_delegate && [_delegate respondsToSelector:@selector(identityContextAnaylseInfluenceFailure:)]) {
             [_delegate identityContextAnaylseInfluenceFailure:self];
         }
-    }else {
-        if (_delegate && [_delegate respondsToSelector:@selector(identityContextAnaylseInfluenceSuccess:pipeAnaylseResult:)]) {
-            [_delegate identityContextAnaylseInfluenceSuccess:self pipeAnaylseResult:response.data];
+        [self hidenAccessoryView];
+        return;
+    }
+    NSString *mainWhere = [analyseResponse mainWhere];
+    if (!mainWhere.length) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextAnaylseInfluenceSuccess:pipeAnaylseResult:)]) {
+            [self.delegate identityContextAnaylseInfluenceSuccess:self pipeAnaylseResult:analyseResponse.data];
             [self pause];
         }
+        [self hidenAccessoryView];
+        return;
     }
+    NSString *layerId = userInfo[@"layerId"];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"id"] = @"mwgs";
+    params[@"layerId"] = @"11";
+    params[@"mainWhere"] = mainWhere;
+    params[@"outFields"] = @"*";
+    params[@"returnAllatt"] = @(true);
+    params[@"orderByFields"] = @"LB_STREET_CHI,LB_BUILDING_CHI,LB_STREET_NO";
+    params[@"groupByFieldsForStatistics"] = @"LB_STREET_CHI,LB_BUILDING_CHI,LB_STREET_NO";
+    params[@"fushuWhere"] = @"1=1";
+    NSMutableArray *outStatistics = [NSMutableArray array];
+    NSDictionary *outStatisticItem = @{@"statisticType": @"COUNT",@"onStatisticField":@"DV_ID",@"outStatisticFieldName":@"用户统计"};
+    [outStatistics addObject:outStatisticItem];
+    params[@"outStatistics"] = [outStatistics jsonStringEncoded];
+    [[[Z3MapViewQueryInflenceUsersRequest alloc] initWithRelativeToURL:@"rest/services/fushuServer/queryFsInfo" method:GET parameter:params success:^(__kindof Z3BaseResponse * _Nonnull response) {
+        [analyseResponse refreshRespone:response];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextAnaylseInfluenceSuccess:pipeAnaylseResult:)]) {
+            [self.delegate identityContextAnaylseInfluenceSuccess:self pipeAnaylseResult:analyseResponse.data];
+            [self pause];
+        }
+        [self hidenAccessoryView];
+    } failure:^(__kindof Z3BaseResponse * _Nonnull response) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(identityContextAnaylseInfluenceSuccess:pipeAnaylseResult:)]) {
+            [self.delegate identityContextAnaylseInfluenceSuccess:self pipeAnaylseResult:analyseResponse.data];
+            [self pause];
+        }
+        [self hidenAccessoryView];
+    }] start];
 }
 
 - (void)handlePipeAnalyseFailureResponse:(Z3BaseResponse *)response mapPoint:(AGSPoint *)mapPoint {

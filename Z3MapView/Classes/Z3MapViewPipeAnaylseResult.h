@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,copy) NSArray *users;
 
+@property (nonatomic,copy) NSArray *influenceUsers;
+
 /**
  影响管段
  */

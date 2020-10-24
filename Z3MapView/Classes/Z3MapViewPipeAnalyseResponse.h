@@ -10,8 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Z3MapViewPipeAnalyseResponse : Z3BaseResponse
+@interface Z3MapViewQueryInflenceUsersResponse : Z3BaseResponse
 @property (nonatomic,assign) BOOL isEmpty;
 @end
+
+@interface Z3MapViewPipeAnalyseResponse : Z3BaseResponse
+@property (nonatomic,assign) BOOL isEmpty;
+- (NSString *)mainWhere;
+- (void)refreshRespone:(Z3MapViewQueryInflenceUsersResponse *)response;
+@end
+
+
+
+
 
 NS_ASSUME_NONNULL_END

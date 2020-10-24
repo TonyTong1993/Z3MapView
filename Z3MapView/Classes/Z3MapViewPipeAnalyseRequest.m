@@ -13,3 +13,9 @@
     return [Z3MapViewPipeAnalyseResponse class];
 }
 @end
+
+@implementation Z3MapViewQueryInflenceUsersRequest
+- (Class)responseClasz {
+    return [Z3MapViewQueryInflenceUsersResponse class];
+}
+@end
