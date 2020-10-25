@@ -81,9 +81,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (AGSGraphic *)buildPipeNodeMarkGraphicWithPoint:(AGSPoint *)point
                                        attributes:(NSDictionary * _Nullable)attributes;
 
-- (AGSGraphic *)buildPipelineMarkGraphicWithPoint:(AGSPoint *)point
-                                       attributes:(NSDictionary * _Nullable)attributes;
-
 - (AGSGraphic *)buildUsersMarkGraphicWithPoint:(AGSPoint *)point
                                     attributes:(NSDictionary * _Nullable)attributes;
     //地址查询-POI

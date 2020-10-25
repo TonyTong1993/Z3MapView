@@ -59,7 +59,7 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
             return [[Z3GraphicFactory factory] buildPipeNodeMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
             break;
         case 2:
-            return [[Z3GraphicFactory factory] buildPipelineMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+            return nil;
             break;
         default:
             return [[Z3GraphicFactory factory] buildUsersMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];

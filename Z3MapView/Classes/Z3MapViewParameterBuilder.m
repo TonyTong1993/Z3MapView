@@ -109,7 +109,8 @@
         [mparams addEntriesFromDictionary:userInfo];
     }
     mparams[@"returnGeometry"] = @"true";
-    mparams[@"pageSize"] = @"2000";
+    mparams[@"pagesize"] = @"2000";
+    mparams[@"pageno"] = @"1";
     return [mparams copy];
 }
 

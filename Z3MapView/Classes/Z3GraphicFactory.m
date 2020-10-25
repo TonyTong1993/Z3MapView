@@ -185,21 +185,14 @@
 
 - (AGSGraphic *)buildPipeNodeMarkGraphicWithPoint:(AGSPoint *)point
                                              attributes:(NSDictionary * _Nullable)attributes{
-    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakValvesSymbol];
-    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
-    return graphic;
-}
-
-- (AGSGraphic *)buildPipelineMarkGraphicWithPoint:(AGSPoint *)point
-                                             attributes:(NSDictionary * _Nullable)attributes{
-    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakValvesSymbol];
+    AGSPictureMarkerSymbol *normalSymbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_pipe_node"]];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
     return graphic;
 }
 
 - (AGSGraphic *)buildUsersMarkGraphicWithPoint:(AGSPoint *)point
                                              attributes:(NSDictionary * _Nullable)attributes{
-    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakValvesSymbol];
+    AGSPictureMarkerSymbol *normalSymbol = [[AGSPictureMarkerSymbol alloc] initWithImage:[UIImage imageNamed:@"icon_mark_user"]];
     AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
     return graphic;
 }
