@@ -278,6 +278,7 @@
     params[@"layerId"] = layerId;
     params[@"mainWhere"] = mainWhere;
     params[@"outFields"] = @"*";
+    params[@"returnAllatt"] = @"true";
     params[@"orderByFields"] = @"LB_STREET_CHI,LB_BUILDING_CHI,LB_STREET_NO";
     params[@"groupByFieldsForStatistics"] = @"LB_STREET_CHI,LB_BUILDING_CHI,LB_STREET_NO";
     NSMutableArray *outStatistics = [NSMutableArray array];
