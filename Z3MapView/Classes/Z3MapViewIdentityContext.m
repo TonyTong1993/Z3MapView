@@ -19,6 +19,7 @@
 #import "Z3MapViewPrivate.h"
 #import "Z3MapView.h"
 #import "Z3MobileConfig.h"
+#import "Z3GISMetaQuery.h"
 #import <YYKit/NSArray+YYAdd.h>
 #import <YYKit/NSDictionary+YYAdd.h>
 @interface Z3MapViewIdentityContext()<AGSGeoViewTouchDelegate>
@@ -269,16 +270,16 @@
         [self hidenAccessoryView];
         return;
     }
-    NSString *layerId = userInfo[@"layerId"];
+    
+    //TODO: 挂接图层ID从Users字段获取，循环执行下面的接口，拼接影响用户的数据结果
+    NSString *layerId = [Z3GISMetaQuery querier].peiShuiDianLayerId;
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"id"] = @"mwgs";
-    params[@"layerId"] = @"11";
+    params[@"layerId"] = layerId;
     params[@"mainWhere"] = mainWhere;
     params[@"outFields"] = @"*";
-    params[@"returnAllatt"] = @(true);
     params[@"orderByFields"] = @"LB_STREET_CHI,LB_BUILDING_CHI,LB_STREET_NO";
     params[@"groupByFieldsForStatistics"] = @"LB_STREET_CHI,LB_BUILDING_CHI,LB_STREET_NO";
-    params[@"fushuWhere"] = @"1=1";
     NSMutableArray *outStatistics = [NSMutableArray array];
     NSDictionary *outStatisticItem = @{@"statisticType": @"COUNT",@"onStatisticField":@"DV_ID",@"outStatisticFieldName":@"用户统计"};
     [outStatistics addObject:outStatisticItem];

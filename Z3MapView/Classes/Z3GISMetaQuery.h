@@ -153,6 +153,10 @@ NS_ASSUME_NONNULL_BEGIN
  @return ID
  */
 - (NSString *)bookMarkLayerId;
+/*
+ 获取配水点图层ID
+ */
+-(NSString *)peiShuiDianLayerId;
 @end
 
 NS_ASSUME_NONNULL_END
