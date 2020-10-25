@@ -22,6 +22,7 @@
 @property (nonatomic,strong) Z3MapViewIdentityResult *result;//管段
 @property (nonatomic,copy) QueryPipeComplication queryPipeComplication;
 @property (nonatomic,strong) NSMutableSet *mset;
+@property (nonatomic,assign) NSUInteger type;
 @end
 @implementation Z3MapViewQueryLeakPipeXtd
 static  CGFloat PipeLeakCalloutViewWidth = 100.0f;
@@ -50,7 +51,20 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 }
 
 - (AGSGraphic *)pointGraphicForDisplayIdentityResultInMapViewWithGeometry:(AGSGeometry *)geometry attributes:(NSDictionary *)attributes {
-   return [[Z3GraphicFactory factory] buildPipeLeakValvesMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+    switch (_type) {
+        case 0:
+            return [[Z3GraphicFactory factory] buildPipeLeakValvesMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+            break;
+        case 1:
+            return [[Z3GraphicFactory factory] buildPipeNodeMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+            break;
+        case 2:
+            return [[Z3GraphicFactory factory] buildPipelineMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+            break;
+        default:
+            return [[Z3GraphicFactory factory] buildUsersMarkGraphicWithPoint:(AGSPoint *)geometry attributes:attributes];
+            break;
+    }
 }
 
 - (AGSGeometry *)identityContext:(Z3MapViewIdentityContext *)context
@@ -130,7 +144,8 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 
 }
     
-- (void)switchDisplayFeatues:(NSArray *)features closeArea:(nonnull AGSPolygon *)closeArea{
+- (void)switchDisplayFeatues:(NSArray *)features closeArea:(nonnull AGSPolygon *)closeArea type:(NSUInteger)type{
+    _type = type;
     [self.displayIdentityResultContext updatePipeAnalyseResults:features closeArea:closeArea mapPoint:self.tapLocation];
 }
 

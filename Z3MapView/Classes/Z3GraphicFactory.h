@@ -77,6 +77,15 @@ NS_ASSUME_NONNULL_BEGIN
     //爆管分析-阀门
 - (AGSGraphic *)buildPipeLeakValvesMarkGraphicWithPoint:(AGSPoint *)point
                                              attributes:(NSDictionary * _Nullable)attributes;
+
+- (AGSGraphic *)buildPipeNodeMarkGraphicWithPoint:(AGSPoint *)point
+                                       attributes:(NSDictionary * _Nullable)attributes;
+
+- (AGSGraphic *)buildPipelineMarkGraphicWithPoint:(AGSPoint *)point
+                                       attributes:(NSDictionary * _Nullable)attributes;
+
+- (AGSGraphic *)buildUsersMarkGraphicWithPoint:(AGSPoint *)point
+                                    attributes:(NSDictionary * _Nullable)attributes;
     //地址查询-POI
 - (AGSGraphic *)buildPOIGraphicWithPoint:(AGSPoint *)point
                                     text:(NSString *)text

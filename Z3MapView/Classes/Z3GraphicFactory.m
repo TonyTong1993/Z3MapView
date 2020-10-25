@@ -183,6 +183,27 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildPipeNodeMarkGraphicWithPoint:(AGSPoint *)point
+                                             attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakValvesSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildPipelineMarkGraphicWithPoint:(AGSPoint *)point
+                                             attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakValvesSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
+- (AGSGraphic *)buildUsersMarkGraphicWithPoint:(AGSPoint *)point
+                                             attributes:(NSDictionary * _Nullable)attributes{
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPipeLeakValvesSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 - (AGSGraphic *)buildCloseValvesMarkGraphicWithPoint:(AGSPoint *)point
                                              attributes:(NSDictionary * _Nullable)attributes{
     AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildFlagSymbol];

@@ -26,7 +26,7 @@ typedef void(^QueryPipeComplication)(Z3MapViewIdentityResult *result);
  */
 - (void)searchRelativeValves:(NSString * _Nullable)valveNods;
     
-- (void)switchDisplayFeatues:(NSArray *)features closeArea:(AGSPolygon *)closeArea;
+- (void)switchDisplayFeatues:(NSArray *)features closeArea:(AGSPolygon *)closeArea type:(NSUInteger)type;
     
 - (void)clearAnalyseResults;
 @end
