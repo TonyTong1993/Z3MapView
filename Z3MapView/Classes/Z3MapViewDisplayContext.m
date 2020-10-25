@@ -31,6 +31,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
 
 @property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
 @property (nonatomic,strong) AGSGeodatabase *gdb;
+@property (nonatomic,assign) BOOL isNeedCheckLayerStatus;
 @end
 @implementation Z3MapViewDisplayContext
     
@@ -41,6 +42,10 @@ static NSString *context = @"Z3MapViewDisplayContext";
         [self loadAGSLayers];
     }
     return self;
+}
+
+- (void)setIsNeedCheckLayerStatus:(BOOL)isCheck{
+    _isNeedCheckLayerStatus = isCheck;
 }
     
 - (void)loadAGSLayers {
@@ -59,6 +64,9 @@ static NSString *context = @"Z3MapViewDisplayContext";
                     NSLog(@"layer : %@load completion! error:%@",layer.name,[error localizedDescription]);
                     NSLog(@"%@",[error localizedDescription]);
                 } else {
+                    if(!_isNeedCheckLayerStatus){
+                        return;
+                    }
                     AGSArcGISMapImageLayer *imageLayer = (AGSArcGISMapImageLayer*)layer;
                     [self checkLayerStatus:imageLayer];
                 }

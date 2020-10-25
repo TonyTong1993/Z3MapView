@@ -71,6 +71,16 @@
     return featureCollectionLayers;
 }
 
+- (NSArray *)querySZSLFeatureCollectionLayer {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    NSMutableArray *featureCollectionLayers = [[NSMutableArray alloc] initWithCapacity:5];
+    [metas enumerateObjectsUsingBlock:^(Z3FeatureCollectionLayer *meta, NSUInteger idx, BOOL * _Nonnull stop) {
+         [featureCollectionLayers addObject:meta];
+    }];
+    return featureCollectionLayers;
+}
+
+
 - (NSString *)targetLayerIDWithLayerName:(NSString *)layerName {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     __block NSString *layerID = nil;

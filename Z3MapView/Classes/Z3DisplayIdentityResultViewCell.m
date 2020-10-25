@@ -182,7 +182,7 @@
 
 - (void)setIdentityResult:(Z3MapViewIdentityResult *)result
                 indexPath:(NSIndexPath *)indexPath
-              displayType:(NSInteger)displayType{
+              displayType:(NSInteger)displayType datasourceCount:(NSInteger)totalCount{
     _identityResult = result;
     NSString *title = @"";
     NSString *material = @"";
@@ -193,7 +193,8 @@
     NSArray *allKeys = [result.attributes allKeys];
     Z3FeatureLayer *featureLayer = [[Z3GISMetaQuery querier] layerIdWithDNO:dno];
     if (featureLayer.geotype == 0) {
-        title = [NSString stringWithFormat:@"%ld：%@",indexPath.row+1,[self deviceWithAttributes:result]];
+        title = [NSString stringWithFormat:@"%ld：%@", totalCount - 1 -  indexPath.row + 1,[self deviceWithAttributes:result]];
+        //title = [NSString stringWithFormat:@"%ld：%@",indexPath.row+1,[self deviceWithAttributes:result]];
         material = [self materialWithAttributes:result.attributes];
         if (address.length) {
             _addressFlagLabel.text = addressTitle;

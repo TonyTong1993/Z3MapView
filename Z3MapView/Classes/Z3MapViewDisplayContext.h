@@ -23,6 +23,7 @@ typedef void(^MapViewLoadStatusListener)(NSInteger status);
 
 //设置map layer load status listener
 - (void)setMapViewLoadStatusListener:(MapViewLoadStatusListener)listener;
+- (void)setIsNeedCheckLayerStatus:(BOOL)isCheck;
 
 //设置mapView viewpoint
 - (void)zoomIn;

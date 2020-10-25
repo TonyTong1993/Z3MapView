@@ -103,7 +103,7 @@ static NSString *Z3DisplayIdentityResultViewCell_reuseIdentifier = @"Z3DisplayId
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     Z3DisplayIdentityResultViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:Z3DisplayIdentityResultViewCell_reuseIdentifier forIndexPath:indexPath];
     Z3MapViewIdentityResult *result = self.dataSource[indexPath.row];
-    [cell setIdentityResult:result indexPath:indexPath displayType:_dispalyType];
+    [cell setIdentityResult:result indexPath:indexPath displayType:_dispalyType datasourceCount:self.dataSource.count];
     return cell;
 }
 

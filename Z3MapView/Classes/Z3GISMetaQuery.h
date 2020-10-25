@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 查询元数据中所有包含管网的图层
 - (NSArray *)queryAllContainNetsFeatureCollectionLayer;
 
+/// 查询SZSL元数据 非管网元素
+- (NSArray *)querySZSLFeatureCollectionLayer;
+
     /// 获取目标图层的ID
     /// @param layerName 目标图层名字
 - (NSString *)targetLayerIDWithLayerName:(NSString *)layerName;
