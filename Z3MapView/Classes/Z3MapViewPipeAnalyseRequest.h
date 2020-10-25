@@ -14,4 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface Z3MapViewQueryInflenceUsersRequest : Z3BaseRequest
+
+@end
+
 NS_ASSUME_NONNULL_END

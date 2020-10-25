@@ -207,6 +207,20 @@
     return mstr;
 }
 
+-(NSString *)peiShuiDianLayerId {
+    NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
+    __block NSString *layerId = @"";
+    for (Z3FeatureCollectionLayer *meta in metas) {
+        [meta.net enumerateObjectsUsingBlock:^(Z3FeatureLayer *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.dname isEqualToString:@"DILIVERY_POINT"]) {
+                layerId = @(obj.layerid).stringValue;
+                *stop = YES;
+            }
+        }];
+    }
+    return layerId;
+}
+
 - (NSString *)allExcludePipelineLayerIDs {
     NSArray *metas = [Z3MobileConfig shareConfig].gisMetas;
     NSMutableString *mstr = [[NSMutableString alloc] initWithString:@"all:"];

@@ -10,6 +10,11 @@
 #import "Z3MapViewPipeAnaylseResult.h"
 #import "Z3MapViewIdentityResult.h"
 #import <ArcGIS/ArcGIS.h>
+
+@interface Z3MapViewPipeAnalyseResponse ()
+@property (nonatomic,copy) NSString *mainWhere;
+@end
+
 @implementation Z3MapViewPipeAnalyseResponse
 @synthesize data = _data,errorMsg = _errorMsg;
 - (void)toModel {
@@ -45,17 +50,23 @@
     
     NSArray *users = usersObj[@"results"];
     NSMutableArray *musers = [[NSMutableArray alloc] init];
+    NSMutableArray *factilityIDs = [NSMutableArray array];
     for (NSDictionary *json in users) {
         Z3MapViewIdentityResult *identityResult = [Z3MapViewIdentityResult modelWithJSON:json];
         NSDictionary *geometry = json[@"geometry"];
         identityResult.geometry = (AGSGeometry *)[AGSGeometry fromJSON:geometry error:nil];
         NSDictionary *attributes = json[@"attributes"];
+        NSString *factilityID = attributes[@"FACILITYID"];
+        [factilityIDs addObject:[NSString stringWithFormat:@"'%@'",factilityID]];
         [identityResult.attributes addEntriesFromDictionary:attributes];
         [identityResult.attributes setValue:@(identityResult.layerId) forKey:@"layerId"];
         [musers addObject:identityResult];
     }
-     result.users = [musers copy];
-    
+    if (factilityIDs.count) {
+        NSString *factilityIDsString = [factilityIDs componentsJoinedByString:@","];
+        _mainWhere = [NSString stringWithFormat:@"FACILITYID in ( %@ )",factilityIDsString];
+    }
+    result.users = [musers copy];
     NSArray *closeLines = closeLinesObj[@"results"];
     NSMutableArray *mcloseLines = [[NSMutableArray alloc] init];
     for (NSDictionary *json in closeLines) {
@@ -83,8 +94,22 @@
     result.closeNodes = [mcloseNodes copy];
     
     _data = result;
-    
 }
 
+- (void)refreshRespone:(Z3MapViewQueryInflenceUsersResponse *)response {
+    Z3MapViewPipeAnaylseResult *result = self.data;
+    result.influenceUsers = response.data;
+}
+@end
+
+@implementation Z3MapViewQueryInflenceUsersResponse
+
+@synthesize data = _data;
+- (void)toModel {
+    NSInteger count = [self.responseJSONObject[@"count"] integerValue];
+    _isEmpty = count <= 0;
+    NSArray *features = self.responseJSONObject[@"features"];
+    _data = features;
+}
 
 @end
