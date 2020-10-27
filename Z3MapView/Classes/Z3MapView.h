@@ -97,6 +97,8 @@ extern NSString * const Z3MapViewPatrolPartConfirmInfoKey;
 extern NSString * const Z3MapViewPatrolPartConfirmPartsInfoKey;
 extern NSString * const Z3MapViewPatrolPartConfirmTaskInfoKey;
 
+extern NSString * const Z3IPadUnRegistAllNotification;
+
 @class Z3BookMark;
 typedef void(^ChangeSelectedBookMarkListener)(Z3BookMark *bookMark,NSUInteger index);
 typedef void(^AddBookMarkSuccess)(Z3BookMark *bookMark);

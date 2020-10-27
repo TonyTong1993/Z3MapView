@@ -81,3 +81,6 @@ NSNotificationName const Z3MapViewPatrolPartConfirmNotification = @"zzht.mapview
 NSString * const Z3MapViewPatrolPartConfirmPartsInfoKey = @"zzht.mapview.patrol.part.confirm.parts.key";
 NSString * const Z3MapViewPatrolPartConfirmTaskInfoKey = @"zzht.mapview.patrol.part.confirm.task.key";
 
+//发送解注册所有消息通知
+NSNotificationName const Z3IPadUnRegistAllNotification = @"zzht.device.unregist.all.notification";
+
