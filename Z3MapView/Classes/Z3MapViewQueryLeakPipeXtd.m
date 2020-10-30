@@ -128,7 +128,13 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 
 - (void)searchRelativeValves:(NSString *)valveNods {
     NSString *layerID = [NSString stringWithFormat:@"%ld",self.result.layerId];
-    NSString *objectId = self.result.attributes[@"gid"];
+    NSString *objectId;
+    if([self.result.attributes containsObjectForKey:@"GID"]){
+        objectId = self.result.attributes[@"GID"];
+    }else{
+        objectId = self.result.attributes[@"gid"];
+    }
+    
     NSDictionary *arguments = @{
                                 @"layerId":layerID,
                                 @"objectId":objectId ?:@"",
