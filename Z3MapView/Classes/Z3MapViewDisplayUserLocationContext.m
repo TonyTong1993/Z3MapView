@@ -82,10 +82,10 @@
         }];
         
         CLLocation *curLocation = [Z3LocationManager manager].location;
-        if (!curLocation) {
-            AGSPoint *point = [dataSource locationToAgsPoint:curLocation];
-            [self.mapView setViewpointCenter:point completion:^(BOOL finished) {
-            }];
+        if (curLocation) {
+//            AGSPoint *point = [dataSource locationToAgsPoint:curLocation];
+//            [self.mapView setViewpointCenter:point completion:^(BOOL finished) {
+//            }];
             [dataSource didLocateWithLocation:curLocation];
         }
         
