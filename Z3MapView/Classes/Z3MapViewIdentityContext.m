@@ -50,7 +50,7 @@
     if ([self.identityRequest isExecuting]) {
         [self.identityRequest.requestTask cancel];
     }
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:Z3HUDIdentityResultDiplayViewDidChangeSelectIndexNotification object:nil];
 }
 
 - (void)setIdentityURL:(NSString *)url {
