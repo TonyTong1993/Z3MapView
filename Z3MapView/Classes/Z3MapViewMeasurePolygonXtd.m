@@ -47,7 +47,10 @@
         }
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
         formatter.numberStyle = NSNumberFormatterDecimalStyle;
-        NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:area]];
+        NSString *areaStr = [NSString stringWithFormat:@"%.1f", area]; //保留1位小数
+        double areaDouble = [areaStr doubleValue];
+        NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble: areaDouble]];
+        //NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:area]];
         self.mapView.callout.title = LocalizedString(@"str_map_area");
         self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_square_meter")];
         [self.mapView.callout setAccessoryButtonHidden:YES];
@@ -59,7 +62,10 @@
 - (void)drawLengthOfSideWithMidPoint:(AGSPoint *)mapPoint length:(double)length {
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
     formatter.numberStyle = NSNumberFormatterDecimalStyle;
-    NSString *fDistance = [formatter stringFromNumber:[NSNumber numberWithDouble:length]];
+    NSString *distanceStr = [NSString stringWithFormat:@"%.1f", length]; //保留1位小数
+    double distanceDouble = [distanceStr doubleValue];
+    NSString *fDistance = [formatter stringFromNumber:[NSNumber numberWithDouble: distanceDouble]];
+    //NSString *fDistance = [formatter stringFromNumber:[NSNumber numberWithDouble:length]];
     NSString *label = [NSString stringWithFormat:@"%@%@",fDistance,LocalizedString(@"str_unit_unit_meter")];
     CGPoint offset = CGPointMake(20, 20);
     AGSGraphic *graphic = [[Z3GraphicFactory factory] buildTextGraphicWithPoint:mapPoint text:label textColor:[UIColor colorWithHex:leftNavBarColorHex] fontFamily:[Z3Theme themeFontFamilyName] fontSize:15 offset:offset attributes:@{}];
