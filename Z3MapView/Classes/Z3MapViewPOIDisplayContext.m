@@ -69,8 +69,18 @@
         _current = graphic;
         __weak typeof(self) weakSelf = self;
         [self.mapView setViewpointCenter:(AGSPoint *)_current.geometry completion:^(BOOL finished) {
-            if (self.isShowPopup) {
-                [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+            double scale =  self.mapView.mapScale;
+            if (scale > 1000) {
+                [self.mapView setViewpointScale:500 completion:^(BOOL finished) {
+                    if (self.isShowPopup) {
+                        [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+                    }
+                    
+                }];
+            } else {
+                if (self.isShowPopup) {
+                    [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+                }
             }
         }];
     }
