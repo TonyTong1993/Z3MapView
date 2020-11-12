@@ -31,7 +31,8 @@
 
 - (NSString *)dispayText {
     NSString *code = self.attributes[@"FACILITYID"] ?:@"";
-    return [NSString stringWithFormat:@"%@ 编号:%@",self.value,code];
+    NSString *no = NSLocalizedString(@"mt_field_pipe_num", @"编号");
+    return [NSString stringWithFormat:@"%@ %@:%@",self.value,no,code];
 }
 
 - (NSMutableDictionary<NSString *,id> *)attributes {
