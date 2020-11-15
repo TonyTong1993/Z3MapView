@@ -80,10 +80,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
 -(void)checkLayerStatus :(AGSLayer *)layer{
     AGSArcGISMapImageLayer *imageLayer = (AGSArcGISMapImageLayer*)layer;
     NSMutableArray<AGSArcGISMapImageSublayer*> *mapImageSublayers = imageLayer.mapImageSublayers;
-    NSLog(@"layer:%@ contents count is: %lu",layer.name,mapImageSublayers.count);
-        
     for (AGSArcGISMapImageSublayer *subLayer in mapImageSublayers) {
-        NSLog(@"所有图层id：%@",@(subLayer.sublayerID));//第一层级元素图层
         NSArray *contents = subLayer.subLayerContents;
         if([contents count] < 1){
             subLayer.visible = [self resetLayerVisibileByLocalState:subLayer];

@@ -12,8 +12,10 @@
 #import "Z3MapPOI.h"
 #import "Z3GraphicFactory.h"
 #import "Z3POICalloutView.h"
+#import "Z3CoordinateConvertFactory.h"
 @interface Z3MapViewPOIDisplayContext ()<AGSGeoViewTouchDelegate>
 @property (nonatomic,strong) AGSGraphicsOverlay *displayPOIGraphicsOverlay;
+@property (nonatomic,strong) NSMutableArray *graphics;
 @property (nonatomic,strong) AGSGraphic *current;
 @end
 @implementation Z3MapViewPOIDisplayContext
@@ -42,14 +44,50 @@
 
 - (void)buildGraphics {
     NSMutableArray *graphics = [[NSMutableArray alloc] init];
+    NSMutableArray *totalGraphics = [[NSMutableArray alloc] init];
+    Z3CoordinateConvertFactory *factory = [Z3CoordinateConvertFactory factory];
     for (int i = 0; i < self.pois.count; i++) {
         Z3MapPOI *result = self.pois[i];
         AGSGeometry *geometry = [result toGeometry];
         NSString *text = [NSString stringWithFormat:@"%d",(i+1)];
-        AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:geometry text:text attributes:result.attributes];
-         [graphics addObject:graphic];
+        
+        switch (geometry.geometryType) {
+            case AGSGeometryTypePoint:
+            {
+            AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:geometry text:text attributes:result.attributes];
+            [graphics addObject:graphic];
+            [totalGraphics addObject:graphic];
+            }
+                break;
+            case AGSGeometryTypePolyline:
+            {
+            AGSGeometry *labelPoint = [factory labelPointForGeometry:geometry];
+            AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:geometry text:text attributes:result.attributes];
+            [totalGraphics addObject:graphic];
+           graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:labelPoint text:text attributes:result.attributes];
+            [graphics addObject:graphic];
+            [totalGraphics addObject:graphic];
+           
+            
+            }
+                break;
+            case AGSGeometryTypePolygon:
+            {
+            AGSGeometry *polygon = [factory labelPointForGeometry:geometry];
+            AGSGraphic *graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:geometry text:text attributes:result.attributes];
+            [totalGraphics addObject:graphic];
+            graphic = [[Z3GraphicFactory factory] buildPOIGraphicWithGeometry:polygon text:text attributes:result.attributes];
+            [graphics addObject:graphic];
+            [totalGraphics addObject:graphic];
+            }
+                break;
+            default:
+                break;
+        }
+        
     }
-    [self.displayPOIGraphicsOverlay.graphics addObjectsFromArray:graphics];
+    self.graphics = graphics;
+    [self.displayPOIGraphicsOverlay.graphics addObjectsFromArray:totalGraphics];
 }
 
 - (void)setSelectPOIAtIndexPath:(NSIndexPath *)indexPath {
@@ -57,7 +95,7 @@
 }
 
 - (void)setSelectPOIAtIndex:(NSUInteger)index {
-    NSMutableArray *graphics = self.displayPOIGraphicsOverlay.graphics;
+    NSMutableArray *graphics = self.graphics;
     NSUInteger count = graphics.count;
     if (count < index) {
         return;
@@ -68,7 +106,9 @@
         [_current setSelected:NO];
         _current = graphic;
         __weak typeof(self) weakSelf = self;
-        [self.mapView setViewpointCenter:(AGSPoint *)_current.geometry completion:^(BOOL finished) {
+        Z3CoordinateConvertFactory *factory = [Z3CoordinateConvertFactory factory];
+        AGSPoint *labelPoint = [factory labelPointForGeometry:graphic.geometry];
+        [self.mapView setViewpointCenter:labelPoint completion:^(BOOL finished) {
             if (self.isShowPopup) {
                 [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
             }
@@ -79,6 +119,7 @@
 - (void)dismissPOIs {
     [self.mapView.callout dismiss];
     [self.displayPOIGraphicsOverlay.graphics removeAllObjects];
+    [self.graphics removeAllObjects];
 }
 
 - (void)geoView:(AGSGeoView *)geoView didTapAtScreenPoint:(CGPoint)screenPoint mapPoint:(AGSPoint *)mapPoint {
