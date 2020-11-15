@@ -24,7 +24,9 @@
         self.mapView.callout.title = LocalizedString(@"str_measure_length_title");
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
         formatter.numberStyle = NSNumberFormatterDecimalStyle;
-        NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:distance]];
+        NSString *distanceStr = [NSString stringWithFormat:@"%.1f", distance];
+        double distanceDouble = [distanceStr doubleValue];
+        NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble: distanceDouble]];
         self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_unit_meter")];
         
         [self.mapView.callout setAccessoryButtonHidden:YES];

@@ -108,11 +108,22 @@
         __weak typeof(self) weakSelf = self;
         Z3CoordinateConvertFactory *factory = [Z3CoordinateConvertFactory factory];
         AGSPoint *labelPoint = [factory labelPointForGeometry:graphic.geometry];
-        [self.mapView setViewpointCenter:labelPoint completion:^(BOOL finished) {
-            if (self.isShowPopup) {
-                [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
-            }
-        }];
+        double scale =  self.mapView.mapScale;
+        if (scale > 1000) {
+            [self.mapView setViewpointScale:500 completion:^(BOOL finished) {
+                [self.mapView setViewpointCenter:labelPoint completion:^(BOOL finished) {
+                    if (self.isShowPopup) {
+                        [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+                    }
+                }];
+            }];
+        } else {
+            [self.mapView setViewpointCenter:labelPoint completion:^(BOOL finished) {
+                if (self.isShowPopup) {
+                    [weakSelf.mapView.callout showCalloutForGraphic:graphic tapLocation:nil animated:YES];
+                }
+            }];
+        }
     }
 }
 
