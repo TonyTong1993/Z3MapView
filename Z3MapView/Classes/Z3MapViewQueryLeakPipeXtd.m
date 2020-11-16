@@ -16,6 +16,7 @@
 #import "Z3MobileConfig.h"
 #import "Z3MobileTask.h"
 #import "Z3QueryTaskHelper.h"
+#import "MBProgressHUD.h"
 @interface Z3MapViewQueryLeakPipeXtd()<Z3HUDPipeLeakCalloutViewDelegate>
 @property (nonatomic,strong) AGSPoint *tapLocation;//管段上距离触发点最近的点
 @property (nonatomic,strong) Z3MapViewIdentityResult *result;//管段
@@ -121,9 +122,21 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 }
     
 - (void)calloutView:(UIView *)sender closeValve:(NSString *)valveId {
+    if(nil == valveId){
+        [self showToast:@"阀门id为空！"];
+        return;
+    }
+        
     [self.mset addObject:valveId];
     NSString *valveIds = [[self.mset allObjects] componentsJoinedByString:@","];
     [self searchRelativeValves:valveIds];
+}
+
+- (void)showToast:(NSString *)message {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.targetViewController.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = message;
+    [hud hideAnimated:YES afterDelay:1.0];
 }
 
 - (void)searchRelativeValves:(NSString *)valveNods {

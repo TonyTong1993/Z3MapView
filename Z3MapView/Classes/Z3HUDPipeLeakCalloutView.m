@@ -103,7 +103,13 @@ static  CGFloat PipeLeakCalloutViewHeight = 32.0f;
 }
 
 - (void)onClickedValveBtn:(id)sender {
-    NSString *gid = self.result.attributes[@"gid"];
+    NSString *gid;
+    if([self.result.attributes containsObjectForKey:@"GID"]){
+        gid = self.result.attributes[@"GID"];
+    }else{
+        gid = self.result.attributes[@"gid"];
+    }
+    //NSString *gid = self.result.attributes[@"gid"];
     if (_delegate && [_delegate respondsToSelector:@selector(calloutView:closeValve:)]) {
         [_delegate calloutView:self closeValve:gid];
     }
