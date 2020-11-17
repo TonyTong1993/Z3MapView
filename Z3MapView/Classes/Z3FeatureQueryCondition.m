@@ -52,6 +52,7 @@ NSString * const LAST_SELECTED_PIPE_NET_FEATURE_RELATIONS = @"last.selected.pipe
     newInstance.value = self.value;
     newInstance.relation = self.relation;
     newInstance.selectOptions = self.selectOptions;
+    newInstance.disptype = self.disptype;
     return newInstance;
 }
 

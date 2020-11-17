@@ -148,7 +148,8 @@
             condition.disptype = obj.disptype;
             condition.esritype = obj.esritype;
             condition.prop = obj.prop;
-            if (obj.disptype == 3) {
+            if (obj.disptype == 3 ||
+                obj.disptype == 4) {
                 NSMutableArray *options = [[NSMutableArray alloc] initWithCapacity:obj.values.count];
                 for (NSString *value in obj.values) {
                     Z3FeaturePropertyOption *option = [[Z3FeaturePropertyOption alloc] init];
@@ -176,7 +177,7 @@
         target = [target copy];
         if (target) {
             id value = property[@"value"];
-            if (target.disptype != 3) {
+            if (target.disptype != 3 && target.disptype != 4) {
                 target.value = value;
             } else {
                 predicate = [NSPredicate predicateWithFormat:@"name == %@",value];
