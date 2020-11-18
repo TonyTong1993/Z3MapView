@@ -12,6 +12,7 @@
 #import "Z3GraphicFactory.h"
 #import "Z3Theme.h"
 #import "UIColor+Z3.h"
+#import "Z3MeasurePolygonCalloutView.h"
 @interface Z3MapViewMeasurePolygonXtd()
 
 @end
@@ -32,6 +33,7 @@
     double area = [AGSGeometryEngine geodeticAreaOfGeometry:geometry areaUnit:[AGSAreaUnit squareMeters] curveType:AGSGeodeticCurveTypeShapePreserving];
     if (area > 0.0f) {
         [self.sketchGraphicsOverlay.graphics removeAllObjects];
+        double circumference = 0;
         for (AGSPart* part in geometry.parts){
             for (AGSSegment *segment in part.array) {
                 AGSPoint *startPoint = segment.startPoint;
@@ -41,6 +43,7 @@
                 AGSPoint *midPoint = AGSPointMake(midX, midY, geometry.spatialReference);
                 AGSGeodeticDistanceResult *result = [AGSGeometryEngine geodeticDistanceBetweenPoint1:startPoint point2:endPoint distanceUnit:[AGSLinearUnit meters] azimuthUnit:[AGSAngularUnit degrees] curveType:AGSGeodeticCurveTypeGeodesic];
                 double distance = [result distance];
+                circumference += distance;
                 [self drawLengthOfSideWithMidPoint:midPoint length:distance];
                 
             }
@@ -50,9 +53,24 @@
         NSString *areaStr = [NSString stringWithFormat:@"%.1f", area]; //保留1位小数
         double areaDouble = [areaStr doubleValue];
         NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble: areaDouble]];
+        
+        NSString *circumferenceStr = [NSString stringWithFormat:@"%.1f", circumference]; //保留1位小数
+        double circumferenceDouble = [circumferenceStr doubleValue];
+        NSString *circumferenceAmount = [formatter stringFromNumber:[NSNumber numberWithDouble: circumferenceDouble]];
+        
         //NSString *newAmount = [formatter stringFromNumber:[NSNumber numberWithDouble:area]];
-        self.mapView.callout.title = LocalizedString(@"str_map_area");
-        self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_square_meter")];
+        //self.mapView.callout.title = LocalizedString(@"str_map_area");
+        //self.mapView.callout.detail = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_square_meter")];
+        
+        Z3MeasurePolygonCalloutView *calloutView = [Z3MeasurePolygonCalloutView calloutView];
+        [calloutView setBackgroundColor:[UIColor clearColor]];
+        calloutView.areaNameLabel.text = LocalizedString(@"str_map_area");
+        calloutView.areaValueLabel.text = [NSString stringWithFormat:@"%@%@",newAmount,LocalizedString(@"str_unit_square_meter")];
+        calloutView.circumferenceNameLabel.text = LocalizedString(@"str_map_circumference");
+        calloutView.circumferenceValueLabel.text = [NSString stringWithFormat:@"%@%@",circumferenceAmount,LocalizedString(@"str_unit_unit_meter")];
+        AGSCallout *callout = [self.mapView callout];
+        [callout setCustomView:calloutView];
+        
         [self.mapView.callout setAccessoryButtonHidden:YES];
         AGSPoint *point = [AGSGeometryEngine labelPointForPolygon:geometry];
         [self.mapView.callout showCalloutAt:point screenOffset:CGPointZero rotateOffsetWithMap:NO animated:YES];
@@ -68,7 +86,7 @@
     //NSString *fDistance = [formatter stringFromNumber:[NSNumber numberWithDouble:length]];
     NSString *label = [NSString stringWithFormat:@"%@%@",fDistance,LocalizedString(@"str_unit_unit_meter")];
     CGPoint offset = CGPointMake(20, 20);
-    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildTextGraphicWithPoint:mapPoint text:label textColor:[UIColor colorWithHex:leftNavBarColorHex] fontFamily:[Z3Theme themeFontFamilyName] fontSize:15 offset:offset attributes:@{}];
+    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildTextGraphicWithPoint:mapPoint text:label textColor:[UIColor darkTextColor] fontFamily:[Z3Theme themeFontFamilyName] fontSize:15 offset:offset attributes:@{}];
     [self.sketchGraphicsOverlay.graphics addObject:graphic];
 }
 

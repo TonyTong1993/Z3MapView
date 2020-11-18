@@ -79,6 +79,8 @@
     style.selectedVertexSymbol = [factory buildSelectedVertexSymbol];
     style.selectedMidVertexSymbol = [factory buildSelectedMidVertexSymbol];
     style.midVertexSymbol = [factory buildNormalMidVertexSymbol];
+    UIColor *darkRed = [UIColor colorWithRed:219/255.0 green:105/255.0 blue:180/255.0 alpha:0.5];
+    style.lineSymbol = [factory buildPolyLineSymbolWithColor:darkRed ];
     return style;
 }
 
