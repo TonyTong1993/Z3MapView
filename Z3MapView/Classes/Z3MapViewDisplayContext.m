@@ -61,13 +61,16 @@ static NSString *context = @"Z3MapViewDisplayContext";
             [layer addObserver:self forKeyPath:@"loadStatus" options:NSKeyValueObservingOptionNew context:&context];
             [layer loadWithCompletion:^(NSError * _Nullable error) {
                 if (error) {
-                    NSLog(@"layer : %@load completion! error:%@",layer.name,[error localizedDescription]);
+                    NSLog(@"layer : %@ load completion! error:%@",layer.name,[error localizedDescription]);
                     NSLog(@"%@",[error localizedDescription]);
                 } else {
                     if(!_isNeedCheckLayerStatus){
                         return;
                     }
                     AGSArcGISMapImageLayer *imageLayer = (AGSArcGISMapImageLayer*)layer;
+                    if (![imageLayer respondsToSelector:@selector(mapImageSublayers)]) {
+                        return;
+                    }
                     [self checkLayerStatus:imageLayer];
                 }
             }];
