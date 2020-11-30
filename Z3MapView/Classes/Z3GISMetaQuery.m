@@ -140,7 +140,8 @@
 - (NSArray *)buildFeaturePropertyConditionsWithFields:(NSArray *)fields {
     NSMutableArray *conditons = [NSMutableArray array];
     for (Z3FeatureLayerProperty *obj in fields) {
-        if ([obj.alias isChinese]) {
+        //if ([obj.alias isChinese]) {
+        if (obj.visible == 1) {
             Z3FeaturePropertyCondition *condition = [[Z3FeaturePropertyCondition alloc] init];
             condition.name = obj.name;
             condition.alias = obj.alias;
