@@ -18,6 +18,7 @@ extern NSString * const QUERY_GRAPHICS_OVERLAY_ID;
 extern NSString * const TRACK_GRAPHICS_OVERLAY_ID;
 extern NSString * const POI_GRAPHICS_OVERLAY_ID;
 extern NSString * const SKETCH_GRAPHICS_OVERLAY_ID;
+extern NSString * const ISUE_REPORT_SELECT_DEVICE_GRAPHICS_OVERLAY_ID;
 @interface Z3MapViewCommandXtd (Private)
 - (void)display;
 - (void)dismiss;

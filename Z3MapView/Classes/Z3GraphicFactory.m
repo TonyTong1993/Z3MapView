@@ -266,6 +266,12 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildMarkPointGraphicWithPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes {
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildMarkPointSymbol];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:point symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 - (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
                                      text:(NSString *)text
                                 textColor:(UIColor *)textColor

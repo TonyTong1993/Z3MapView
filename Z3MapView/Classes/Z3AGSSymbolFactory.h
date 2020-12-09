@@ -78,6 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return AGSSymbol
  */
 - (AGSSymbol *)buildAddressSymbol;
+- (AGSSymbol *)buildMarkPointSymbol;
 
 
 /**

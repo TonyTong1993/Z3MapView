@@ -77,6 +77,8 @@ typedef void(^MapViewLoadStatusListener)(NSInteger status);
  移除位置AnotationView
  */
 - (void)removeAddressAnotationView;
+- (void)removeIsueReportSelectDeviceView;
+- (void)showMarkPointWithlocation:(AGSPoint *)location;
 
 @end
 

@@ -13,3 +13,4 @@ NSString * const QUERY_GRAPHICS_OVERLAY_ID= @"query.graphics.overlay";
 NSString * const TRACK_GRAPHICS_OVERLAY_ID= @"track.graphics.overlay";
 NSString * const POI_GRAPHICS_OVERLAY_ID = @"POI.graphics.overlay";
 NSString * const SKETCH_GRAPHICS_OVERLAY_ID = @"sketch.graphics.overlay";
+NSString * const ISUE_REPORT_SELECT_DEVICE_GRAPHICS_OVERLAY_ID= @"isue.report.select.device.graphics.overlay";

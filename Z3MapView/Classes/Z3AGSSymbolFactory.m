@@ -233,6 +233,13 @@
     return symbol;
 }
 
+- (AGSSymbol *)buildMarkPointSymbol{
+    UIImage *userLocationImage = [UIImage imageNamed:@"icon_flag"];
+    AGSPictureMarkerSymbol *symbol = [[AGSPictureMarkerSymbol alloc] initWithImage:userLocationImage];
+    symbol.offsetY = userLocationImage.size.height/2;
+    return symbol;
+}
+
 - (AGSSymbol *)buildTextSymbolWithText:(NSString *)text
                              textColor:(UIColor *)textColor
                             fontFamily:(NSString *)fontFamily

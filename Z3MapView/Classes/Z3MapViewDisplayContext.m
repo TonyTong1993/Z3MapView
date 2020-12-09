@@ -30,6 +30,7 @@ static NSString *context = @"Z3MapViewDisplayContext";
 @property (nonatomic,strong) Z3MapViewCenterPropertyView *centerPropertyView;
 
 @property (nonatomic,strong) AGSGraphicsOverlay *addressGraphicsOverlay;
+@property (nonatomic,strong) AGSGraphicsOverlay *isueReportSelectDeviceGraphicsOverlay;
 @property (nonatomic,strong) AGSGeodatabase *gdb;
 @property (nonatomic,assign) BOOL isNeedCheckLayerStatus;
 @end
@@ -304,9 +305,22 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
 }
 
+- (void)showMarkPointWithlocation:(AGSPoint *)location {
+    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildMarkPointGraphicWithPoint:location attributes:nil];
+    [self.isueReportSelectDeviceGraphicsOverlay.graphics addObject:graphic];
+    if (self.mapView.mapScale > 2000) {
+        [self zoomToPoint:location withScale:2000];
+    }
+}
+
 - (void)removeAddressAnotationView {
     [self.addressGraphicsOverlay.graphics removeAllObjects];
 }
+
+- (void)removeIsueReportSelectDeviceView {
+    [self.isueReportSelectDeviceGraphicsOverlay.graphics removeAllObjects];
+}
+
 #pragma mark - Control PopupView
 - (void)showCenterPropertyView {
     if (!_centerPropertyView) {
@@ -397,6 +411,19 @@ static NSString *context = @"Z3MapViewDisplayContext";
         NSAssert(_addressGraphicsOverlay, @"identityGraphicsOverlay not create");
     }
     return _addressGraphicsOverlay;
+}
+
+- (AGSGraphicsOverlay *)isueReportSelectDeviceGraphicsOverlay {
+    if (_isueReportSelectDeviceGraphicsOverlay == nil) {
+        for (AGSGraphicsOverlay *overlay in self.mapView.graphicsOverlays) {
+            if ([overlay.overlayID isEqualToString:ISUE_REPORT_SELECT_DEVICE_GRAPHICS_OVERLAY_ID]) {
+                _isueReportSelectDeviceGraphicsOverlay = overlay;
+                break;
+            }
+        }
+        NSAssert(_isueReportSelectDeviceGraphicsOverlay, @"identityGraphicsOverlay not create");
+    }
+    return _isueReportSelectDeviceGraphicsOverlay;
 }
 
 /**
