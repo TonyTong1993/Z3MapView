@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Z3AGSLayerFactory : NSObject
 + (instancetype)factory;
 - (NSArray *)loadMapLayers;
+- (AGSLayer *)loadMapLayer:(Z3MapLayer *)mapLayer;
 - (AGSBasemap *)localBaseMap;
 - (AGSBasemap *)onlineBaseMap;
 - (AGSBasemap *)onlineBaseMapWithMapLayer:(Z3MapLayer *)mapLayer;

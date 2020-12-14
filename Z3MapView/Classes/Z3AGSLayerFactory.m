@@ -22,6 +22,11 @@
 
 - (NSArray *)loadMapLayers {
     Z3MapConfig *config =  [Z3MobileConfig shareConfig].mapConfig;
+//    NSMutableArray *temp = [[NSMutableArray alloc]init];
+//    NSArray *tempBasemaps = [config availiableBasemaps];
+//    [temp addObjectsFromArray:tempBasemaps];
+//    [temp addObjectsFromArray:[config mapLayers]];
+//    NSArray *sources = [temp copy];
     NSArray *sources = [config mapLayers];
     NSMutableArray *layers = [NSMutableArray arrayWithCapacity:sources.count];
     for (Z3MapLayer *mapLayer in sources) {
@@ -55,6 +60,7 @@
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
             //        layer.minScale = [mapLayer.dispMinScale doubleValue];
             //        layer.maxScale = [mapLayer.dispMaxScale doubleValue];
+        layer.visible = mapLayer.visible;
         [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisfeaturelayer"]) {
@@ -65,6 +71,7 @@
         layer.minScale = 520000; //[mapLayer.dispMinScale doubleValue];
         layer.maxScale = [mapLayer.dispMaxScale doubleValue];
         layer.opacity = mapLayer.opacity;
+        layer.visible = mapLayer.visible;
         [layer setLayerID:mapLayer.ID];
         if (mapLayer.token) {
             AGSCredential *credential = [[AGSCredential alloc] initWithToken:mapLayer.token referer:nil];
@@ -76,6 +83,7 @@
         AGSArcGISMapImageLayer *layer = [[AGSArcGISMapImageLayer alloc] initWithURL:url];
             //        layer.minScale = [mapLayer.dispMinScale doubleValue];
             //        layer.maxScale = 250;//[mapLayer.dispMaxScale doubleValue];
+        layer.visible = mapLayer.visible;
         [layer setLayerID:mapLayer.ID];
         return layer;
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"arcgisimageservicelayer"]) {
@@ -85,6 +93,7 @@
         
     }else if ([[mapLayer.sourceType lowercaseString] isEqualToString:@"ecitytiledmapservicelayer"]) {
         AGSArcGISTiledLayer *layer = [[AGSArcGISTiledLayer alloc] initWithURL:url];
+        layer.visible = mapLayer.visible;
         [layer setLayerID:mapLayer.ID];
         return layer;
         /* 支持缓存的标准在线瓦片服务*/
@@ -105,10 +114,12 @@
 
 - (AGSBasemap *)onlineBaseMap {
     Z3MapConfig *config =  [Z3MobileConfig shareConfig].mapConfig;
-    Z3MapLayer *mapLayer = [config visiableBasemap];
-    AGSBasemap *basemap = [[AGSBasemap alloc] initWithBaseLayer:[self loadMapLayer:mapLayer]];
+    //Z3MapLayer *mapLayer = [config visiableBasemaps];
+    NSArray *mapLayers = [config visiableBasemaps];
+    AGSBasemap *basemap = [[AGSBasemap alloc] initWithBaseLayers:mapLayers referenceLayers:nil];
     return basemap;
 }
+
 
 - (AGSBasemap *)onlineBaseMapWithMapLayer:(Z3MapLayer *)mapLayer {
     AGSBasemap *basemap = [[AGSBasemap alloc] initWithBaseLayer:[self loadMapLayer:mapLayer]];
