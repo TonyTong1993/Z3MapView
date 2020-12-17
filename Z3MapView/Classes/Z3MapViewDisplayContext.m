@@ -238,6 +238,9 @@ static NSString *context = @"Z3MapViewDisplayContext";
     [map removeObserver:self forKeyPath:@"loadStatus"];
     [self.mapView removeObserver:self forKeyPath:@"visibleArea"];
     [self.mapView removeObserver:self forKeyPath:@"drawStatus"];
+    if ([Z3MobileConfig shareConfig].offlineLogin) {
+        return;
+    }
     for (AGSLayer *layer in map.operationalLayers) {
         [layer removeObserver:self forKeyPath:@"loadStatus"];
     }
