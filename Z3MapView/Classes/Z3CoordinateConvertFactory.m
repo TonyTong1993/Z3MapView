@@ -83,9 +83,21 @@
         point = (AGSPoint *)geometry;
     }else if ([geometry isKindOfClass:[AGSPolyline class]]) {
         AGSPolyline *line = (AGSPolyline *)geometry;
-        AGSPart *part = [line.parts partAtIndex:0];
-        int index = round(part.pointCount /2.0);
-        point = [part pointAtIndex:index];
+        AGSPartCollection *parts = line.parts;
+        NSInteger middle = parts.count / 2;
+        AGSPart *part = [line.parts partAtIndex:middle];
+        BOOL todd = part.pointCount % 2 == 1;
+        if (todd) {
+            NSInteger tmiddle = part.pointCount / 2;
+            point =  [part pointAtIndex:tmiddle];;
+        } else {
+            NSInteger tmiddle = part.pointCount / 2;
+            AGSPoint *startPoint = [part pointAtIndex:tmiddle-1];
+            AGSPoint *endPoint = [part pointAtIndex:tmiddle];
+            double x = (startPoint.x + endPoint.x) / 2;
+            double y = (startPoint.y + endPoint.y) / 2;
+            point =  AGSPointMake(x, y, nil);
+        }
     }else if ([geometry isKindOfClass:[AGSPolygon class]]) {
         AGSPolygon *polygon = (AGSPolygon *)geometry;
         point = [AGSGeometryEngine labelPointForPolygon:polygon];
