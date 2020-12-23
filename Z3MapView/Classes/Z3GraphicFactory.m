@@ -272,6 +272,13 @@
     return graphic;
 }
 
+- (AGSGraphic *)buildMarklineGraphicWithPolyline:(AGSPolyline *)line attributes:(NSDictionary *)attributes {
+    UIColor *soldRed = [UIColor colorWithRed:255/255.0 green:128/255.0 blue:0 alpha:1];
+    AGSSymbol *normalSymbol = [[Z3AGSSymbolFactory factory] buildPolyLineSymbolWithColor:soldRed];
+    AGSGraphic *graphic = [[AGSGraphic alloc] initWithGeometry:line symbol:normalSymbol attributes:attributes];
+    return graphic;
+}
+
 - (AGSGraphic *)buildTextGraphicWithPoint:(AGSPoint *)point
                                      text:(NSString *)text
                                 textColor:(UIColor *)textColor

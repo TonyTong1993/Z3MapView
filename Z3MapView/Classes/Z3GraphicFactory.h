@@ -268,6 +268,8 @@ NS_ASSUME_NONNULL_BEGIN
                                   attributes:(NSDictionary *)attr;
 
 - (AGSGraphic *)buildMarkPointGraphicWithPoint:(AGSPoint *)point attributes:(NSDictionary *)attributes;
+
+- (AGSGraphic *)buildMarklineGraphicWithPolyline:(AGSPolyline *)line attributes:(NSDictionary *)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

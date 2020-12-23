@@ -96,6 +96,12 @@ static NSString *context = @"Z3MapViewDisplayContext";
     }
 }
 
+//根据用户习惯恢复图层隐藏和显示状态
+-(void)checkofflineLayerStatus :(AGSLayer *)layer{
+    AGSFeatureLayer *featureLayer = (AGSFeatureLayer*)layer;
+    featureLayer.visible = [self resetLayerVisibileByLocalState:layer];
+}
+
 -(void)checkLayerStatusWithLayerContents:(id<AGSLayerContent>) sublayer {
     NSArray *contents = sublayer.subLayerContents;
     NSLog(@"layer:%@ contents count is: %lu",sublayer.name,contents.count);
@@ -143,6 +149,9 @@ static NSString *context = @"Z3MapViewDisplayContext";
 - (void)loadLayersByGeodatabase:(AGSMap *)map {
     [self loadOfflineMapLayersFromGeoDatabase:^(NSArray * _Nonnull layers) {
         [map.operationalLayers addObjectsFromArray:layers];
+        for (AGSLayer *layer in map.operationalLayers) {
+            [self checkofflineLayerStatus:layer];
+        }
     }];
 }
 
@@ -314,6 +323,11 @@ static NSString *context = @"Z3MapViewDisplayContext";
     if (self.mapView.mapScale > 2000) {
         [self zoomToPoint:location withScale:2000];
     }
+}
+
+- (void)showMarkPolylineWithPolyline:(AGSPolyline *)line {
+    AGSGraphic *graphic = [[Z3GraphicFactory factory] buildMarklineGraphicWithPolyline:line attributes:nil];
+    [self.isueReportSelectDeviceGraphicsOverlay.graphics addObject:graphic];
 }
 
 - (void)removeAddressAnotationView {

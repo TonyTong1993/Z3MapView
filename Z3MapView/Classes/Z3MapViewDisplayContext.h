@@ -10,6 +10,7 @@
 #import "Z3MapViewLayerFilterView.h"
 #import "Z3MapOperationView.h"
 #import "Z3MapViewOperationDelegate.h"
+#import <ArcGIS/ArcGIS.h>
 NS_ASSUME_NONNULL_BEGIN
 @class AGSMapView,AGSEnvelope,AGSPoint;
 typedef void(^MapViewLoadStatusListener)(NSInteger status);
@@ -79,6 +80,7 @@ typedef void(^MapViewLoadStatusListener)(NSInteger status);
 - (void)removeAddressAnotationView;
 - (void)removeIsueReportSelectDeviceView;
 - (void)showMarkPointWithlocation:(AGSPoint *)location;
+- (void)showMarkPolylineWithPolyline:(AGSPolyline *)line;
 
 @end
 
